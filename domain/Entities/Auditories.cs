@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace domain.Entities
 {
@@ -15,7 +14,7 @@ namespace domain.Entities
         string? details
         )
     {
-        public BigInteger Id { get; }
+        public long Id { get; }
 
         public Guid UserId { get; } = userId;
 

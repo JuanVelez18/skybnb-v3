@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace domain.Entities
 {
-    public class GuestData(
+    public class Guests(
         Guid usuarioId,
         Guid addressId
         )
