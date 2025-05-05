@@ -1,0 +1,56 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
+namespace domain.Entities
+{
+    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(Dni), IsUnique = true)]
+    public class Users(
+        string dni,
+        string firstName,
+        string lastName,
+        string email,
+        string passwordHash,
+        DateOnly birthday,
+        int countryId,
+        string? phone
+        ): AuditableEntity
+    {
+        public Guid Id { get; }
+
+        [Unicode(false)]
+        [MaxLength(20)]
+        public string Dni { get; set; } = dni;
+
+        [MaxLength(50)]
+        public string FirstName { get; set; } = firstName;
+
+        [MaxLength(50)]
+        public string LastName { get; set; } = lastName;
+
+        [MaxLength(100)]
+        [EmailAddress]
+        public string Email { get; set; } = email;
+
+        [Unicode(false)]
+        [MaxLength(120)]
+        public string PasswordHash { get; set; } = passwordHash;
+
+        public DateOnly Birthday { get; set; } = birthday;
+
+        public int CountryId { get; set; } = countryId;
+
+        [Unicode(false)]
+        [MaxLength(20)]
+        public string? Phone { get; set; } = phone;
+
+        public bool IsActive { get; set; } = true;
+
+
+        public Countries? Country { get; }
+        public List<Roles> Roles { get; } = [];
+        public List<Properties> HostedProperties { get; } = [];
+        public List<Bookings> Bookings { get; } = [];
+        public List<Reviews> ReviewsWritten { get; } = [];
+    }
+}
