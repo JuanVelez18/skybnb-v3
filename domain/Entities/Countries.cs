@@ -25,5 +25,9 @@ namespace domain.Entities
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+
+        public List<Cities> Cities { get; set; } = [];
+        public List<Users> Users { get; set; } = [];
     }
 }
