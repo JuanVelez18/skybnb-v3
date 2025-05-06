@@ -9,7 +9,7 @@ namespace domain.Entities
         string? description
         ): AuditableEntity
     {
-        public int Id { get; }
+        public int Id { get; init; }
 
         [MaxLength(100)]
         public string Name { get; } = name;

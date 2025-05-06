@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace domain.Entities
 {
     public class Guests(
-        Guid usuarioId,
+        Guid userId,
         Guid addressId
         )
     {
         [Key]
         [ForeignKey("Users")]
-        public Guid UserId { get; init; } = usuarioId;
+        public Guid UserId { get; private set; } = userId;
 
         public Guid AddressId { get; set; } = addressId;
 

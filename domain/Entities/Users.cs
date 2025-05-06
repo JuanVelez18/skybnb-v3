@@ -16,7 +16,7 @@ namespace domain.Entities
         string? phone
         ): AuditableEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         [Unicode(false)]
         [MaxLength(20)]
@@ -47,10 +47,10 @@ namespace domain.Entities
         public bool IsActive { get; set; } = true;
 
 
-        public Countries? Country { get; }
-        public List<Roles> Roles { get; } = [];
-        public List<Properties> HostedProperties { get; } = [];
-        public List<Bookings> Bookings { get; } = [];
-        public List<Reviews> ReviewsWritten { get; } = [];
+        public Countries? Country { get; set; }
+        public List<Roles> Roles { get; set; } = [];
+        public List<Properties> HostedProperties { get; set; } = [];
+        public List<Bookings> Bookings { get; set; } = [];
+        public List<Reviews> ReviewsWritten { get; set; } = [];
     }
 }

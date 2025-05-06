@@ -12,19 +12,19 @@ namespace domain.Entities
         string comment
         ) : AuditableEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
-        public Guid BookingId { get; } = bookingId;
+        public Guid BookingId { get; private set; } = bookingId;
 
-        public Guid PropertyId { get; } = propertyId;
+        public Guid PropertyId { get; private set; } = propertyId;
 
-        public Guid GuestId { get; } = guestId;
+        public Guid GuestId { get; private set; } = guestId;
 
         [Range(1,5)]
-        public decimal Rating { get; } = rating;
+        public decimal Rating { get; private set; } = rating;
 
         [MaxLength(2000)]
-        public string Comment { get; } = comment;
+        public string Comment { get; private set; } = comment;
 
 
         public bool IsActive { get; set; } = true;

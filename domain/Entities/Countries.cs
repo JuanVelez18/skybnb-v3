@@ -9,7 +9,7 @@ namespace domain.Entities
         string? phoneCode
         ): AuditableEntity
     {
-        public int Id { get; }
+        public int Id { get; private set; }
 
         [MaxLength(100)]
         public string Name { get; set; } = name;

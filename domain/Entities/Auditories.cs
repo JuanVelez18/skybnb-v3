@@ -14,19 +14,19 @@ namespace domain.Entities
         string? details
         )
     {
-        public long Id { get; }
+        public long Id { get; private set; }
 
-        public Guid UserId { get; } = userId;
+        public Guid UserId { get; private set; } = userId;
 
-        public string Action { get; } = action;
+        public string Action { get; private set; } = action;
 
-        public DateTime Timestamp { get; } = timestamp;
+        public DateTime Timestamp { get; private set; } = timestamp;
 
-        public string? Entity { get; } = entity;
+        public string? Entity { get; private set; } = entity;
 
-        public string? EntityId { get; } = entityId;
+        public string? EntityId { get; private set; } = entityId;
 
-        public string? Details { get; } = details;
+        public string? Details { get; private set; } = details;
         
 
         public Users? User { get; set; }

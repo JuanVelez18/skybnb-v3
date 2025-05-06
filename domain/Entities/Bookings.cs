@@ -12,26 +12,26 @@ namespace domain.Entities
         decimal totalPrice
         ): AuditableEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
-        public Guid PropertyId { get; } = propertyId;
+        public Guid PropertyId { get; private set; } = propertyId;
 
-        public Guid GuestId { get; } = guestId;
+        public Guid GuestId { get; private set; } = guestId;
 
-        public DateOnly CheckInDate { get; } = checkInDate;
+        public DateOnly CheckInDate { get; private set; } = checkInDate;
 
-        public DateOnly CheckOutDate { get; } = checkOutDate;
+        public DateOnly CheckOutDate { get; private set; } = checkOutDate;
 
         [Range(1, int.MaxValue)]
-        public int NumGuests { get; } = numGuests;
+        public int NumGuests { get; private set; } = numGuests;
 
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
         [Precision(13, 2)]
-        public decimal TotalPrice { get; } = totalPrice;
+        public decimal TotalPrice { get; private set; } = totalPrice;
 
 
-        public Properties? Property { get; }
-        public Users? Guest { get; }
+        public Properties? Property { get; set; }
+        public Users? Guest { get; set; }
     }
 }

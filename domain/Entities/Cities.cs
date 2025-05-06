@@ -10,12 +10,12 @@ namespace domain.Entities
         decimal? longitude
         ): AuditableEntity
     {
-        public int Id { get; }
+        public int Id { get; private set; }
 
         [MaxLength(100)]
-        public string Name { get; } = name;
+        public string Name { get; private set; } = name;
 
-        public int CountryId { get; } = countryId;
+        public int CountryId { get; private set; } = countryId;
 
         [Precision(10, 8)]
         public decimal? Latitude { get; set; } = latitude;

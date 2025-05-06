@@ -9,16 +9,16 @@ namespace domain.Entities
         string? description
         ): AuditableEntity
     {
-        public int Id { get; }
+        public int Id { get; init; }
 
         [MaxLength(100)]
-        public string Name { get; } = name;
+        public string Name { get; private set; } = name;
 
         [MaxLength(255)]
         public string? Description { get; set; } = description;
 
 
-        public List<Permissions> Permissions { get; } = [];
-        public List<Users> Users { get; } = [];
+        public List<Permissions> Permissions { get; set; } = [];
+        public List<Users> Users { get; set; } = [];
     }
 }

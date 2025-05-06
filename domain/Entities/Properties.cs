@@ -17,7 +17,7 @@ namespace domain.Entities
         Guid addressId
         ): AuditableEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         [MaxLength(150)]
         public string Title { get; set; } = title;
@@ -42,7 +42,7 @@ namespace domain.Entities
 
         public int TypeId { get; set; } = typeId;
 
-        public Guid HostId { get; } = hostId;
+        public Guid HostId { get; private set; } = hostId;
 
         public Guid AddressId { get; set; } = addressId;
 
@@ -56,9 +56,9 @@ namespace domain.Entities
 
 
         public PropertyTypes? Type { get; set; }
-        public Users? Host { get; }
+        public Users? Host { get; set; }
         public Addresses? Address { get; set; }
-        public List<Bookings> Bookings { get; } = [];
-        public List<Reviews> Reviews { get; } = [];
+        public List<Bookings> Bookings { get; set; } = [];
+        public List<Reviews> Reviews { get; set; } = [];
     }
 }

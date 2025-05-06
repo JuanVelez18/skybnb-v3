@@ -15,7 +15,7 @@ namespace domain.Entities
         decimal? longitude
         ): AuditableEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         [MaxLength(100)]
         public string Street { get; set; } = street;
