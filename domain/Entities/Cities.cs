@@ -8,7 +8,7 @@ namespace domain.Entities
         int countryId,
         decimal? latitude,
         decimal? longitude
-        ): AuditableEntity
+        )
     {
         public int Id { get; private set; }
 
@@ -24,6 +24,8 @@ namespace domain.Entities
         public decimal? Longitude { get; set; } = longitude;
 
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public Countries? Country { get; set; }

@@ -15,7 +15,7 @@ namespace domain.Entities
         int typeId,
         Guid hostId,
         Guid addressId
-        ): AuditableEntity
+        )
     {
         public Guid Id { get; private set; }
 
@@ -53,6 +53,8 @@ namespace domain.Entities
         public decimal? AverageRating { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public PropertyTypes? Type { get; set; }

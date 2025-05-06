@@ -14,7 +14,7 @@ namespace domain.Entities
         DateOnly birthday,
         int countryId,
         string? phone
-        ): AuditableEntity
+        )
     {
         public Guid Id { get; private set; }
 
@@ -45,6 +45,8 @@ namespace domain.Entities
         public string? Phone { get; set; } = phone;
 
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public Countries? Country { get; set; }

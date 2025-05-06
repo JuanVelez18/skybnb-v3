@@ -7,7 +7,7 @@ namespace domain.Entities
         string name,
         string isoCode,
         string? phoneCode
-        ): AuditableEntity
+        )
     {
         public int Id { get; private set; }
 
@@ -23,5 +23,7 @@ namespace domain.Entities
         public string? PhoneCode { get; set; } = phoneCode;
 
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

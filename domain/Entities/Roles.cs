@@ -7,7 +7,7 @@ namespace domain.Entities
     public class Roles(
         string name,
         string? description
-        ): AuditableEntity
+        )
     {
         public int Id { get; init; }
 

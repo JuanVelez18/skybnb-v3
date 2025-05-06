@@ -9,11 +9,10 @@ namespace domain.Entities
         int intersectionNumber,
         int doorNumber,
         int cityId,
-        int countryId,
         string? complement,
         decimal? latitude,
         decimal? longitude
-        ): AuditableEntity
+        )
     {
         public Guid Id { get; private set; }
 
@@ -31,8 +30,6 @@ namespace domain.Entities
 
         public int CityId { get; set; } = cityId;
 
-        public int CountryId { get; set; } = countryId;
-
         [MaxLength(200)]
         public string? Complement { get; set; } = complement;
 
@@ -43,10 +40,10 @@ namespace domain.Entities
         public decimal? Longitude { get; set; } = longitude;
 
         public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public Cities? City { get; set; }
-
-        public Countries? Country { get; set; }
     }
 }

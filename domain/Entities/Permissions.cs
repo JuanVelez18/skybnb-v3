@@ -7,7 +7,7 @@ namespace domain.Entities
     public class Permissions(
         string name,
         string? description
-        ): AuditableEntity
+        )
     {
         public int Id { get; init; }
 

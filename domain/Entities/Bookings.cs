@@ -10,7 +10,7 @@ namespace domain.Entities
         DateOnly checkOutDate,
         int numGuests,
         decimal totalPrice
-        ): AuditableEntity
+        )
     {
         public Guid Id { get; private set; }
 
@@ -29,6 +29,9 @@ namespace domain.Entities
 
         [Precision(13, 2)]
         public decimal TotalPrice { get; private set; } = totalPrice;
+
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public Properties? Property { get; set; }
