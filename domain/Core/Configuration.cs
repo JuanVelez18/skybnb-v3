@@ -3,7 +3,7 @@
     public class Configuration
     {
         public static string ConexionString { get; } = "";
-        public static string Key { get; } = "";
+        public static string SecretKey { get; } = "";
 
         static Configuration()
         {
@@ -19,7 +19,7 @@
             var datos = JsonConversor.ToObject<Dictionary<string, string>>(json)!;
 
             ConexionString = datos["ConexionString"]!;
-            Key = datos["Key"]!;
+            SecretKey = datos["SecretKey"]!;
         }
     }
 }
