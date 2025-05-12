@@ -9,6 +9,7 @@ namespace repository.Implementations
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            Console.Write($"The conexion string is {Configuration.ConexionString}");
             optionsBuilder.UseSqlServer(Configuration.ConexionString);
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
