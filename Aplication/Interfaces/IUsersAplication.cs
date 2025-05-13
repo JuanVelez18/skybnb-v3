@@ -1,13 +1,12 @@
 ﻿using domain.Entities;
-namespace lib_aplicaciones.Interfaces
+
+namespace Aplication.Interfaces
 {
-    public interface IRolesAplication
+    public interface IUsersApplication
     {
-        void Configuration(string StringConexion);
-        List<Users> PorEstudiante(Users? entidad);
         List<Users> Listar();
-        Users? Guardar(Users? entidad);
-        Users? Modificar(Users? entidad);
-        Users? Borrar(Users? entidad);
+        void Guardar(Users entidad);
+        void Modificar(Users entidad);
+        void Borrar(Users entidad);
     }
 }

@@ -1,6 +1,9 @@
+using asp_services.Dtos;
 using domain.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using repository.Implementations;
 using System.Text;
 
 if (string.IsNullOrEmpty(Configuration.SecretKey) || Encoding.UTF8.GetBytes(Configuration.SecretKey).Length < 32)
@@ -15,6 +18,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Inyecta el hasheador de constraseñas a los controladores
+builder.Services.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
+
+// Inyecta instancia de conexión a la base de datos
+builder.Services.AddSingleton<DbConexion, DbConexion>();
 
 
 // 1. AGREGAR SERVICIOS DE AUTENTICACIÓN Y CONFIGURAR JWT BEARER
