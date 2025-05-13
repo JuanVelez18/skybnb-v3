@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "repository", "repository\re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asp_services", "asp_services\asp_services.csproj", "{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aplication", "Aplication\Aplication.csproj", "{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +51,7 @@ Global
 		{A7BA4F41-090E-42B0-A8B9-98ECE52C96A8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{F6B966DD-5B63-4529-B125-5B9131AE746A} = {CA0629B0-1421-40A4-BF72-48A304578966}
 		{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA} = {CA0629B0-1421-40A4-BF72-48A304578966}
+		{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7} = {CA0629B0-1421-40A4-BF72-48A304578966}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4894C791-9658-44FB-BDE8-3BC4302376FA}
