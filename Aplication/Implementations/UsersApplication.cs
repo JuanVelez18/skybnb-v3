@@ -1,6 +1,6 @@
 ﻿using Aplication.Interfaces;
 using domain.Entities;
-using repository.Implementations;
+using repository.Conexions;
 
 namespace Aplication.Implementations
 {

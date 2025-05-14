@@ -3,7 +3,7 @@ using domain.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using repository.Implementations;
+using repository.Conexions;
 using System.Text;
 
 if (string.IsNullOrEmpty(Configuration.SecretKey) || Encoding.UTF8.GetBytes(Configuration.SecretKey).Length < 32)

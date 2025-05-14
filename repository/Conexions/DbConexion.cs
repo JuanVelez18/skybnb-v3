@@ -1,9 +1,8 @@
-﻿using System.Reflection.Metadata;
-using domain.Core;
+﻿using domain.Core;
 using domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace repository.Implementations
+namespace repository.Conexions
 {
     public class DbConexion: DbContext
     {
