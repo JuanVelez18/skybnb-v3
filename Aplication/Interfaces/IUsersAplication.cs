@@ -1,6 +1,6 @@
 ﻿using domain.Entities;
 
-namespace Aplication.Interfaces
+namespace application.Interfaces
 {
     public interface IUsersApplication
     {

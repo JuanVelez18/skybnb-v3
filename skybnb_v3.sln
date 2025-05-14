@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "repository", "repository\re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asp_services", "asp_services\asp_services.csproj", "{F1B834E2-1473-4BAE-9A8C-43AF1EE70BEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aplication", "Aplication\Aplication.csproj", "{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "application", "Aplication\application.csproj", "{F256C022-EEFA-4CAB-BA6F-F2B05FF037A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,7 +4,7 @@ using domain.Core;
 using domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Aplication.Interfaces;
+using application.Interfaces;
 
 namespace asp_services.Controllers
 {

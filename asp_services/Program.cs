@@ -1,5 +1,5 @@
-using Aplication.Implementations;
-using Aplication.Interfaces;
+using application.Implementations;
+using application.Interfaces;
 using asp_services.Dtos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
