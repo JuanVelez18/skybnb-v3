@@ -51,9 +51,8 @@ Plaforma de alquiler a corto plazo de propiedades que permite a Anfitriones publ
 			openssl rand -base64 32
 			```
 			Copia la salida de este comando y pégala como valor para `SecretKey`.
-		
-		> [!CAUTION]
-		> Esta clave debe mantenerse secreta. La generada aquí es para desarrollo local. Producción y otros entornos deben tener sus propias claves únicas y seguras gestionadas adecuadamente.
+		- **¡Importante!**: Esta clave debe mantenerse secreta. La generada aquí es para desarrollo local. Producción y otros entornos deben tener sus propias claves únicas y seguras gestionadas adecuadamente.
+
 	- `ConnectionStrings:ConexionString`:
 		- **Propósito**: Cadena de conexión para la base de datos principal de la aplicación.
 		- **Ejemplos**:
