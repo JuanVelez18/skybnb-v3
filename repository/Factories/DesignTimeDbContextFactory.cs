@@ -16,7 +16,7 @@ namespace repository.Factories
             var connectionString = configuration.GetConnectionString("ConexionString");
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new InvalidOperationException("I can't find the connection string “ConexionString” in User Secrets");
+                throw new InvalidOperationException("I can't find the connection string \"ConexionString\" in User Secrets");
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<DbConexion>();
