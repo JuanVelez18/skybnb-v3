@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace repository.Conexions
 {
-    public class DbConexion: DbContext
+    public class DbConexion(DbContextOptions<DbConexion> options) : DbContext(options)
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.ConexionString);
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 

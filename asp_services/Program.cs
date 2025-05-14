@@ -1,29 +1,29 @@
 using asp_services.Dtos;
-using domain.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using repository.Conexions;
 using System.Text;
 
-if (string.IsNullOrEmpty(Configuration.SecretKey) || Encoding.UTF8.GetBytes(Configuration.SecretKey).Length < 32)
+var builder = WebApplication.CreateBuilder(args);
+
+var secretKey = builder.Configuration["SecretKey"];
+var connectionString = builder.Configuration.GetConnectionString("ConexionString");
+
+if (string.IsNullOrEmpty(secretKey) || Encoding.UTF8.GetBytes(secretKey).Length < 32)
 {
-    // Manejar error crítico: la clave es esencial y debe ser segura.
     throw new InvalidOperationException("La clave secreta JWT no está configurada correctamente o es demasiado corta.");
 }
 
-
-var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Inyecta el hasheador de constraseñas a los controladores
 builder.Services.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
 
 // Inyecta instancia de conexión a la base de datos
-builder.Services.AddSingleton<DbConexion, DbConexion>();
+builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
 
 // 1. AGREGAR SERVICIOS DE AUTENTICACIÓN Y CONFIGURAR JWT BEARER
@@ -35,16 +35,15 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-options.SaveToken = true; // Opcional: guarda el token en HttpContext después de la validación
-options.RequireHttpsMetadata = builder.Environment.IsProduction(); // Requerir HTTPS en producción
+    options.SaveToken = true; // Opcional: guarda el token en HttpContext después de la validación
+    options.RequireHttpsMetadata = builder.Environment.IsProduction(); // Requerir HTTPS en producción
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
-
         ValidateLifetime = true, // Validar expiración del token
 
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.SecretKey)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
 
         // ClockSkew permite una pequeña desviación de tiempo entre el servidor que emite
         // el token y el servidor que lo valida. El valor por defecto es 5 minutos.
