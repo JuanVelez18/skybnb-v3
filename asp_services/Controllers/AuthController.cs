@@ -4,9 +4,9 @@ using domain.Core;
 using domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Aplication.Interfaces;
+using application.Interfaces;
 
-namespace services.Controllers
+namespace asp_services.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -34,8 +34,8 @@ namespace services.Controllers
         {
             // 1. Validar credenciales (esto es un ejemplo simplificado)
             // En una aplicación real, consultarías una base de datos, verificarías un hash de contraseña, etc.
-            bool credentialsAreValid = (loginModel.Username == "testuser" && loginModel.Password == "P@ssword1!");
-            bool isAdmin = (loginModel.Username == "adminuser" && loginModel.Password == "AdminP@ss!"); // Ejemplo
+            bool credentialsAreValid = loginModel.Username == "testuser" && loginModel.Password == "P@ssword1!";
+            bool isAdmin = loginModel.Username == "adminuser" && loginModel.Password == "AdminP@ss!"; // Ejemplo
 
             if (credentialsAreValid || isAdmin)
             {
@@ -63,14 +63,14 @@ namespace services.Controllers
             try
             {
                 user = new Users(
-                    dni: userDto.dni,
-                    firstName: userDto.firstName,
-                    lastName: userDto.lastName,
-                    email: userDto.email,
-                    birthday: userDto.birthday,
-                    countryId: userDto.countryId,
-                    phone: userDto.phone,
-                    passwordHash: _passwordHasher.HashPassword(userDto, userDto.password)
+                    dni: userDto.Dni,
+                    firstName: userDto.FirstName,
+                    lastName: userDto.LastName,
+                    email: userDto.Email,
+                    birthday: userDto.Birthday,
+                    countryId: userDto.CountryId,
+                    phone: userDto.Phone,
+                    passwordHash: _passwordHasher.HashPassword(userDto, userDto.Password)
                 );
 
             }

@@ -1,8 +1,8 @@
-﻿using Aplication.Interfaces;
+﻿using application.Interfaces;
 using domain.Entities;
 using repository.Conexions;
 
-namespace Aplication.Implementations
+namespace application.Implementations
 {
     public class UsersApplication: IUsersApplication
     {
