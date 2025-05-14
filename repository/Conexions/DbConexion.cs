@@ -1,5 +1,4 @@
-﻿using domain.Core;
-using domain.Entities;
+﻿using domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace repository.Conexions
