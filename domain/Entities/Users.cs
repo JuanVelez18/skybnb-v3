@@ -14,7 +14,7 @@ namespace domain.Entities
         DateOnly birthday,
         int countryId,
         string? phone
-        )
+        ): ISoftDeletable
     {
         public Guid Id { get; private set; }
 

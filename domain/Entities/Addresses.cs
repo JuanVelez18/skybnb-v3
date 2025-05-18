@@ -12,7 +12,7 @@ namespace domain.Entities
         string? complement,
         decimal? latitude,
         decimal? longitude
-        )
+        ): ISoftDeletable
     {
         public Guid Id { get; private set; }
 
