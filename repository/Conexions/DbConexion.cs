@@ -1,4 +1,5 @@
-﻿using domain.Entities;
+﻿using System.Linq.Expressions;
+using domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace repository.Conexions
@@ -23,6 +24,14 @@ namespace repository.Conexions
         public DbSet<Bookings> Bookings { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
 
+        private static LambdaExpression CreateSoftDeletedFilter(Type type)
+        {
+            var parameter = Expression.Parameter(type, "e");
+            var propertyAccess = Expression.Property(Expression.Convert(parameter, typeof(ISoftDeletable)), nameof(ISoftDeletable.IsActive));
+            var constantTrue = Expression.Constant(true);
+            var body = Expression.Equal(propertyAccess, constantTrue);
+            return Expression.Lambda(body, parameter);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -153,6 +162,18 @@ namespace repository.Conexions
                         );
                     }
                 );
+
+            base.OnModelCreating(modelBuilder);
+
+            // Apply soft delete filter to all entities implementing ISoftDeletable
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
+                {
+                    var filter = CreateSoftDeletedFilter(entityType.ClrType);
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+                }
+            }
         }
     }
 }
