@@ -16,5 +16,6 @@ namespace domain.Entities
 
 
         public Addresses? Address { get; set; }
+        public Users? User { get; set; }
     }
 }
