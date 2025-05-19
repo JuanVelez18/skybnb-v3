@@ -8,5 +8,7 @@ namespace application.Interfaces
         void Guardar(Users entidad);
         void Modificar(Users entidad);
         void Borrar(Users entidad);
+
+        Task Register
     }
 }
