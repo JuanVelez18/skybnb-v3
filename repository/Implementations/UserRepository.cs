@@ -12,6 +12,7 @@ namespace repository.Implementations
         public async Task<Users?> GetByEmailAsync(string email)
         {
             return await _dbSet
+                .Include(user => user.Roles)
                 .FirstOrDefaultAsync(user => user.Email == email);
         }
 
