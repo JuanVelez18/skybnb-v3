@@ -7,11 +7,13 @@ namespace repository.Implementations
     {
         private readonly DbConexion _conexion;
         public IUserRepository Users { get; private set; }
+        public IGuestRepository Guests { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
         {
             _conexion = conexion;
             Users = new UserRepository(_conexion);
+            Guests = new GuestRepository(_conexion);
         }
 
         public async Task<int> CommitAsync()
