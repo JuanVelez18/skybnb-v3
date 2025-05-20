@@ -7,13 +7,13 @@ using repository.Interfaces;
 
 namespace application.Implementations
 {
-    public class UsersApplication: IUsersApplication
+    public class AuthApplication: IUsersApplication
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<UserCredentialsDto> _passwordHasher;
         private readonly IJwtGenerator _jwtGenerator;
 
-        public UsersApplication(
+        public AuthApplication(
             IUnitOfWork unitOfWork,
             IPasswordHasher<UserCredentialsDto> passwordHasher,
             IJwtGenerator jwtGenerator
