@@ -4,7 +4,7 @@
     {
         Task<TEntity?> GetByIdAsync(TKey id);
         Task<List<TEntity>> GetAllAsync();
-        Task AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
     }
