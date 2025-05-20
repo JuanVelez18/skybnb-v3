@@ -1,27 +1,32 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using application.Core;
+using application.Interfaces;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace application.Core
+namespace application.Implementations
 {
-    public class JwtGenerator
+    public class JwtGenerator: IJwtGenerator
     {
         private readonly JwtOptions _options;
 
-        public JwtGenerator(JwtOptions options)
+        public JwtGenerator(IOptions<JwtOptions> options)
         {
-            if (options.SecretKey == null)
-                throw new ArgumentNullException(nameof(options.SecretKey), "Secret key cannot be null.");
+            _options = options.Value;
 
-            if (Encoding.UTF8.GetBytes(options.SecretKey).Length < 32) // 256 bits for HS256
+            if (_options.SecretKey == null)
+                throw new ArgumentNullException(nameof(_options.SecretKey), "Secret key cannot be null.");
+
+            if (Encoding.UTF8.GetBytes(_options.SecretKey).Length < 32) // 256 bits for HS256
             {
                 throw new ArgumentException("The secret key is too short for HS256. It should be at least 32 bytes.");
             }
 
-            if (options.TokenExpirationInMinutes <= 0)
+            if (_options.TokenExpirationInMinutes <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(options.TokenExpirationInMinutes), "Expiration time must be greater than zero.");
+                throw new ArgumentOutOfRangeException(nameof(_options.TokenExpirationInMinutes), "Expiration time must be greater than zero.");
             }
         }
 
