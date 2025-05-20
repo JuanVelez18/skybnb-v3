@@ -77,9 +77,13 @@ namespace repository.Configuration
                 ],
                 [HostRole.Id] = [
                     CreatePropertyPermission.Id, ReadPropertyPermission.Id, UpdatePropertyPermission.Id, DeletePropertyPermission.Id,
-                    ReadBookingPermission.Id, UpdateBookingPermission.Id
+                    ReadPropertyTypePermission.Id,
+                    ReadBookingPermission.Id, UpdateBookingPermission.Id,
+                    ReadReviewPermission.Id
                 ],
                 [GuestRole.Id] = [
+                    ReadPropertyPermission.Id,
+                    ReadPropertyTypePermission.Id,
                     CreateBookingPermission.Id, ReadBookingPermission.Id, UpdateBookingPermission.Id,
                     CreateReviewPermission.Id, ReadReviewPermission.Id
                 ]

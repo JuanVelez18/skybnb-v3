@@ -61,6 +61,13 @@ namespace repository.Conexions
                 .WithMany(p => p.Reviews)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
+            modelBuilder
+                .Entity<Guests>()
+                .HasOne(g => g.User)
+                .WithOne(u => u.Guest)
+                .HasForeignKey<Guests>(g => g.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<Roles>().HasData(
                 InitialData.AdminRole,
                 InitialData.HostRole,
