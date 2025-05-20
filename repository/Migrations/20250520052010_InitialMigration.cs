@@ -242,6 +242,11 @@ namespace repository.Migrations
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Guests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -414,12 +419,16 @@ namespace repository.Migrations
                     { 19, 1 },
                     { 21, 1 },
                     { 28, 1 },
+                    { 10, 2 },
                     { 17, 2 },
                     { 18, 2 },
                     { 19, 2 },
                     { 20, 2 },
                     { 22, 2 },
                     { 23, 2 },
+                    { 26, 2 },
+                    { 10, 3 },
+                    { 18, 3 },
                     { 21, 3 },
                     { 22, 3 },
                     { 23, 3 },
