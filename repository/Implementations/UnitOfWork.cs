@@ -10,6 +10,7 @@ namespace repository.Implementations
         public IGuestRepository Guests { get; private set; }
         public IAddressRepository Addresses { get; private set; }
         public IRoleRepository Roles { get; private set; }
+        public IAuditoryRepository Auditories { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
         {
@@ -18,6 +19,7 @@ namespace repository.Implementations
             Guests = new GuestRepository(_conexion);
             Addresses = new AddressRepository(_conexion);
             Roles = new RoleRepository(_conexion);
+            Auditories = new AuditoryRepository(_conexion);
         }
 
         public async Task<int> CommitAsync()
