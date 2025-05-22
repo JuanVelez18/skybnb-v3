@@ -52,7 +52,7 @@ namespace application.Implementations
             user = user ?? CreateBaseUser(userCreationDto);
 
             user = await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.Users.AssignRole(user.Id, InitialData.HostRole.Id);
+            await _unitOfWork.Users.AssignRole(user, InitialData.HostRole.Id);
 
             await _unitOfWork.CommitAsync();
 
@@ -89,7 +89,7 @@ namespace application.Implementations
 
             user = await _unitOfWork.Users.AddAsync(user);
             await _unitOfWork.Guests.AddAsync(guest);
-            await _unitOfWork.Users.AssignRole(user.Id, InitialData.GuestRole.Id);
+            await _unitOfWork.Users.AssignRole(user, InitialData.GuestRole.Id);
 
             await _unitOfWork.CommitAsync();
 
