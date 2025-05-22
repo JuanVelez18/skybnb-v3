@@ -1,4 +1,5 @@
-﻿using application.DTOs;
+﻿using System.Text.Json;
+using application.DTOs;
 using application.Interfaces;
 using domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -66,8 +67,18 @@ namespace application.Implementations
         public async Task<TokensDto> RegisterHost(UserCreationDto userCreationDto)
         {
             var (user, role) = await GetUserAndRole(userCreationDto, InitialData.HostRole.Id);
-
             _unitOfWork.Users.AssignRole(user, role);
+
+            var auditory = new Auditories(
+                userId: user.Id,
+                action: "Register host",
+                entity: "User",
+                entityId: user.Id.ToString(),
+                details: JsonSerializer.Serialize(user),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
@@ -99,6 +110,26 @@ namespace application.Implementations
                 addressId: address.Id
             );
             await _unitOfWork.Guests.AddAsync(guest);
+
+            var auditoryNow = DateTime.UtcNow;
+            var userAuditory = new Auditories(
+                userId: user.Id,
+                action: "Register guest",
+                entity: "User",
+                entityId: user.Id.ToString(),
+                details: JsonSerializer.Serialize(user),
+                timestamp: auditoryNow
+            );
+            var addressAuditory = new Auditories(
+                userId: user.Id,
+                action: "Register guest address",
+                entity: "Address",
+                entityId: address.Id.ToString(),
+                details: JsonSerializer.Serialize(address),
+                timestamp: auditoryNow
+            );
+            await _unitOfWork.Auditories.AddAsync(userAuditory);
+            await _unitOfWork.Auditories.AddAsync(addressAuditory);
 
             await _unitOfWork.CommitAsync();
 
