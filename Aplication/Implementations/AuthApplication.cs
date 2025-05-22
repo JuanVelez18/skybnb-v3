@@ -7,7 +7,7 @@ using repository.Interfaces;
 
 namespace application.Implementations
 {
-    public class AuthApplication: IUsersApplication
+    public class AuthApplication : IUsersApplication
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<UserCredentialsDto> _passwordHasher;
@@ -41,38 +41,45 @@ namespace application.Implementations
             );
         }
 
-        public async Task<TokensDto> RegisterHost(UserCreationDto userCreationDto)
+        private async Task<(Users, Roles)> GetUserAndRole(UserCreationDto userDto, int roleId)
         {
-            var user = await _unitOfWork.Users.GetByEmailAsync(userCreationDto.Email);
-            if (user != null && user.Roles.Any(r => r.Id == InitialData.HostRole.Id))
+            var role = await _unitOfWork.Roles.GetByIdAsync(roleId);
+            if (role == null)
             {
-                throw new InvalidOperationException("The user already exists with role Host.");
+                throw new InvalidOperationException($"The role {roleId} does not exist.");
             }
 
-            user = user ?? CreateBaseUser(userCreationDto);
+            var user = await _unitOfWork.Users.GetByEmailAsync(userDto.Email);
+            if (user == null)
+            {
+                user = CreateBaseUser(userDto);
+                user = await _unitOfWork.Users.AddAsync(user);
+            }
+            else if (user.Roles.Any(r => r.Id == roleId))
+            {
+                throw new InvalidOperationException($"The user already exists with role {role.Name}.");
+            }
 
-            user = await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.Users.AssignRole(user, InitialData.HostRole.Id);
+            return (user, role);
+        }
 
+        public async Task<TokensDto> RegisterHost(UserCreationDto userCreationDto)
+        {
+            var (user, role) = await GetUserAndRole(userCreationDto, InitialData.HostRole.Id);
+
+            _unitOfWork.Users.AssignRole(user, role);
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
             {
-                AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: InitialData.HostRole.Id),
+                AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: role.Id),
                 RefreshToken = string.Empty
             };
         }
 
         public async Task<TokensDto> RegisterGuest(GuestCreationDto guestCreationDto)
         {
-            var user = await _unitOfWork.Users.GetByEmailAsync(guestCreationDto.Email);
-            if (user != null && user.Roles.Any(r => r.Id == InitialData.GuestRole.Id))
-            {
-                throw new InvalidOperationException("The user already exists with role Guest.");
-            }
-
-            user = user ?? CreateBaseUser(guestCreationDto);
-            await _unitOfWork.Users.AddAsync(user);
+            var (user, role) = await GetUserAndRole(guestCreationDto, InitialData.GuestRole.Id);
 
             var address = new Addresses(
                 street: guestCreationDto.Address.Street,
@@ -84,7 +91,8 @@ namespace application.Implementations
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
             );
-            await _unitOfWork.Addresses.AddAsync(address);
+            address = await _unitOfWork.Addresses.AddAsync(address);
+            _unitOfWork.Users.AssignRole(user, role);
 
             var guest = new Guests(
                 userId: user.Id,
@@ -92,12 +100,11 @@ namespace application.Implementations
             );
             await _unitOfWork.Guests.AddAsync(guest);
 
-            await _unitOfWork.Users.AssignRole(user, InitialData.GuestRole.Id);
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
             {
-                AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: InitialData.GuestRole.Id),
+                AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: role.Id),
                 RefreshToken = string.Empty
             };
         }
