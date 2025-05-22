@@ -21,7 +21,7 @@ namespace application.DTOs
         public int DoorNumber { get; set; }
 
         [Required(ErrorMessage = "City ID is required")]
-        public int CityId { get; set; }
+        public required int CityId { get; set; }
 
         [MaxLength(200, ErrorMessage = "Complement must be at most 200 characters long")]
         public string? Complement { get; set; }
