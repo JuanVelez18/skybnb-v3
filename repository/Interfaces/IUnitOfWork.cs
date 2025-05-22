@@ -5,6 +5,7 @@
         IUserRepository Users { get; }
         IGuestRepository Guests { get; }
         IAddressRepository Addresses { get; }
+        IRoleRepository Roles { get; }
 
         Task<int> CommitAsync();
     }
