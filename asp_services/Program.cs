@@ -5,6 +5,7 @@ using application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using repository.Conexions;
+using repository.Configuration;
 using repository.Implementations;
 using repository.Interfaces;
 
@@ -24,10 +25,20 @@ builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<U
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
 
+// Initializer
+builder.Services.AddScoped<IDataInitializer, DataInitializer>();
+
 // Inyecta instancia de conexión a la base de datos
 builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
+
+// Initialize the database
+using (var scope = app.Services.CreateScope())
+{
+    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
+    await dataInitializer.InitializeAsync();
+}
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
