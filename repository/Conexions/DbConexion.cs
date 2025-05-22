@@ -7,11 +7,6 @@ namespace repository.Conexions
 {
     public class DbConexion(DbContextOptions<DbConexion> options) : DbContext(options)
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-        }
-
         public DbSet<Auditories> Auditories { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
