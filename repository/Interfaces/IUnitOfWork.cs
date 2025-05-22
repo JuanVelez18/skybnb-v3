@@ -4,6 +4,7 @@
     {
         IUserRepository Users { get; }
         IGuestRepository Guests { get; }
+        IAddressRepository Addresses { get; }
 
         Task<int> CommitAsync();
     }
