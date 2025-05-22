@@ -16,20 +16,9 @@ namespace repository.Implementations
                 .FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task AssignRole(Users user, int roleId)
+        public void AssignRole(Users user, Roles role)
         {
-            var role = await _conexion.Roles
-                .AsTracking()
-                .FirstOrDefaultAsync(r => r.Id == roleId);
-            if (role == null)
-                throw new KeyNotFoundException($"Role with ID {roleId} not found");
-
-
-            var alreadyHasRole = user.Roles != null && user.Roles.Any(r => r.Id == roleId);
-            if (alreadyHasRole) return;
-
             user.Roles!.Add(role);
-            user.UpdatedAt = DateTime.UtcNow;
         }
     }
 }
