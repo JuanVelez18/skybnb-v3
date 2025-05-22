@@ -72,6 +72,8 @@ namespace application.Implementations
             }
 
             user = user ?? CreateBaseUser(guestCreationDto);
+            await _unitOfWork.Users.AddAsync(user);
+
             var address = new Addresses(
                 street: guestCreationDto.Address.Street,
                 streetNumber: guestCreationDto.Address.StreetNumber,
@@ -82,15 +84,15 @@ namespace application.Implementations
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
             );
+            await _unitOfWork.Addresses.AddAsync(address);
+
             var guest = new Guests(
                 userId: user.Id,
                 addressId: address.Id
             );
-
-            user = await _unitOfWork.Users.AddAsync(user);
             await _unitOfWork.Guests.AddAsync(guest);
-            await _unitOfWork.Users.AssignRole(user, InitialData.GuestRole.Id);
 
+            await _unitOfWork.Users.AssignRole(user, InitialData.GuestRole.Id);
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
