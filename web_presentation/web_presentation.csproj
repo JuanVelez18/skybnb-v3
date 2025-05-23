@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>9abf7fad-04e5-4914-8abd-c2159b5e71bf</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aplication\application.csproj" />
+    <ProjectReference Include="..\presentations\presentations.csproj" />
+  </ItemGroup>
+
+</Project>
