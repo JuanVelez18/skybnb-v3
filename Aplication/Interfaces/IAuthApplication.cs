@@ -7,5 +7,6 @@ namespace application.Interfaces
     {
         Task<TokensDto> RegisterHost(UserCreationDto userCreationDto);
         Task<TokensDto> RegisterGuest(GuestCreationDto userCreationDto);
+        Task<TokensDto> Login(UserCredentialsDto credentials);
     }
 }

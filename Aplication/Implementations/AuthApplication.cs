@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using application.Core;
 using application.DTOs;
 using application.Interfaces;
 using domain.Entities;
@@ -58,7 +59,7 @@ namespace application.Implementations
             }
             else if (user.Roles.Any(r => r.Id == roleId))
             {
-                throw new InvalidOperationException($"The user already exists with role {role.Name}.");
+                throw new InvalidDataApplicationException($"The user already exists with role {role.Name}.");
             }
 
             return (user, role);
@@ -136,6 +137,32 @@ namespace application.Implementations
             return new TokensDto
             {
                 AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: role.Id),
+                RefreshToken = string.Empty
+            };
+        }
+
+        public async Task<TokensDto> Login(UserCredentialsDto credentials)
+        {
+            var user = await _unitOfWork.Users.GetByEmailAsync(credentials.Email);
+            if (user == null)
+            {
+                throw new InvalidDataApplicationException("Invalid email or password.");
+            }
+
+            var result = _passwordHasher.VerifyHashedPassword(
+                credentials,
+                user.PasswordHash,
+                credentials.Password
+            );
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                throw new InvalidDataApplicationException("Invalid email or password.");
+            }
+
+            return new TokensDto
+            {
+                AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: null),
                 RefreshToken = string.Empty
             };
         }
