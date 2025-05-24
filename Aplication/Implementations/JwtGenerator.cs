@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace application.Implementations
@@ -70,6 +71,16 @@ namespace application.Implementations
             string jwtTokenString = tokenHandler.WriteToken(securityToken);
 
             return jwtTokenString;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] randomBytes = new byte[32]; // 256 bits
+                rng.GetBytes(randomBytes);
+                return Convert.ToBase64String(randomBytes);
+            }
         }
     }
 }
