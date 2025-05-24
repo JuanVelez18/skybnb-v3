@@ -3,6 +3,7 @@ using application.Core;
 using application.DTOs;
 using application.Implementations;
 using application.Interfaces;
+using asp_services.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +75,9 @@ app.UseHttpsRedirection();
 
 // Authentication Middleware
 app.UseAuthorization();
+
+// Custom Error Handling Middleware
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
 
