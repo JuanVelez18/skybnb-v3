@@ -43,6 +43,11 @@ namespace asp_services.Middlewares
                     problemDetails.Title = "Unauthorized";
                     problemDetails.Detail = exception.Message;
                     break;
+                case NotFoundApplicationException _:
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    problemDetails.Title = "Not Found";
+                    problemDetails.Detail = exception.Message;
+                    break;
                 default:
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     problemDetails.Title = "Internal Server Error";
