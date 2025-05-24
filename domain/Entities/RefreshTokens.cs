@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace domain.Entities
 {
+    [Index(nameof(TokenValue), IsUnique = true)]
+    [Index(nameof(UserId))]
     public class RefreshTokens
     {
         public long Id { get; set; }
@@ -34,5 +37,11 @@ namespace domain.Entities
 
         [NotMapped]
         public bool IsActive => RevokedAt == null && !Used && DateTime.UtcNow < ExpiresAt;
+
+        public void ReplaceBy(RefreshTokens newToken)
+        {
+            Used = true;
+            ReplacedByToken = newToken;
+        }
     }
 }
