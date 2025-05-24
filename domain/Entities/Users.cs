@@ -14,7 +14,7 @@ namespace domain.Entities
         DateOnly birthday,
         int countryId,
         string? phone
-        )
+        ): ISoftDeletable
     {
         public Guid Id { get; private set; }
 
@@ -50,6 +50,7 @@ namespace domain.Entities
 
 
         public Countries? Country { get; set; }
+        public Guests? Guest { get; set; }
         public List<Roles> Roles { get; set; } = [];
         public List<Properties> HostedProperties { get; set; } = [];
         public List<Bookings> Bookings { get; set; } = [];

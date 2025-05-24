@@ -1,64 +1,46 @@
+using application.Core;
+using application.DTOs;
 using application.Implementations;
 using application.Interfaces;
-using asp_services.Dtos;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using repository.Conexions;
-using System.Text;
+using repository.Configuration;
+using repository.Implementations;
+using repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var secretKey = builder.Configuration["SecretKey"];
 var connectionString = builder.Configuration.GetConnectionString("ConexionString");
-
-if (string.IsNullOrEmpty(secretKey) || Encoding.UTF8.GetBytes(secretKey).Length < 32)
-{
-    throw new InvalidOperationException("La clave secreta JWT no está configurada correctamente o es demasiado corta.");
-}
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Inyecta el hasheador de constraseñas a los controladores
-builder.Services.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
-// Inyecta la aplicación de usuarios
-builder.Services.AddScoped<IUsersApplication, UsersApplication>();
+// JWT Configuration
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+
+// Dependecie Injection
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<UserCredentialsDto>>();
+builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddScoped<IUsersApplication, AuthApplication>();
+
+// Initializer
+builder.Services.AddScoped<IDataInitializer, DataInitializer>();
 
 // Inyecta instancia de conexión a la base de datos
 builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
-// 1. AGREGAR SERVICIOS DE AUTENTICACIÓN Y CONFIGURAR JWT BEARER
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; // Opcional, para algunos escenarios
-})
-.AddJwtBearer(options =>
-{
-    options.SaveToken = true; // Opcional: guarda el token en HttpContext después de la validación
-    options.RequireHttpsMetadata = builder.Environment.IsProduction(); // Requerir HTTPS en producción
-
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateLifetime = true, // Validar expiración del token
-
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-
-        // ClockSkew permite una pequeña desviación de tiempo entre el servidor que emite
-        // el token y el servidor que lo valida. El valor por defecto es 5 minutos.
-        // Para mayor seguridad, podrías reducirlo o ponerlo a TimeSpan.Zero
-        // si tus servidores están bien sincronizados.
-        ClockSkew = TimeSpan.FromMinutes(1)
-    };
-});
-
 var app = builder.Build();
-// Configure the HTTP request pipeline.
 
+// Initialize the database
+using (var scope = app.Services.CreateScope())
+{
+    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
+    await dataInitializer.InitializeAsync();
+}
+
+// Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

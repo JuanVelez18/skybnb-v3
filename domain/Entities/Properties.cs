@@ -15,7 +15,7 @@ namespace domain.Entities
         int typeId,
         Guid hostId,
         Guid addressId
-        )
+        ): ISoftDeletable
     {
         public Guid Id { get; private set; }
 

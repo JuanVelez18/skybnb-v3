@@ -130,12 +130,32 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 2,
-                            PermissionsId = 23
+                            PermissionsId = 10
                         },
                         new
                         {
                             RolesId = 2,
                             PermissionsId = 22
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 23
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 26
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 18
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 10
                         },
                         new
                         {
@@ -145,12 +165,12 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 3,
-                            PermissionsId = 23
+                            PermissionsId = 22
                         },
                         new
                         {
                             RolesId = 3,
-                            PermissionsId = 22
+                            PermissionsId = 23
                         },
                         new
                         {
@@ -392,7 +412,6 @@ namespace repository.Migrations
             modelBuilder.Entity("domain.Entities.Guests", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AddressId")
@@ -919,7 +938,15 @@ namespace repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("domain.Entities.Users", "User")
+                        .WithOne("Guest")
+                        .HasForeignKey("domain.Entities.Guests", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Address");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("domain.Entities.Properties", b =>
@@ -1009,6 +1036,8 @@ namespace repository.Migrations
             modelBuilder.Entity("domain.Entities.Users", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("Guest");
 
                     b.Navigation("HostedProperties");
 

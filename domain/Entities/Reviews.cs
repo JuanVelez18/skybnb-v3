@@ -10,7 +10,7 @@ namespace domain.Entities
         Guid guestId,
         decimal rating,
         string comment
-        )
+        ): ISoftDeletable
     {
         public Guid Id { get; private set; }
 
