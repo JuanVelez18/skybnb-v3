@@ -40,7 +40,7 @@ builder.Services.AddScoped<IUsersApplication, AuthApplication>();
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
 
-// Inyecta instancia de conexión a la base de datos
+// Inyecta instancia de conexiï¿½n a la base de datos
 builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
 // Add authentication
@@ -55,6 +55,8 @@ builder.Services.AddAuthentication(options =>
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = false, // Disable issuer validation
+        ValidateAudience = false, // Disable audience validation
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
