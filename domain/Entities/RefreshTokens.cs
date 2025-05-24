@@ -24,12 +24,13 @@ namespace domain.Entities
         [Required]
         public bool Used { get; set; } = false;
 
-        public int? ReplacedByTokenId { get; set; }
+        public long? ReplacedByTokenId { get; set; }
 
 
         public Users? User { get; set; }
         public RefreshTokens? ReplacedByToken { get; set; }
         public List<RefreshTokens> ReplacesTokens { get; set; } = [];
+
 
         [NotMapped]
         public bool IsActive => RevokedAt == null && !Used && DateTime.UtcNow < ExpiresAt;
