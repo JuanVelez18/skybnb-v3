@@ -197,5 +197,31 @@ namespace application.Implementations
                 RefreshToken = refreshToken
             };
         }
+
+        public async Task<TokensDto> RefreshToken(RefreshTokenDto refreshTokenDto)
+        {
+            var hashedToken = _tokenHasher.HashToken(refreshTokenDto.RefreshToken);
+            var refreshToken = await _unitOfWork.RefreshTokens.GetByHashedTokenAsync(hashedToken);
+            if (refreshToken == null || !refreshToken.IsActive)
+            {
+                throw new UnauthorizedApplicationException("Expired or invalid refresh token.");
+            }
+
+            var (newRefreshTokenEntity, newRefreshToken) = CreateRefreshToken(refreshToken.User!);
+            await _unitOfWork.RefreshTokens.AddAsync(newRefreshTokenEntity);
+
+            refreshToken.ReplaceBy(newRefreshTokenEntity);
+
+            await _unitOfWork.CommitAsync();
+
+            return new TokensDto
+            {
+                AccessToken = _jwtGenerator.GenerateAccessToken(
+                    userId: refreshToken.User!.Id,
+                    roleId: null
+                ),
+                RefreshToken = newRefreshToken
+            };
+        }
     }
 }
