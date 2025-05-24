@@ -191,6 +191,8 @@ namespace application.Implementations
             var (refreshTokenEntity, refreshToken) = CreateRefreshToken(user);
             await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity);
 
+            await _unitOfWork.CommitAsync();
+
             return new TokensDto
             {
                 AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: null),
