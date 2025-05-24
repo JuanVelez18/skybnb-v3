@@ -43,5 +43,10 @@ namespace domain.Entities
             Used = true;
             ReplacedByToken = newToken;
         }
+
+        public void Revoke()
+        {
+            RevokedAt = DateTime.UtcNow;
+        }
     }
 }
