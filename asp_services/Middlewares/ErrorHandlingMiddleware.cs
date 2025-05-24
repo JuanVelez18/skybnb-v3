@@ -38,6 +38,11 @@ namespace asp_services.Middlewares
                     problemDetails.Title = "Invalid Data";
                     problemDetails.Detail = exception.Message;
                     break;
+                case UnauthorizedApplicationException _:
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    problemDetails.Title = "Unauthorized";
+                    problemDetails.Detail = exception.Message;
+                    break;
                 default:
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     problemDetails.Title = "Internal Server Error";
