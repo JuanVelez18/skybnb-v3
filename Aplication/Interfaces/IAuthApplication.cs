@@ -9,5 +9,6 @@ namespace application.Interfaces
         Task<TokensDto> RegisterGuest(GuestCreationDto userCreationDto);
         Task<TokensDto> Login(UserCredentialsDto credentials);
         Task<TokensDto> RefreshToken(RefreshTokenDto refreshTokenDto);
+        Task Logout(Guid userId, string refreshToken);
     }
 }

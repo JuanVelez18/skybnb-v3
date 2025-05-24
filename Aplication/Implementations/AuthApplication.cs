@@ -191,6 +191,16 @@ namespace application.Implementations
             var (refreshTokenEntity, refreshToken) = CreateRefreshToken(user);
             await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity);
 
+            var auditory = new Auditories(
+                userId: user.Id,
+                action: "User login",
+                timestamp: DateTime.UtcNow,
+                entity: null,
+                entityId: null,
+                details: null
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
@@ -211,7 +221,6 @@ namespace application.Implementations
 
             var (newRefreshTokenEntity, newRefreshToken) = CreateRefreshToken(refreshToken.User!);
             await _unitOfWork.RefreshTokens.AddAsync(newRefreshTokenEntity);
-
             refreshToken.ReplaceBy(newRefreshTokenEntity);
 
             await _unitOfWork.CommitAsync();
@@ -224,6 +233,38 @@ namespace application.Implementations
                 ),
                 RefreshToken = newRefreshToken
             };
+        }
+
+        public async Task Logout(Guid userId, string refreshToken)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundApplicationException("User not found.");
+            }
+
+            var hashedToken = _tokenHasher.HashToken(refreshToken);
+            var token = await _unitOfWork.RefreshTokens.GetByHashedTokenAsync(hashedToken);
+            if (token == null || !token.IsActive) return;
+
+            if (token.UserId != user.Id)
+            {
+                throw new UnauthorizedApplicationException("This token does not belong to the user.");
+            }
+
+            token.Revoke();
+
+            var auditory = new Auditories(
+                userId: user.Id,
+                action: "User logout",
+                timestamp: DateTime.UtcNow,
+                entity: null,
+                entityId: null,
+                details: null
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+
+            await _unitOfWork.CommitAsync();
         }
     }
 }
