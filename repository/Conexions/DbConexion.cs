@@ -19,6 +19,7 @@ namespace repository.Conexions
         public DbSet<Properties> Properties { get; set; }
         public DbSet<Bookings> Bookings { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
+        public DbSet<RefreshTokens> RefreshTokens { get; set; }
 
         private static LambdaExpression CreateSoftDeletedFilter(Type type)
         {

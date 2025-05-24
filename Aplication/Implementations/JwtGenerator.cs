@@ -4,11 +4,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace application.Implementations
 {
-    public class JwtGenerator: IJwtGenerator
+    public class JwtGenerator : IJwtGenerator
     {
         private readonly JwtOptions _options;
 
@@ -30,7 +31,7 @@ namespace application.Implementations
             }
         }
 
-        public string GenerateAccessToken(Guid userId, int roleId)
+        public string GenerateAccessToken(Guid userId, int? roleId)
         {
             // 1. Create the symmetric security key from the secret key
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
@@ -41,11 +42,16 @@ namespace application.Implementations
             var now = DateTime.UtcNow;
             // 3. Define the claims for the payload
             var claims = new List<Claim>
-        {
-            new (JwtRegisteredClaimNames.Sub, userId.ToString()), // "sub" (Subject)
-            new (JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // "iat" (Issued At)
-            new ("currentRole", roleId.ToString(), ClaimValueTypes.UInteger32)
-        };
+            {
+                new (JwtRegisteredClaimNames.Sub, userId.ToString()), // "sub" (Subject)
+                new (JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // "iat" (Issued At)
+            };
+            if (roleId != null)
+            {
+                #pragma warning disable CS8604 // Possible null reference argument.
+                claims.Add(new("currentRole", roleId.ToString(), ClaimValueTypes.UInteger32));
+                #pragma warning restore CS8604 // Possible null reference argument.
+            };
 
             // 4. Create the token descriptor
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -65,6 +71,16 @@ namespace application.Implementations
             string jwtTokenString = tokenHandler.WriteToken(securityToken);
 
             return jwtTokenString;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] randomBytes = new byte[32]; // 256 bits
+                rng.GetBytes(randomBytes);
+                return Convert.ToBase64String(randomBytes);
+            }
         }
     }
 }

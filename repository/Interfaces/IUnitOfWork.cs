@@ -6,6 +6,7 @@
         IGuestRepository Guests { get; }
         IAddressRepository Addresses { get; }
         IRoleRepository Roles { get; }
+        IRefreshTokenRepository RefreshTokens { get; }
         IAuditoryRepository Auditories { get; }
 
         Task<int> CommitAsync();

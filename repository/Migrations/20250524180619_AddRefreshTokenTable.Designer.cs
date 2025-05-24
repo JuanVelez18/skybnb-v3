@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using repository.Conexions;
 
@@ -11,9 +12,11 @@ using repository.Conexions;
 namespace repository.Migrations
 {
     [DbContext(typeof(DbConexion))]
-    partial class DbConexionModelSnapshot : ModelSnapshot
+    [Migration("20250524180619_AddRefreshTokenTable")]
+    partial class AddRefreshTokenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -706,7 +709,10 @@ namespace repository.Migrations
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("ReplacedByTokenId")
+                    b.Property<int?>("ReplacedByTokenId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ReplacedByTokenId1")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("RevokedAt")
@@ -714,7 +720,7 @@ namespace repository.Migrations
 
                     b.Property<string>("TokenValue")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Used")
                         .HasColumnType("bit");
@@ -724,10 +730,7 @@ namespace repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReplacedByTokenId");
-
-                    b.HasIndex("TokenValue")
-                        .IsUnique();
+                    b.HasIndex("ReplacedByTokenId1");
 
                     b.HasIndex("UserId");
 
@@ -1022,7 +1025,7 @@ namespace repository.Migrations
                 {
                     b.HasOne("domain.Entities.RefreshTokens", "ReplacedByToken")
                         .WithMany("ReplacesTokens")
-                        .HasForeignKey("ReplacedByTokenId");
+                        .HasForeignKey("ReplacedByTokenId1");
 
                     b.HasOne("domain.Entities.Users", "User")
                         .WithMany()
