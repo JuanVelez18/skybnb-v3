@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using application.Interfaces;
 using application.DTOs;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asp_services.Controllers
 {
@@ -42,6 +44,19 @@ namespace asp_services.Controllers
         {
             var tokens = await _usersApplication.RefreshToken(refreshTokenDto);
             return Ok(tokens);
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _usersApplication.Logout(
+                userId,
+                refreshTokenDto.RefreshToken
+            );
+
+            return NoContent();
         }
     }
 }
