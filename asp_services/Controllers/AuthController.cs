@@ -27,13 +27,20 @@ namespace asp_services.Controllers
         {
             var tokens = await _usersApplication.RegisterGuest(guestCreationDto);
             return Ok(tokens);
-           
+
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserCredentialsDto credentials)
         {
             var tokens = await _usersApplication.Login(credentials);
+            return Ok(tokens);
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var tokens = await _usersApplication.RefreshToken(refreshTokenDto);
             return Ok(tokens);
         }
     }
