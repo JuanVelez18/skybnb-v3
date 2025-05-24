@@ -14,16 +14,19 @@ namespace application.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<UserCredentialsDto> _passwordHasher;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly ITokenHasher _tokenHasher;
 
         public AuthApplication(
             IUnitOfWork unitOfWork,
             IPasswordHasher<UserCredentialsDto> passwordHasher,
-            IJwtGenerator jwtGenerator
+            IJwtGenerator jwtGenerator,
+            ITokenHasher tokenHasher
         )
         {
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
             _jwtGenerator = jwtGenerator;
+            _tokenHasher = tokenHasher;
         }
 
         private Users CreateBaseUser(UserCreationDto userCreationDto)
@@ -41,6 +44,25 @@ namespace application.Implementations
                 countryId: userCreationDto.CountryId,
                 phone: userCreationDto.Phone
             );
+        }
+
+        private (RefreshTokens, string) CreateRefreshToken(Users user)
+        {
+            var token = _jwtGenerator.GenerateRefreshToken();
+            var hashedToken = _tokenHasher.HashToken(token);
+            var now = DateTime.UtcNow;
+            var expiresAt = now.AddDays(7);
+
+            var entity = new RefreshTokens()
+            {
+                TokenValue = hashedToken,
+                UserId = user.Id,
+                IssuedAt = now,
+                ExpiresAt = expiresAt,
+                Used = false
+            };
+
+            return (entity, token);
         }
 
         private async Task<(Users, Roles)> GetUserAndRole(UserCreationDto userDto, int roleId)
@@ -80,12 +102,15 @@ namespace application.Implementations
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
 
+            var (refreshTokenEntity, refreshToken) = CreateRefreshToken(user);
+            await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity);
+
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
             {
                 AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: role.Id),
-                RefreshToken = string.Empty
+                RefreshToken = refreshToken
             };
         }
 
@@ -132,12 +157,15 @@ namespace application.Implementations
             await _unitOfWork.Auditories.AddAsync(userAuditory);
             await _unitOfWork.Auditories.AddAsync(addressAuditory);
 
+            var (refreshTokenEntity, refreshToken) = CreateRefreshToken(user);
+            await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity);
+
             await _unitOfWork.CommitAsync();
 
             return new TokensDto
             {
                 AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: role.Id),
-                RefreshToken = string.Empty
+                RefreshToken = refreshToken
             };
         }
 
@@ -160,10 +188,13 @@ namespace application.Implementations
                 throw new InvalidDataApplicationException("Invalid email or password.");
             }
 
+            var (refreshTokenEntity, refreshToken) = CreateRefreshToken(user);
+            await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity);
+
             return new TokensDto
             {
                 AccessToken = _jwtGenerator.GenerateAccessToken(userId: user.Id, roleId: null),
-                RefreshToken = string.Empty
+                RefreshToken = refreshToken
             };
         }
     }

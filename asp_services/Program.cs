@@ -30,10 +30,11 @@ builder.Services.AddControllers();
 // JWT Configuration
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
-// Dependecie Injection
+// Dependecies Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<UserCredentialsDto>>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
 
 // Initializer
