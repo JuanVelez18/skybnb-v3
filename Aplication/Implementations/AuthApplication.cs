@@ -143,7 +143,10 @@ namespace application.Implementations
                 action: "Register guest",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user),
+                details: JsonSerializer.Serialize(user, new JsonSerializerOptions
+                {
+                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+                }),
                 timestamp: auditoryNow
             );
             var addressAuditory = new Auditories(
