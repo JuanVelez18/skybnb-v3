@@ -40,8 +40,8 @@ namespace application.Implementations
                     userCreationDto.ToCredentials(),
                     userCreationDto.Password
                 ),
-                birthday: userCreationDto.Birthday,
-                countryId: userCreationDto.CountryId,
+                birthday: userCreationDto.Birthday!.Value,
+                countryId: userCreationDto.CountryId!.Value,
                 phone: userCreationDto.Phone
             );
         }
@@ -120,10 +120,10 @@ namespace application.Implementations
 
             var address = new Addresses(
                 street: guestCreationDto.Address.Street,
-                streetNumber: guestCreationDto.Address.StreetNumber,
-                intersectionNumber: guestCreationDto.Address.IntersectionNumber,
-                doorNumber: guestCreationDto.Address.DoorNumber,
-                cityId: guestCreationDto.Address.CityId,
+                streetNumber: guestCreationDto.Address.StreetNumber!.Value,
+                intersectionNumber: guestCreationDto.Address.IntersectionNumber!.Value,
+                doorNumber: guestCreationDto.Address.DoorNumber!.Value,
+                cityId: guestCreationDto.Address.CityId!.Value,
                 complement: guestCreationDto.Address.Complement,
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
@@ -143,7 +143,10 @@ namespace application.Implementations
                 action: "Register guest",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user),
+                details: JsonSerializer.Serialize(user, new JsonSerializerOptions
+                {
+                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+                }),
                 timestamp: auditoryNow
             );
             var addressAuditory = new Auditories(
