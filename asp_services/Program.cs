@@ -36,6 +36,7 @@ builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<U
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
+builder.Services.AddScoped<ICountryApplication, CountryApplication>();
 
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
