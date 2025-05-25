@@ -11,6 +11,7 @@ namespace repository.Implementations
         public IAddressRepository Addresses { get; private set; }
         public IRoleRepository Roles { get; private set; }
         public IRefreshTokenRepository RefreshTokens { get; private set; }
+        public ICountryRepository Countries { get; private set; }
         public IAuditoryRepository Auditories { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
@@ -21,6 +22,7 @@ namespace repository.Implementations
             Addresses = new AddressRepository(_conexion);
             Roles = new RoleRepository(_conexion);
             RefreshTokens = new RefreshTokenRepository(_conexion);
+            Countries = new CountryRepository(_conexion);
             Auditories = new AuditoryRepository(_conexion);
         }
 
