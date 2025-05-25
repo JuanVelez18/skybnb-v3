@@ -40,8 +40,8 @@ namespace application.Implementations
                     userCreationDto.ToCredentials(),
                     userCreationDto.Password
                 ),
-                birthday: userCreationDto.Birthday,
-                countryId: userCreationDto.CountryId,
+                birthday: userCreationDto.Birthday!.Value,
+                countryId: userCreationDto.CountryId!.Value,
                 phone: userCreationDto.Phone
             );
         }
