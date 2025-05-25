@@ -6,22 +6,22 @@ namespace application.DTOs
     {
         [Required(ErrorMessage = "Street is required")]
         [MinLength(3, ErrorMessage = "Street must be at least 3 characters long")]
-        public required string Street { get; set; }
+        public string Street { get; set; }
 
         [Required(ErrorMessage = "Street number is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Street number must be greater than 0")]
-        public int StreetNumber { get; set; }
+        public int? StreetNumber { get; set; }
 
         [Required(ErrorMessage = "Intersection number is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Intersection number must be greater than 0")]
-        public int IntersectionNumber { get; set; }
+        public int? IntersectionNumber { get; set; }
 
         [Required(ErrorMessage = "Door number is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Door number must be greater than 0")]
-        public int DoorNumber { get; set; }
+        public int? DoorNumber { get; set; }
 
-        [Required(ErrorMessage = "City ID is required")]
-        public required int CityId { get; set; }
+        [Required(ErrorMessage = "City is required")]
+        public int? CityId { get; set; }
 
         [MaxLength(200, ErrorMessage = "Complement must be at most 200 characters long")]
         public string? Complement { get; set; }

@@ -17,7 +17,7 @@ namespace repository.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -692,6 +692,48 @@ namespace repository.Migrations
                     b.ToTable("PropertyTypes");
                 });
 
+            modelBuilder.Entity("domain.Entities.RefreshTokens", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("IssuedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("ReplacedByTokenId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TokenValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReplacedByTokenId");
+
+                    b.HasIndex("TokenValue")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("domain.Entities.Reviews", b =>
                 {
                     b.Property<Guid>("Id")
@@ -976,6 +1018,23 @@ namespace repository.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("domain.Entities.RefreshTokens", b =>
+                {
+                    b.HasOne("domain.Entities.RefreshTokens", "ReplacedByToken")
+                        .WithMany("ReplacesTokens")
+                        .HasForeignKey("ReplacedByTokenId");
+
+                    b.HasOne("domain.Entities.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReplacedByToken");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("domain.Entities.Reviews", b =>
                 {
                     b.HasOne("domain.Entities.Bookings", "Booking")
@@ -1031,6 +1090,11 @@ namespace repository.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("domain.Entities.RefreshTokens", b =>
+                {
+                    b.Navigation("ReplacesTokens");
                 });
 
             modelBuilder.Entity("domain.Entities.Users", b =>
