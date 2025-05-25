@@ -1,10 +1,38 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
+
+    if (Request.Cookies.ContainsKey("AccessToken"))
+    {
+        Layout = null;
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Request.Cookies.ContainsKey("AccessToken"))
+{
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home</title>
+    </head>
+
+    <body>
+        <div>
+            <h1>Welcome Back!</h1>
+            <p>You are logged in</p>
+        </div>
+    </body>
+
+    </html>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome to Skybnb</h1>
+        <p>Skybnb is a platform that connects travelers with hosts offering unique accommodations around the world.</p>
+    </div>
+}
