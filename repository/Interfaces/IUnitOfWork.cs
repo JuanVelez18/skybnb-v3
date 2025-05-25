@@ -8,6 +8,7 @@
         IRoleRepository Roles { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         ICountryRepository Countries { get; }
+        ICityRepository Cities { get; }
         IAuditoryRepository Auditories { get; }
 
         Task<int> CommitAsync();
