@@ -15,7 +15,6 @@ namespace presentations.Implementations
             var response = await _comunication.Execute<TokensDto, UserCreationDto>("/auth/register/host", userCreationDto);
             if (response.Ok)
             {
-                _comunication.Authenticate(response.Data!.AccessToken, response.Data.RefreshToken);
                 return response.Data!;
             }
             else
@@ -29,7 +28,6 @@ namespace presentations.Implementations
             var response = await _comunication.Execute<TokensDto, GuestCreationDto>("/auth/register/guest", guestCreationDto);
             if (response.Ok)
             {
-                _comunication.Authenticate(response.Data!.AccessToken, response.Data.RefreshToken);
                 return response.Data!;
             }
             else
