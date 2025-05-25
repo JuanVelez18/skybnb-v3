@@ -6,6 +6,7 @@ using application.Interfaces;
 using asp_services.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using repository.Conexions;
@@ -62,6 +63,23 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
         ClockSkew = TimeSpan.FromSeconds(30)
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "Unauthorized",
+                Detail = context.ErrorDescription
+            };
+
+            return context.Response.WriteAsJsonAsync(problemDetails);
+        }
     };
 });
 
