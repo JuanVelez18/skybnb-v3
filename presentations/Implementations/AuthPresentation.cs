@@ -20,7 +20,7 @@ namespace presentations.Implementations
             }
             else
             {
-                throw new Exception($"Error: {response.Message}");
+                throw new Exception($"Error: {response.Error!.Detail}");
             }
         }
 
@@ -34,7 +34,7 @@ namespace presentations.Implementations
             }
             else
             {
-                throw new Exception($"Error: {response.Message}");
+                throw new Exception($"Error: {response.Error!.Detail}");
             }
         }
     }

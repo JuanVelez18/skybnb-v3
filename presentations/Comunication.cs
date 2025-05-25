@@ -3,6 +3,8 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using application.DTOs;
 using Microsoft.Extensions.Options;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace presentations
 {
@@ -26,10 +28,52 @@ namespace presentations
         public class Response<T>
         {
             public bool Ok { get; init; }
-            public string Message { get; init; } = string.Empty;
             public T? Data { get; init; }
+            public ProblemDetails? Error { get; init; }
         }
 
+        private async Task<Response<T>> RefreshAndRetry<T, D>(string endpoint, D? data) where D : class
+        {
+            if (string.IsNullOrEmpty(_refreshToken))
+            {
+                throw new InvalidOperationException("Refresh token is not set.");
+            }
+
+            var httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(30)
+            };
+
+            var refreshMessage = await httpClient.PostAsJsonAsync($"{_host}/auth/refresh", new RefreshTokenDto
+            {
+                RefreshToken = _refreshToken
+            });
+
+            if (!refreshMessage.IsSuccessStatusCode)
+            {
+                return new Response<T>
+                {
+                    Ok = false,
+                    Error = new ProblemDetails
+                    {
+                        Title = "Login Required",
+                        Detail = "Please log in again."
+                    }
+                };
+            }
+
+            var content = await refreshMessage.Content.ReadAsStringAsync();
+            var tokens = JsonSerializer.Deserialize<TokensDto>(content)!;
+            _accessToken = tokens.AccessToken;
+            _refreshToken = tokens.RefreshToken;
+
+            return await Execute<T, D>(endpoint, data);
+        }
+
+        public async Task<Response<T>> Execute<T>(string endpoint) where T : class
+        {
+            return await Execute<T, object>(endpoint, null);
+        }
         public async Task<Response<T>> Execute<T, D>(string endpoint, D? data) where D : class
         {
             Response<T> response;
@@ -53,12 +97,22 @@ namespace presentations
 
                 var content = await message.Content.ReadAsStringAsync();
 
+
+                if (message.StatusCode == HttpStatusCode.Unauthorized && content.Contains("token expired", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return await RefreshAndRetry<T, D>(endpoint, data);
+                }
+
                 if (!message.IsSuccessStatusCode)
                 {
                     response = new Response<T>
                     {
                         Ok = false,
-                        Message = message.ReasonPhrase ?? "Unknown error"
+                        Error = JsonSerializer.Deserialize<ProblemDetails>(content) ?? new ProblemDetails
+                        {
+                            Title = "Error",
+                            Detail = "The request failed.",
+                        }
                     };
                 }
                 else
@@ -66,7 +120,6 @@ namespace presentations
                     response = new Response<T>
                     {
                         Ok = true,
-                        Message = message.ReasonPhrase ?? "Success",
                         Data = JsonSerializer.Deserialize<T>(content)
                     };
                 }
@@ -77,7 +130,11 @@ namespace presentations
                 response = new Response<T>
                 {
                     Ok = false,
-                    Message = ex.Message
+                    Error = new ProblemDetails
+                    {
+                        Title = "Exception",
+                        Detail = ex.Message
+                    }
                 };
             }
             finally
