@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using application.DTOs;
+using Microsoft.Extensions.Options;
 
 namespace presentations
 {
@@ -11,9 +12,15 @@ namespace presentations
         private string? _accessToken;
         private string? _refreshToken;
 
-        public Comunication(string host)
+        public Comunication(IOptions<PresentationConfiguration>? options)
         {
-            _host = host;
+            if (options == null)
+                throw new ArgumentNullException(nameof(options), "Options cannot be null.");
+
+            if (string.IsNullOrEmpty(options.Value.Host))
+                throw new ArgumentNullException(nameof(options.Value.Host), "Host cannot be null or empty.");
+
+            _host = options.Value.Host;
         }
 
         public class Response<T>

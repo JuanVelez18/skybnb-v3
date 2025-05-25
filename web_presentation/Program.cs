@@ -11,6 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.Configure<PresentationConfiguration>(builder.Configuration.GetSection("PresentationConfiguration"));
 
 // Add application services
+builder.Services.AddSingleton<Comunication>();
 builder.Services.AddSingleton<IAuthPresentation, AuthPresentation>();
 
 var app = builder.Build();

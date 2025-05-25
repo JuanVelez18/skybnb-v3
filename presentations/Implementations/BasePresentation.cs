@@ -8,15 +8,9 @@ namespace presentations.Implementations
     {
         protected Comunication _comunication;
 
-        public BasePresentation(IOptions<PresentationConfiguration> options)
+        public BasePresentation(Comunication comunication)
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options), "Options cannot be null.");
-
-            if (string.IsNullOrEmpty(options.Value.Host))
-                throw new ArgumentNullException(nameof(options.Value.Host), "Host cannot be null or empty.");
-
-            _comunication = new Comunication(options.Value.Host);
+            _comunication = comunication;
         }
 
         public void Authenticate(string accessToken, string refreshToken)

@@ -6,7 +6,7 @@ namespace presentations.Implementations
 {
     public class AuthPresentation : BasePresentation, IAuthPresentation
     {
-        public AuthPresentation(IOptions<PresentationConfiguration> options) : base(options)
+        public AuthPresentation(Comunication comunication) : base(comunication)
         {
         }
 
