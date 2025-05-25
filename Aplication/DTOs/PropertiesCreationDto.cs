@@ -10,7 +10,7 @@ namespace application.DTOs
 
         [Required(ErrorMessage = "Description is required")]
         [MaxLength(2000, ErrorMessage = "Description must be at most 2000 characters long")]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [Required(ErrorMessage = "Number of bathrooms is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Number of bathrooms must 0 or greater")]
@@ -29,16 +29,16 @@ namespace application.DTOs
         public int MaxGuests { get; set; }
 
         [Required(ErrorMessage = "Base price per night is required")]
-        [Range(typeof(decimal),"0.01", "1000000", ErrorMessage = "Base price per night must be greater than 0")]
+        [Range(0.01, double.MaxValue , ErrorMessage = "Base price per night must be greater than 0")]
         public decimal BasePricePerNight { get; set; }
 
         [Required(ErrorMessage = "Type ID is required")]
-        public required int TypeId { get; set; }
+        public int TypeId { get; set; }
 
         [Required(ErrorMessage = "Host ID is required")]
-        public required Guid HostId { get; set; }
+        public Guid HostId { get; set; }
 
         [Required(ErrorMessage = "Address ID is required")]
-        public required Guid AddressId { get; set; }
+        public Guid AddressId { get; set; }
     }
 }
