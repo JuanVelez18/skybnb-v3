@@ -38,6 +38,7 @@ builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
 builder.Services.AddScoped<ICountryApplication, CountryApplication>();
+builder.Services.AddScoped<ICitytApplication, CityApplication>();
 
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
