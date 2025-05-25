@@ -11,9 +11,10 @@ builder.Services.AddRazorPages();
 builder.Services.Configure<PresentationConfiguration>(builder.Configuration.GetSection("PresentationConfiguration"));
 
 // Add application services
-builder.Services.AddSingleton<Comunication>();
-builder.Services.AddSingleton<IAuthPresentation, AuthPresentation>();
-builder.Services.AddSingleton<ICountryPresentation, CountryPresentation>();
+builder.Services.AddScoped<Comunication>();
+builder.Services.AddScoped<IAuthPresentation, AuthPresentation>();
+builder.Services.AddScoped<ICountryPresentation, CountryPresentation>();
+builder.Services.AddScoped<ICitytPresentation, CityPresentation>();
 
 var app = builder.Build();
 
