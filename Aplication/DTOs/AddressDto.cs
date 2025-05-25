@@ -20,7 +20,7 @@ namespace application.DTOs
         [Range(1, int.MaxValue, ErrorMessage = "Door number must be greater than 0")]
         public int? DoorNumber { get; set; }
 
-        [Required(ErrorMessage = "City ID is required")]
+        [Required(ErrorMessage = "City is required")]
         public int? CityId { get; set; }
 
         [MaxLength(200, ErrorMessage = "Complement must be at most 200 characters long")]
