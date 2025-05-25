@@ -31,6 +31,14 @@ namespace asp_services.Middlewares
                 Instance = context.Request.Path
             };
 
+            // TODO: Log the exception details to a logging service or file
+            var innerException = exception.InnerException ?? exception;
+            while (innerException.InnerException != null)
+            {
+                innerException = innerException.InnerException;
+            }
+            Console.WriteLine($"Url: {context.Request.Path}, Method: {context.Request.Method}, Exception: {innerException.Message}");
+
             switch (exception)
             {
                 case InvalidDataApplicationException _:
