@@ -120,10 +120,10 @@ namespace application.Implementations
 
             var address = new Addresses(
                 street: guestCreationDto.Address.Street,
-                streetNumber: guestCreationDto.Address.StreetNumber,
-                intersectionNumber: guestCreationDto.Address.IntersectionNumber,
-                doorNumber: guestCreationDto.Address.DoorNumber,
-                cityId: guestCreationDto.Address.CityId,
+                streetNumber: guestCreationDto.Address.StreetNumber!.Value,
+                intersectionNumber: guestCreationDto.Address.IntersectionNumber!.Value,
+                doorNumber: guestCreationDto.Address.DoorNumber!.Value,
+                cityId: guestCreationDto.Address.CityId!.Value,
                 complement: guestCreationDto.Address.Complement,
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
