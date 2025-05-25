@@ -11,6 +11,8 @@ namespace repository.Implementations
         public IAddressRepository Addresses { get; private set; }
         public IRoleRepository Roles { get; private set; }
         public IPropertiesRepository Properties { get; private set; }
+        public IReviewsRepository Reviews { get; private set; }
+        public IBookingsRepository Bookings { get; private set; }
         public IAuditoryRepository Auditories { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
@@ -21,6 +23,8 @@ namespace repository.Implementations
             Addresses = new AddressRepository(_conexion);
             Roles = new RoleRepository(_conexion);
             Properties = new PropertiesRepository(_conexion);
+            Reviews = new ReviewsRepository(_conexion);
+            Bookings = new BookingRepository(_conexion);
             Auditories = new AuditoryRepository(_conexion);
         }
 
