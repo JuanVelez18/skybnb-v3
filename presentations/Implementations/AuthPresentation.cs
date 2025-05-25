@@ -4,18 +4,10 @@ using presentations.Interfaces;
 
 namespace presentations.Implementations
 {
-    public class AuthPresentation : IAuthPresentation
+    public class AuthPresentation : BasePresentation, IAuthPresentation
     {
-        private readonly PresentationConfiguration _configuration;
-        private readonly Comunication _comunication;
-
-        public AuthPresentation(IOptions<PresentationConfiguration> options)
+        public AuthPresentation(IOptions<PresentationConfiguration> options) : base(options)
         {
-            _configuration = options.Value;
-            if (string.IsNullOrEmpty(_configuration.Host))
-                throw new ArgumentNullException(nameof(_configuration.Host), "Host cannot be null or empty.");
-
-            _comunication = new Comunication(_configuration.Host);
         }
 
         public async Task<TokensDto> RegisterHostAsync(UserCreationDto userCreationDto)

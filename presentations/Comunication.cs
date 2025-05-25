@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using application.DTOs;
 
 namespace presentations
 {
@@ -22,7 +23,7 @@ namespace presentations
             public T? Data { get; init; }
         }
 
-        public async Task<Response<T>> Execute<T, D>(string endpoint, D? data) where D: class
+        public async Task<Response<T>> Execute<T, D>(string endpoint, D? data) where D : class
         {
             Response<T> response;
             var url = $"{_host}{endpoint}";
@@ -52,7 +53,8 @@ namespace presentations
                         Ok = false,
                         Message = message.ReasonPhrase ?? "Unknown error"
                     };
-                } else
+                }
+                else
                 {
                     response = new Response<T>
                     {
@@ -75,7 +77,7 @@ namespace presentations
             {
                 httpClient.Dispose();
             }
-            
+
             return response!;
         }
 
@@ -88,6 +90,30 @@ namespace presentations
 
             _accessToken = accessToken;
             _refreshToken = refreshToken;
+        }
+
+        public TokensDto GetTokens()
+        {
+            if (string.IsNullOrEmpty(_accessToken) || string.IsNullOrEmpty(_refreshToken))
+            {
+                throw new InvalidOperationException("Access token and refresh token must be set before calling GetTokens.");
+            }
+
+            return new TokensDto
+            {
+                AccessToken = _accessToken,
+                RefreshToken = _refreshToken
+            };
+        }
+
+        public bool VerifyTokenRotation(string currentAccessToken, string currentRefreshToken)
+        {
+            if (string.IsNullOrEmpty(currentAccessToken) || string.IsNullOrEmpty(currentRefreshToken))
+            {
+                throw new ArgumentException("Access token and refresh token cannot be null or empty.");
+            }
+
+            return _accessToken != currentAccessToken || _refreshToken != currentRefreshToken;
         }
     }
 }
