@@ -10,6 +10,9 @@ namespace repository.Implementations
         public IGuestRepository Guests { get; private set; }
         public IAddressRepository Addresses { get; private set; }
         public IRoleRepository Roles { get; private set; }
+        public IPropertiesRepository Properties { get; private set; }
+        public IReviewsRepository Reviews { get; private set; }
+        public IBookingsRepository Bookings { get; private set; }
         public IRefreshTokenRepository RefreshTokens { get; private set; }
         public ICountryRepository Countries { get; private set; }
         public ICityRepository Cities { get; private set; }
@@ -22,10 +25,13 @@ namespace repository.Implementations
             Guests = new GuestRepository(_conexion);
             Addresses = new AddressRepository(_conexion);
             Roles = new RoleRepository(_conexion);
+            Properties = new PropertiesRepository(_conexion);
+            Reviews = new ReviewsRepository(_conexion);
+            Bookings = new BookingRepository(_conexion);
             RefreshTokens = new RefreshTokenRepository(_conexion);
             Countries = new CountryRepository(_conexion);
-            Auditories = new AuditoryRepository(_conexion);
             Cities = new CityRepository(_conexion);
+            Auditories = new AuditoryRepository(_conexion);
         }
 
         public async Task<int> CommitAsync()
