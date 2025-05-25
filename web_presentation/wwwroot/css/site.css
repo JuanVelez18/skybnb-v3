@@ -7,9 +7,11 @@ a {
   color: #0366d6;
 }
 .btn-primary {
+  padding: 0.5rem 1rem;
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+  border-radius: 5px;
 }
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
@@ -25,6 +27,9 @@ html {
   html {
     font-size: 16px;
   }
+}
+p {
+  margin: 0;
 }
 .border-top {
   border-top: 1px solid #e5e5e5;
