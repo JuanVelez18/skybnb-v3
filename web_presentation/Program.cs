@@ -13,6 +13,7 @@ builder.Services.Configure<PresentationConfiguration>(builder.Configuration.GetS
 // Add application services
 builder.Services.AddSingleton<Comunication>();
 builder.Services.AddSingleton<IAuthPresentation, AuthPresentation>();
+builder.Services.AddSingleton<ICountryPresentation, CountryPresentation>();
 
 var app = builder.Build();
 
