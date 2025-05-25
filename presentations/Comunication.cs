@@ -120,7 +120,10 @@ namespace presentations
                     response = new Response<T>
                     {
                         Ok = true,
-                        Data = JsonSerializer.Deserialize<T>(content)
+                        Data = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        })
                     };
                 }
 
