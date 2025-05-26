@@ -6,6 +6,8 @@ namespace repository.Interfaces
     {
         Task<Users?> GetByEmailAsync(string email);
         new Task<Users?> GetByIdAsync(Guid id);
+
+        Task<List<Permissions>> GetUserPermissionsAsync(Guid userId);
         void AssignRole(Users user, Roles role);
     }
 }
