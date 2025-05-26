@@ -1,4 +1,5 @@
 ﻿@page
+@using web_presentation.Core
 @model web_presentation.Pages.RegisterModel
 @{
 	ViewData["Title"] = "Registration";
@@ -175,7 +176,7 @@
 					</button>
 
 					<p>
-						Already have an account? <a asp-page="/Login">Log in</a>
+						Already have an account? <a asp-page="@Routes.Login">Log in</a>
 					</p>
 				</div>
 			</div>

@@ -2,6 +2,7 @@ using application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using presentations.Interfaces;
+using web_presentation.Core;
 
 namespace web_presentation.Pages
 {
@@ -116,7 +117,7 @@ namespace web_presentation.Pages
 
             SetTokensInCookies(tokens);
 
-            return RedirectToPage("/Index");
+            return RedirectToPage(@Routes.Home);
         }
     }
 }
