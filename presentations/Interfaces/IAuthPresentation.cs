@@ -6,5 +6,6 @@ namespace presentations.Interfaces
     {
         Task<TokensDto> RegisterHostAsync(UserCreationDto userCreationDto);
         Task<TokensDto> RegisterGuestAsync(GuestCreationDto guestCreationDto);
+        Task<TokensDto> LoginAsync(UserCredentialsDto loginDto);
     }
 }

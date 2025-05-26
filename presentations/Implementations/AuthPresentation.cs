@@ -35,5 +35,18 @@ namespace presentations.Implementations
                 throw new Exception($"Error: {response.Error!.Detail}");
             }
         }
+
+        public async Task<TokensDto> LoginAsync(UserCredentialsDto loginDto)
+        {
+            var response = await _comunication.Execute<TokensDto, UserCredentialsDto>("/auth/login", loginDto);
+            if (response.Ok)
+            {
+                return response.Data!;
+            }
+            else
+            {
+                throw new Exception($"Error: {response.Error!.Detail}");
+            }
+        }
     }
 }

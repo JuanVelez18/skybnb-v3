@@ -12,12 +12,12 @@ namespace application.DTOs
 
         [Required(ErrorMessage = "User email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
         [MaxLength(20, ErrorMessage = "Password must be at most 20 characters long")]
         [RegularExpression(PasswordValidations.PasswordRegex, ErrorMessage = PasswordValidations.PasswordErrorMessage)]
-        public required string Password { get; set; }
+        public string? Password { get; set; }
     }
 }
