@@ -1,11 +1,17 @@
 using presentations;
 using presentations.Implementations;
 using presentations.Interfaces;
+using Vite.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddViteServices(options =>
+{
+    options.Server.AutoRun = true;
+});
 
 // Add presentation configuration
 builder.Services.Configure<PresentationConfiguration>(builder.Configuration.GetSection("PresentationConfiguration"));
@@ -26,13 +32,19 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebSockets();
+    // Use Vite Dev Server as middleware.
+    app.UseViteDevelopmentServer(true);
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapRazorPages();
+
 
 app.Run();
