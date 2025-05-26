@@ -1,6 +1,7 @@
 @page "/{*catchall}"
 @using web_presentation.Core
 @using web_presentation.Extensions
+@using System.Text.Json;
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
@@ -31,6 +32,13 @@
                 window.__vite_plugin_react_preamble_installed__ = true
             </script>
         </environment>
+
+        @if (Model.ShouldPassCookiesToSPA)
+        {
+            <script id="tokens" type="application/json">
+            @Html.Raw(JsonSerializer.Serialize(Request.GetAuthTokensFromCookies()))
+            </script>
+        }
     </head>
 
     <body>

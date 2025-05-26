@@ -18,31 +18,31 @@ export default defineConfig(async () => {
     build: {
       manifest: true,
       emptyOutDir: false,
-      outDir: "../wwwroot",
+      outDir: "../wwwroot/spa",
       rollupOptions: {
-        input: "main.tsx",
+        input: "Spa/main.tsx",
         output: {
           // Save entry files to the appropriate folder
-          entryFileNames: "spa-js/[name].[hash].js",
+          entryFileNames: "js/[name].[hash].js",
           // Save chunk files to the js folder
-          chunkFileNames: "spa-js/[name]-chunk.js",
+          chunkFileNames: "js/[name]-chunk.js",
           // Save asset files to the appropriate folder
           assetFileNames: (info) => {
             if (info.name) {
               // If the file is a CSS file, save it to the css folder
               if (cssPattern.test(info.name)) {
-                return "spa-css/[name][extname]";
+                return "css/[name][extname]";
               }
               // If the file is an image file, save it to the images folder
               if (imagePattern.test(info.name)) {
-                return "spa-images/[name][extname]";
+                return "images/[name][extname]";
               }
 
               // If the file is any other type of file, save it to the assets folder
-              return "spa-assets/[name][extname]";
+              return "assets/[name][extname]";
             } else {
               // If the file name is not specified, save it to the output directory
-              return "spa-[name][extname]";
+              return "[name][extname]";
             }
           },
         },
