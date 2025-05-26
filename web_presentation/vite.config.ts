@@ -2,6 +2,7 @@ import { type UserConfig, defineConfig } from "vite";
 
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 // Pattern for CSS files
 const cssPattern = /\.css$/;
@@ -53,6 +54,11 @@ export default defineConfig(async () => {
     },
     optimizeDeps: {
       include: [],
+    },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./Spa/src"),
+      },
     },
   };
 
