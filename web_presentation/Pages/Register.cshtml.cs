@@ -2,6 +2,8 @@ using application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using presentations.Interfaces;
+using web_presentation.Core;
+using web_presentation.Extensions;
 
 namespace web_presentation.Pages
 {
@@ -38,27 +40,18 @@ namespace web_presentation.Pages
         {
             Countries = await _countryPresentation.GetAllAsync();
         }
-
         private async Task LoadCitiesAsync()
         {
             Cities = await _cityPresentation.GetAllAsync();
         }
 
-        private void SetTokensInCookies(TokensDto tokens)
-        {
-            var options = new CookieOptions
-            {
-                HttpOnly = true,
-                Path = "/",
-                SameSite = SameSiteMode.Lax
-            };
-
-            Response.Cookies.Append("AccessToken", tokens.AccessToken, options);
-            Response.Cookies.Append("RefreshToken", tokens.RefreshToken, options);
-        }
-
         public async Task<IActionResult> OnGetAsync()
         {
+            if (Request.HasActiveSession())
+            {
+                return RedirectToPage(Routes.Home);
+            }
+
             await LoadCountriesAsync();
             return Page();
         }
@@ -114,9 +107,9 @@ namespace web_presentation.Pages
                 tokens = await _authPresentation.RegisterHostAsync(UserCreation);
             }
 
-            SetTokensInCookies(tokens);
+            Response.SetAuthTokenCookies(tokens);
 
-            return RedirectToPage("/Index");
+            return RedirectToPage(@Routes.Home);
         }
     }
 }

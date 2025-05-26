@@ -1,4 +1,5 @@
 @page
+@using web_presentation.Core
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
@@ -34,5 +35,6 @@ else
     <div class="text-center">
         <h1 class="display-4">Welcome to Skybnb</h1>
         <p>Skybnb is a platform that connects travelers with hosts offering unique accommodations around the world.</p>
+        <p>To get started, <a asp-page="@Routes.Login">log in</a> or <a asp-page="@Routes.Register">register</a> for an account.</p>
     </div>
 }
