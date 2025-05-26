@@ -19,13 +19,22 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Home</title>
+
+        <link rel="stylesheet" vite-href="~/main.tsx" asp-append-version="true" />
+        <environment include="Development">
+            <script type="module">
+                import RefreshRuntime from 'http://localhost:5173/@@react-refresh'
+                RefreshRuntime.injectIntoGlobalHook(window)
+                window.$RefreshReg$ = () => { }
+                window.$RefreshSig$ = () => (type) => type
+                window.__vite_plugin_react_preamble_installed__ = true
+            </script>
+        </environment>
     </head>
 
     <body>
-        <div>
-            <h1>Welcome Back!</h1>
-            <p>You are logged in</p>
-        </div>
+        <div id="root"></div>
+        <script type="module" vite-src="~/main.tsx"></script>
     </body>
 
     </html>
@@ -35,6 +44,7 @@ else
     <div class="text-center">
         <h1 class="display-4">Welcome to Skybnb</h1>
         <p>Skybnb is a platform that connects travelers with hosts offering unique accommodations around the world.</p>
-        <p>To get started, <a asp-page="@Routes.Login">log in</a> or <a asp-page="@Routes.Register">register</a> for an account.</p>
+        <p>To get started, <a asp-page="@Routes.Login">log in</a> or <a asp-page="@Routes.Register">register</a> for an
+            account.</p>
     </div>
 }
