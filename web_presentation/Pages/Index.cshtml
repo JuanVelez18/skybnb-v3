@@ -1,16 +1,17 @@
-@page
+@page "/{*catchall}"
 @using web_presentation.Core
+@using web_presentation.Extensions
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
 
-    if (Request.Cookies.ContainsKey("AccessToken"))
+    if (Request.HasActiveSession())
     {
         Layout = null;
     }
 }
 
-@if (Request.Cookies.ContainsKey("AccessToken"))
+@if (Request.HasActiveSession())
 {
     <!DOCTYPE html>
     <html lang="en">
