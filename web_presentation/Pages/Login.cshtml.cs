@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using presentations.Interfaces;
 using web_presentation.Core;
+using web_presentation.Extensions;
 
 namespace web_presentation.Pages
 {
@@ -14,32 +15,16 @@ namespace web_presentation.Pages
         {
             _authPresentation = authPresentation;
         }
-
         [BindProperty]
         public UserCredentialsDto Credentials { get; set; } = new UserCredentialsDto();
 
-        private void SetTokensInCookies(TokensDto tokens)
-        {
-            var options = new CookieOptions
-            {
-                HttpOnly = true,
-                Path = "/",
-                SameSite = SameSiteMode.Lax
-            };
-
-            Response.Cookies.Append("AccessToken", tokens.AccessToken, options);
-            Response.Cookies.Append("RefreshToken", tokens.RefreshToken, options);
-        }
         public IActionResult OnGet()
         {
-            var hasActiveSession = Request.Cookies.ContainsKey("AccessToken") ||
-                              Request.Cookies.ContainsKey("RefreshToken");
-
-            if (hasActiveSession) return RedirectToPage(Routes.Home);
+            if (Request.HasActiveSession())
+                return RedirectToPage(Routes.Home);
 
             return Page();
         }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,7 +33,7 @@ namespace web_presentation.Pages
             }
 
             var tokens = await _authPresentation.LoginAsync(Credentials);
-            SetTokensInCookies(tokens);
+            Response.SetAuthTokenCookies(tokens);
 
             return RedirectToPage(Routes.Home);
         }
