@@ -1,4 +1,4 @@
-import { dtoToTokens, type Tokens, type TokensDto } from "../models/auth";
+import { dtoToTokens, type Tokens, type RazorTokensDto } from "../models/auth";
 
 const TOKENS_KEY = "tokens";
 const LOGOUT_URL = "/Logout";
@@ -21,7 +21,7 @@ const getTokensFromRazor = (): Tokens | null => {
 
   tokensTag.remove();
 
-  const tokensDto = JSON.parse(tokensTag.textContent!.trim()) as TokensDto;
+  const tokensDto = JSON.parse(tokensTag.textContent!.trim()) as RazorTokensDto;
   const tokens = dtoToTokens(tokensDto);
 
   return tokens;

@@ -3,12 +3,12 @@ export type Tokens = {
   refreshToken: string;
 };
 
-export type TokensDto = {
+export type RazorTokensDto = {
   AccessToken: string;
   RefreshToken: string;
 };
 
-export const dtoToTokens = (dto: TokensDto): Tokens => {
+export const dtoToTokens = (dto: RazorTokensDto): Tokens => {
   return {
     accessToken: dto.AccessToken,
     refreshToken: dto.RefreshToken,
