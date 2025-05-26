@@ -39,6 +39,7 @@ builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
 builder.Services.AddScoped<ICountryApplication, CountryApplication>();
 builder.Services.AddScoped<ICitytApplication, CityApplication>();
+builder.Services.AddScoped<IPropertiesApplication, PropertiesApplication>();
 
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
