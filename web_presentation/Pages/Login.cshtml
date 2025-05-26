@@ -1,0 +1,35 @@
+﻿@page
+@using web_presentation.Core
+@model web_presentation.Pages.LoginModel
+@{
+}
+<center>
+    <div style="display: flex; justify-content: center;">
+        <form method="POST" style="width: 100%; max-width: 600px;">
+            <h3>Login</h3>
+
+            <div style="width: 60%; flex-direction: column; gap: 1rem; display: flex;">
+                <div align="form-group">
+                    <label asp-for="Credentials.Email" class="control-label" style="width: 100%; text-align: left;">
+                        Email
+                    </label>
+                    <input asp-for="Credentials.Email" class="form-control" />
+                    <span asp-validation-for="Credentials.Email" class="text-danger"
+                        style="display: block; width: 100%; text-align: left;"></span>
+                </div>
+
+                <div align="form-group">
+                    <label asp-for="Credentials.Password" class="control-label" style="width: 100%; text-align: left;">
+                        Password
+                    </label>
+                    <input asp-for="Credentials.Password" class="form-control" type="password" />
+                    <span asp-validation-for="Credentials.Password" class="text-danger"
+                        style="display: block; width: 100%; text-align: left;"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p>Don't have an account? <a asp-page="@Routes.Register">Register</a></p>
+            </div>
+        </form>
+    </div>
+</center>
