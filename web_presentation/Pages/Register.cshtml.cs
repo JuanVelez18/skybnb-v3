@@ -109,7 +109,8 @@ namespace web_presentation.Pages
 
             Response.SetAuthTokenCookies(tokens);
 
-            return RedirectToPage(@Routes.Home);
+            TempData["ShouldPassCookiesToSPA"] = true;
+            return RedirectToPage(Routes.Home, new { ShouldPassCookiesToSPA = true });
         }
     }
 }
