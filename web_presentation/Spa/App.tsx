@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { initializeSession, logout } from "./src/utils/auth";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    initializeSession();
+  }, []);
 
   return (
     <>
@@ -18,9 +23,12 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <div className="flex justify-center gap-2">
+          <button onClick={() => setCount((count) => count + 1)}>
+            count is {count}
+          </button>
+          <button onClick={logout}>Logout</button>
+        </div>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
