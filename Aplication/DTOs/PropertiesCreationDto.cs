@@ -14,31 +14,31 @@ namespace application.DTOs
 
         [Required(ErrorMessage = "Number of bathrooms is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Number of bathrooms must 0 or greater")]
-        public int NumBathrooms { get; set; }
+        public int? NumBathrooms { get; set; }
 
         [Required(ErrorMessage = "Number of bedrooms is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Number of bedrooms must 0 or greater")]
-        public int NumBedrooms { get; set; }
+        public int? NumBedrooms { get; set; }
 
         [Required(ErrorMessage = "Number of beds is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Number of beds must 0 or greater")]
-        public int NumBeds { get; set; }
+        public int? NumBeds { get; set; }
 
         [Required(ErrorMessage = "Maximum number of guests is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Maximum number of guests must 0 or greater")]
-        public int MaxGuests { get; set; }
+        public int? MaxGuests { get; set; }
 
         [Required(ErrorMessage = "Base price per night is required")]
         [Range(0.01, double.MaxValue , ErrorMessage = "Base price per night must be greater than 0")]
         public decimal BasePricePerNight { get; set; }
 
         [Required(ErrorMessage = "Type ID is required")]
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
 
         [Required(ErrorMessage = "Host ID is required")]
         public Guid HostId { get; set; }
 
-        [Required(ErrorMessage = "Address ID is required")]
-        public Guid AddressId { get; set; }
+        [Required(ErrorMessage = "Address is required")]
+        public AddressDto? Address { get; set; }
     }
 }

@@ -16,6 +16,12 @@ namespace repository.Implementations
                 .FirstOrDefaultAsync(user => user.Email == email);
         }
 
+        public override async Task<Users?> GetByIdAsync(Guid id)
+        {
+            return await _dbSet
+                .Include(user => user.Roles)
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
         public void AssignRole(Users user, Roles role)
         {
             user.Roles!.Add(role);

@@ -1,0 +1,82 @@
+﻿using application.Core;
+using application.DTOs;
+using application.Interfaces;
+using domain.Entities;
+using repository.Configuration;
+using repository.Interfaces;
+using System.Text.Json;
+
+namespace application.Implementations
+{
+    public class PropertiesApplication : IPropertiesApplication
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public PropertiesApplication(
+            IUnitOfWork unitOfWork )
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task CreateProperties(PropertiesCreationDto propertiesCreationDto, Guid hostId)
+
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(hostId);
+
+            if (user == null)
+            {
+                throw new NotFoundApplicationException("User not found.");
+            }
+
+            if (!user.Roles.Any(r => r.Id == InitialData.HostRole.Id))
+            {
+                throw new UnauthorizedApplicationException("The user is not a host.");
+            }
+
+            var newAddress = new Addresses(
+                street: propertiesCreationDto.Address.Street,
+                streetNumber: propertiesCreationDto.Address.StreetNumber!.Value,
+                intersectionNumber: propertiesCreationDto.Address.IntersectionNumber!.Value,
+                doorNumber: propertiesCreationDto.Address.DoorNumber!.Value,
+                cityId: propertiesCreationDto.Address.CityId!.Value,
+                complement: propertiesCreationDto.Address.Complement,
+                latitude: propertiesCreationDto.Address.Latitude,
+                longitude: propertiesCreationDto.Address.Longitude
+            );
+            await _unitOfWork.Addresses.AddAsync(newAddress);
+
+            var newProperty = new Properties(
+                propertiesCreationDto.Title,
+                propertiesCreationDto.Description!,
+                propertiesCreationDto.NumBathrooms!.Value,
+                propertiesCreationDto.NumBedrooms!.Value,
+                propertiesCreationDto.NumBeds!.Value,
+                propertiesCreationDto.MaxGuests!.Value,
+                propertiesCreationDto.BasePricePerNight,
+                propertiesCreationDto.TypeId!.Value,
+                propertiesCreationDto.HostId,
+                newAddress.Id
+            );
+            newProperty.Host = user;
+
+            newProperty.Address = newAddress;
+
+            await _unitOfWork.Properties.AddAsync(newProperty);
+
+            var auditory = new Auditories(
+                userId: hostId,
+                action: "Register Property",
+                entity: "Property",
+                entityId: newProperty.Id.ToString(),
+                details: JsonSerializer.Serialize(newProperty, new JsonSerializerOptions
+                {
+                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+                }),
+                timestamp: DateTime.UtcNow
+            );
+
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+        }
+    }
+}
