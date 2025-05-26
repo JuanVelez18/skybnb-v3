@@ -33,18 +33,34 @@ namespace application.Implementations
                 throw new UnauthorizedApplicationException("The user is not a host.");
             }
 
+            var newAddress = new Addresses(
+                street: propertiesCreationDto.Address.Street,
+                streetNumber: propertiesCreationDto.Address.StreetNumber!.Value,
+                intersectionNumber: propertiesCreationDto.Address.IntersectionNumber!.Value,
+                doorNumber: propertiesCreationDto.Address.DoorNumber!.Value,
+                cityId: propertiesCreationDto.Address.CityId!.Value,
+                complement: propertiesCreationDto.Address.Complement,
+                latitude: propertiesCreationDto.Address.Latitude,
+                longitude: propertiesCreationDto.Address.Longitude
+            );
+            await _unitOfWork.Addresses.AddAsync(newAddress);
+
             var newProperty = new Properties(
                 propertiesCreationDto.Title,
                 propertiesCreationDto.Description!,
-                propertiesCreationDto.NumBathrooms,
-                propertiesCreationDto.NumBedrooms,
-                propertiesCreationDto.NumBeds,
-                propertiesCreationDto.MaxGuests,
+                propertiesCreationDto.NumBathrooms!.Value,
+                propertiesCreationDto.NumBedrooms!.Value,
+                propertiesCreationDto.NumBeds!.Value,
+                propertiesCreationDto.MaxGuests!.Value,
                 propertiesCreationDto.BasePricePerNight,
-                propertiesCreationDto.TypeId,
+                propertiesCreationDto.TypeId!.Value,
                 propertiesCreationDto.HostId,
-                propertiesCreationDto.AddressId
+                newAddress.Id
             );
+            newProperty.Host = user;
+
+            newProperty.Address = newAddress;
+
             await _unitOfWork.Properties.AddAsync(newProperty);
 
             var auditory = new Auditories(
