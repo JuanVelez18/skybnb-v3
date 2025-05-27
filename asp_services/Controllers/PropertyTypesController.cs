@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace asp_services.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/property-types")]
     public class PropertyTypesController : ControllerBase
     {
-        private readonly IPropertyTypesApplication _propertyTypesApplication;
+        private readonly IPropertiesApplication _propertiesApplication;
 
-        public PropertyTypesController(IPropertyTypesApplication propertyTypesApplication)
+        public PropertyTypesController(IPropertiesApplication propertiesApplication)
         {
-            _propertyTypesApplication = propertyTypesApplication;
+            _propertiesApplication = propertiesApplication;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTypes()
+        public async Task<IActionResult> GetPropertyTypes()
         {
-            var types = await _propertyTypesApplication.GetAllAsync() ?? [];
-            return Ok(types);
+            var propertyTypes = await _propertiesApplication.GetAllPropertyTypesAsync();
+            return Ok(propertyTypes);
         }
     }
 }

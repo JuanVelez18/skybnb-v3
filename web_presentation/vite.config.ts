@@ -2,6 +2,7 @@ import { type UserConfig, defineConfig } from "vite";
 
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import checker from "vite-plugin-checker";
 import path from "path";
 
 // Pattern for CSS files
@@ -13,7 +14,13 @@ const imagePattern = /\.(png|jpe?g|gif|svg|webp|avif)$/;
 export default defineConfig(async () => {
   // Define Vite configuration
   const config: UserConfig = {
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      checker({
+        typescript: true,
+      }),
+    ],
     root: "Spa",
     publicDir: "public",
     build: {

@@ -5,7 +5,7 @@ using repository.Interfaces;
 
 namespace repository.Configuration
 {
-    public class DataInitializer: IDataInitializer
+    public class DataInitializer : IDataInitializer
     {
         private readonly DbConexion _conexion;
 
@@ -22,6 +22,7 @@ namespace repository.Configuration
 
                 await InitializeCountriesAsync();
                 await InitializeCitiesAsync();
+                await InitializePropertyTypesAsync();
 
                 Console.WriteLine("Database initialized successfully.");
             }
@@ -31,7 +32,8 @@ namespace repository.Configuration
             }
         }
 
-        public async Task InitializeCountriesAsync() {
+        public async Task InitializeCountriesAsync()
+        {
             bool countriesExist = await _conexion.Countries.AnyAsync();
             if (countriesExist) return;
 
@@ -85,6 +87,29 @@ namespace repository.Configuration
             await _conexion.SaveChangesAsync();
 
             Console.WriteLine($"{cities.Count} cities initialized successfully.");
+        }
+
+        public async Task InitializePropertyTypesAsync()
+        {
+            bool propertyTypesExist = await _conexion.PropertyTypes.AnyAsync();
+            if (propertyTypesExist) return;
+
+            Console.WriteLine("Initializing property types...");
+
+            var propertyTypes = new List<PropertyTypes>
+            {
+                new (name: "Apartment", description: "A self-contained housing unit that occupies part of a building."),
+                new (name: "House", description: "A standalone residential building."),
+                new (name: "Condo", description: "A unit in a building that is owned individually but shares common areas."),
+                new (name: "Cabin", description: "A small, simple house, often in a rural area."),
+                new (name: "Loft", description: "A large, open space typically converted from an industrial building."),
+                new (name: "Villa", description: "A large and luxurious country house."),
+            };
+
+            await _conexion.PropertyTypes.AddRangeAsync(propertyTypes);
+            await _conexion.SaveChangesAsync();
+
+            Console.WriteLine($"{propertyTypes.Count} property types initialized successfully.");
         }
     }
 }
