@@ -7,7 +7,6 @@ namespace application.DTOs
         public class AssetDto
         {
             [Required(ErrorMessage = "Asset URL is required")]
-            [Url(ErrorMessage = "Invalid URL format")]
             public Uri? Url { get; set; }
 
             [Required(ErrorMessage = "Asset type is required")]
