@@ -98,6 +98,12 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+}
+
 // Authentication Middleware
 app.UseAuthorization();
 
