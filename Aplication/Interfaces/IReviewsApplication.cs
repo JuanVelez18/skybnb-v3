@@ -4,6 +4,7 @@ namespace application.Interfaces
 {
     public interface IReviewsApplication
     {
-        Task CreateReview(ReviewsDto reviewsDto, Guid userId);
+        Task CreateReview(ReviewsDto reviewsDto, Guid guestId);
+        Task DeleteReview(Guid reviewId, Guid guestId);
     }
 }
