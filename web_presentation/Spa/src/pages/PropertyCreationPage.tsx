@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Stepper from "@/components/common/Stepper";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,9 @@ import PropertyAddressForm from "@/components/forms/PropertyAddressForm";
 import type { CreationAddress } from "@/models/ubication";
 import type { CreationMediaFile } from "@/models/multimedia";
 import PropertyMultimediaForm from "@/components/forms/PropertyMultimediaForm";
+import { useCreateProperty } from "@/queries/properties.queries";
+import { RouteNames } from "@/router/routes";
+import Loader from "@/components/common/Loader";
 
 const STEPS = {
   BASIC_INFORMATION: 1,
@@ -39,6 +43,9 @@ const getFormId = (step: number): string => {
 };
 
 const PropertyCreationPage = () => {
+  const navigate = useNavigate();
+  const { createProperty, isCreatingProperty } = useCreateProperty();
+
   const [currentStep, setCurrentStep] = useState<number>(
     STEPS.BASIC_INFORMATION
   );
@@ -75,8 +82,18 @@ const PropertyCreationPage = () => {
       [STEPS.MULTIMEDIA]: data,
     }));
 
-    // TODO: Handle final submission of all data
-    console.log("Final property data:", propertyData);
+    createProperty(
+      {
+        information: propertyData[STEPS.BASIC_INFORMATION]!,
+        address: propertyData[STEPS.ADDRESS]!,
+        multimedia: data,
+      },
+      {
+        onSuccess() {
+          navigate(RouteNames.HOME);
+        },
+      }
+    );
   };
 
   let Form: ReactNode;
@@ -138,6 +155,8 @@ const PropertyCreationPage = () => {
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
+
+      {isCreatingProperty && <Loader />}
     </div>
   );
 };

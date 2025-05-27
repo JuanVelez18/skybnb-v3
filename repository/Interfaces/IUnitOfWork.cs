@@ -14,7 +14,8 @@
                 ICityRepository Cities { get; }
                 IPropertyTypeRepository PropertyTypes { get; }
                 IAuditoryRepository Auditories { get; }
+                IPropertyAssetsRepository PropertyAssets { get; }
 
-                Task<int> CommitAsync();
+        Task<int> CommitAsync();
         }
 }
