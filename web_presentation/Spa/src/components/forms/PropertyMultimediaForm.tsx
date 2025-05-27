@@ -25,6 +25,11 @@ type Props = {
   onSubmit(files: CreationMediaFile[]): void;
 };
 
+const MINIMUN_ONE_IMAGE_ERROR = "Please upload at least one image";
+const MAXIMUM_FILES_ERROR = "You can upload a maximum of 10 files";
+const MINIMUM_IMAGES = 1;
+const MAX_FILES = 10;
+
 const modelToMediaFile = (files: CreationMediaFile[]): MediaFile[] => {
   return files.map((file) => ({
     id: crypto.randomUUID(),
@@ -47,8 +52,17 @@ const PropertyMultimediaForm = ({ formId, initialValues, onSubmit }: Props) => {
   ) => {
     e.preventDefault();
 
+    const images = data.filter((file) => file.type === "image");
+    if (images.length < MINIMUM_IMAGES) {
+      setError(MINIMUN_ONE_IMAGE_ERROR);
+      return;
+    }
+    if (data.length > MAX_FILES) {
+      setError(MAXIMUM_FILES_ERROR);
+      return;
+    }
+
     const creationFiles: CreationMediaFile[] = [];
-    let hasImage = false;
 
     data.forEach((file) => {
       creationFiles.push({
@@ -56,14 +70,8 @@ const PropertyMultimediaForm = ({ formId, initialValues, onSubmit }: Props) => {
         type: file.type,
       });
 
-      if (file.type === "image") hasImage = true;
-
       URL.revokeObjectURL(file.preview);
     });
-    if (!hasImage) {
-      setError("Please upload at least one image");
-      return;
-    }
 
     onSubmit(mediaFiles);
   };
@@ -88,7 +96,7 @@ const PropertyMultimediaForm = ({ formId, initialValues, onSubmit }: Props) => {
           });
         }
       });
-      if (hasImage && error) setError("");
+      if (hasImage && error === MINIMUN_ONE_IMAGE_ERROR) setError("");
 
       setMediaFiles((prev) => [...prev, ...newFiles]);
     },
@@ -117,6 +125,10 @@ const PropertyMultimediaForm = ({ formId, initialValues, onSubmit }: Props) => {
   );
 
   const removeFile = (id: string) => {
+    if (mediaFiles.length <= MAX_FILES && error === MAXIMUM_FILES_ERROR) {
+      setError("");
+    }
+
     setMediaFiles((prev) => {
       const updated = prev.filter((file) => file.id !== id);
       return updated;
