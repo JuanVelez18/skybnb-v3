@@ -1,7 +1,12 @@
 import { RouterProvider } from "react-router-dom";
-import { router } from "./src/router";
 import { useEffect } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import { router } from "./src/router";
 import { initializeSession } from "./src/utils/auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
@@ -10,7 +15,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </>
   );
 }
