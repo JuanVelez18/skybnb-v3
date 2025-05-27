@@ -37,6 +37,7 @@ import {
 
 import { RouteNames } from "@/router/routes";
 import { initializeSession, logout } from "@/utils/auth";
+import { useGetUserSummary } from "@/queries/users.queries";
 
 const navigationItems = [
   {
@@ -67,6 +68,8 @@ const navigationItems = [
 ];
 
 export default function SkyBnBLayout() {
+  const { user, isUserLoading, isUserError } = useGetUserSummary();
+
   useEffect(() => {
     initializeSession();
   }, []);
@@ -139,10 +142,23 @@ export default function SkyBnBLayout() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      Juan Pérez
+                      {isUserLoading ? (
+                        "Loading..."
+                      ) : isUserError ? (
+                        "Error loading name"
+                      ) : (
+                        <>
+                          <span className="capitalize">{user!.firstName}</span>{" "}
+                          <span className="capitalize">{user!.lastName}</span>
+                        </>
+                      )}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      juan.perez@email.com
+                      {isUserLoading
+                        ? "Loading..."
+                        : isUserError
+                        ? "Error loading email"
+                        : user!.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
