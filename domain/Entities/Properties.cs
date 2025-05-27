@@ -15,7 +15,7 @@ namespace domain.Entities
         int typeId,
         Guid hostId,
         Guid addressId
-        ): ISoftDeletable
+        ) : ISoftDeletable
     {
         public Guid Id { get; private set; }
 
@@ -37,7 +37,7 @@ namespace domain.Entities
         [Range(0, int.MaxValue)]
         public int MaxGuests { get; set; } = maxGuests;
 
-        [Precision(12,2)]
+        [Precision(12, 2)]
         public decimal BasePricePerNight { get; set; } = basePricePerNight;
 
         public int TypeId { get; set; } = typeId;
@@ -49,7 +49,7 @@ namespace domain.Entities
         [Range(0, int.MaxValue)]
         public int ReviewsCount { get; set; } = 0;
 
-        [Precision(2,1)]
+        [Precision(2, 1)]
         public decimal? AverageRating { get; set; }
 
         public bool IsActive { get; set; } = true;
@@ -62,5 +62,6 @@ namespace domain.Entities
         public Addresses? Address { get; set; }
         public List<Bookings> Bookings { get; set; } = [];
         public List<Reviews> Reviews { get; set; } = [];
+        public List<PropertyAssets> Multimedia { get; set; } = [];
     }
 }
