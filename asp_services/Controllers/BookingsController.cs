@@ -17,6 +17,7 @@ namespace asp_services.Controllers
             _bookingsApplication = bookingsApplication;
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateBooking([FromBody] BookingsDto bookingsDto)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

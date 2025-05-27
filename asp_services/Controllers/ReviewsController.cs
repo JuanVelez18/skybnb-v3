@@ -16,11 +16,21 @@ namespace asp_services.Controllers
             _reviewsApplication = reviewsApplication;
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateReview([FromBody] ReviewsDto reviewsDto)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _reviewsApplication.CreateReview(reviewsDto, userId);
             return Created();
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeleteReview(Guid reviewId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _reviewsApplication.DeleteReview(reviewId, userId);
+            return NoContent();
         }
     }
 }
