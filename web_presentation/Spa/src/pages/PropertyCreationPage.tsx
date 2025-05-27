@@ -5,6 +5,10 @@ import Stepper from "@/components/common/Stepper";
 import { Button } from "@/components/ui/button";
 import { PropertyBasicInformationForm } from "@/components/forms";
 import type { PropertyBasicInformation } from "@/models/properties";
+import PropertyAddressForm from "@/components/forms/PropertyAddressForm";
+import type { CreationAddress } from "@/models/ubication";
+import type { CreationMediaFile } from "@/models/multimedia";
+import PropertyMultimediaForm from "@/components/forms/PropertyMultimediaForm";
 
 const STEPS = {
   BASIC_INFORMATION: 1,
@@ -40,6 +44,8 @@ const PropertyCreationPage = () => {
   );
   const [propertyData, setPropertyData] = useState({
     [STEPS.BASIC_INFORMATION]: null as PropertyBasicInformation | null,
+    [STEPS.ADDRESS]: null as CreationAddress | null,
+    [STEPS.MULTIMEDIA]: null as CreationMediaFile[] | null,
   });
 
   const handlePreviousStep = () => {
@@ -55,6 +61,24 @@ const PropertyCreationPage = () => {
     setCurrentStep(STEPS.ADDRESS);
   };
 
+  const handleAddressSubmit = (data: CreationAddress) => {
+    setPropertyData((prev) => ({
+      ...prev,
+      [STEPS.ADDRESS]: data,
+    }));
+    setCurrentStep(STEPS.MULTIMEDIA);
+  };
+
+  const handleMultimediaSubmit = (data: CreationMediaFile[]) => {
+    setPropertyData((prev) => ({
+      ...prev,
+      [STEPS.MULTIMEDIA]: data,
+    }));
+
+    // TODO: Handle final submission of all data
+    console.log("Final property data:", propertyData);
+  };
+
   let Form: ReactNode;
   switch (currentStep) {
     case STEPS.BASIC_INFORMATION:
@@ -63,6 +87,24 @@ const PropertyCreationPage = () => {
           formId={getFormId(STEPS.BASIC_INFORMATION)}
           initialValues={propertyData[STEPS.BASIC_INFORMATION]}
           onSubmit={handleBasicInformationSubmit}
+        />
+      );
+      break;
+    case STEPS.ADDRESS:
+      Form = (
+        <PropertyAddressForm
+          formId={getFormId(STEPS.ADDRESS)}
+          initialValues={propertyData[STEPS.ADDRESS]}
+          onSubmit={handleAddressSubmit}
+        />
+      );
+      break;
+    case STEPS.MULTIMEDIA:
+      Form = (
+        <PropertyMultimediaForm
+          formId={getFormId(STEPS.MULTIMEDIA)}
+          initialValues={propertyData[STEPS.MULTIMEDIA]}
+          onSubmit={handleMultimediaSubmit}
         />
       );
       break;
@@ -92,7 +134,7 @@ const PropertyCreationPage = () => {
           form={getFormId(currentStep)}
           className="cursor-pointer"
         >
-          Next
+          {currentStep === STEPS.MULTIMEDIA ? "Create Property" : "Next"}
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
