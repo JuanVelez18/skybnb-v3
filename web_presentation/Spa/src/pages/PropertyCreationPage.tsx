@@ -5,6 +5,8 @@ import Stepper from "@/components/common/Stepper";
 import { Button } from "@/components/ui/button";
 import { PropertyBasicInformationForm } from "@/components/forms";
 import type { PropertyBasicInformation } from "@/models/properties";
+import PropertyAddressForm from "@/components/forms/PropertyAddressForm";
+import type { CreationAddress } from "@/models/ubication";
 
 const STEPS = {
   BASIC_INFORMATION: 1,
@@ -40,6 +42,7 @@ const PropertyCreationPage = () => {
   );
   const [propertyData, setPropertyData] = useState({
     [STEPS.BASIC_INFORMATION]: null as PropertyBasicInformation | null,
+    [STEPS.ADDRESS]: null as CreationAddress | null,
   });
 
   const handlePreviousStep = () => {
@@ -55,6 +58,14 @@ const PropertyCreationPage = () => {
     setCurrentStep(STEPS.ADDRESS);
   };
 
+  const handleAddressSubmit = (data: CreationAddress) => {
+    setPropertyData((prev) => ({
+      ...prev,
+      [STEPS.ADDRESS]: data,
+    }));
+    setCurrentStep(STEPS.MULTIMEDIA);
+  };
+
   let Form: ReactNode;
   switch (currentStep) {
     case STEPS.BASIC_INFORMATION:
@@ -63,6 +74,15 @@ const PropertyCreationPage = () => {
           formId={getFormId(STEPS.BASIC_INFORMATION)}
           initialValues={propertyData[STEPS.BASIC_INFORMATION]}
           onSubmit={handleBasicInformationSubmit}
+        />
+      );
+      break;
+    case STEPS.ADDRESS:
+      Form = (
+        <PropertyAddressForm
+          formId={getFormId(STEPS.ADDRESS)}
+          initialValues={propertyData[STEPS.ADDRESS]}
+          onSubmit={handleAddressSubmit}
         />
       );
       break;
