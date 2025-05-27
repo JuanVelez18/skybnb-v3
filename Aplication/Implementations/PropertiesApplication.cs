@@ -13,7 +13,7 @@ namespace application.Implementations
         private readonly IUnitOfWork _unitOfWork;
 
         public PropertiesApplication(
-            IUnitOfWork unitOfWork )
+            IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -77,6 +77,18 @@ namespace application.Implementations
 
             await _unitOfWork.Auditories.AddAsync(auditory);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<PropertyTypeDto>> GetAllPropertyTypesAsync()
+        {
+            var propertyTypes = await _unitOfWork.PropertyTypes.GetAllAsync();
+
+            return [.. propertyTypes.Select(pt => new PropertyTypeDto
+            {
+                Id = pt.Id,
+                Name = pt.Name,
+                Description = pt.Description
+            })];
         }
     }
 }
