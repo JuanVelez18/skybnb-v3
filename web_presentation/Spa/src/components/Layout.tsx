@@ -8,8 +8,8 @@ import {
   CreditCard,
   Bell,
 } from "lucide-react";
-import { useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -41,34 +41,31 @@ import { useGetUserSummary } from "@/queries/users.queries";
 
 const navigationItems = [
   {
-    title: "Buscar Alojamientos",
+    title: "Search Accommodations",
     icon: Search,
     url: RouteNames.HOME,
   },
   {
-    title: "Mis Propiedades",
+    title: "My Properties",
     icon: Building2,
-    url: RouteNames.HOME,
+    url: RouteNames.CREATE_PROPERTY,
   },
-  // {
-  //   title: "Mis Reservas",
-  //   icon: Calendar,
-  //   url: "#",
-  // },
-  // {
-  //   title: "Favoritos",
-  //   icon: Heart,
-  //   url: "#",
-  // },
-  // {
-  //   title: "Configuración",
-  //   icon: Settings,
-  //   url: "#",
-  // },
 ];
 
 export default function SkyBnBLayout() {
+  const { pathname } = useLocation();
   const { user, isUserLoading, isUserError } = useGetUserSummary();
+
+  const title = useMemo(() => {
+    switch (pathname) {
+      case RouteNames.HOME:
+        return "Search Accommodations";
+      case RouteNames.CREATE_PROPERTY:
+        return "Create New Property";
+      default:
+        return "SkyBnB";
+    }
+  }, [pathname]);
 
   useEffect(() => {
     initializeSession();
@@ -81,11 +78,11 @@ export default function SkyBnBLayout() {
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Building2 className="h-4 w-4" />
-            </div>
+            </div>{" "}
             <div className="flex flex-col">
               <span className="text-lg font-bold text-primary">SkyBnB</span>
               <span className="text-xs text-muted-foreground">
-                Tu plataforma de alojamientos
+                Your accommodation platform
               </span>
             </div>
           </div>
@@ -116,7 +113,7 @@ export default function SkyBnBLayout() {
         {/* Header con menú de usuario */}
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-6">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold">Dashboard</h1>
+            <h1 className="text-xl font-semibold">{title}</h1>
           </div>
 
           <div className="flex items-center gap-4">
@@ -132,8 +129,9 @@ export default function SkyBnBLayout() {
                   variant="ghost"
                   className="relative h-8 w-8 rounded-full"
                 >
+                  {" "}
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder-user.jpg" alt="Usuario" />
+                    <AvatarImage src="/placeholder-user.jpg" alt="User" />
                     <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </Button>
@@ -162,23 +160,23 @@ export default function SkyBnBLayout() {
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator />{" "}
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
-                  <span>Mi Perfil</span>
+                  <span>My Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Facturación</span>
+                  <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Configuración</span>
+                  <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Cerrar Sesión</span>
+                  <span>Log Out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
