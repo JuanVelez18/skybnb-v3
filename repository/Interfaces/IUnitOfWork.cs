@@ -12,6 +12,7 @@
                 IRefreshTokenRepository RefreshTokens { get; }
                 ICountryRepository Countries { get; }
                 ICityRepository Cities { get; }
+                IPropertyTypeRepository PropertyTypes { get; }
                 IAuditoryRepository Auditories { get; }
 
                 Task<int> CommitAsync();
