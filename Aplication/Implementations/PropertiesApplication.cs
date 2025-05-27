@@ -45,6 +45,25 @@ namespace application.Implementations
             );
             await _unitOfWork.Addresses.AddAsync(newAddress);
 
+            var hasImages = propertiesCreationDto.Multimedia!.Any(m => m.Type == "image");
+            if (!hasImages)
+            {
+                throw new InvalidDataApplicationException("At least one image is required.");
+            }
+
+            List<PropertyAssets> newMultimedia = [];
+            foreach (var asset in propertiesCreationDto.Multimedia!)
+            {
+                var newAsset = new PropertyAssets()
+                {
+                    Url = asset.Url,
+                    Type = asset.Type,
+                    Order = asset.Order!.Value
+                };
+                await _unitOfWork.PropertyAssets.AddAsync(newAsset);
+                newMultimedia.Add(newAsset);
+            }
+
             var newProperty = new Properties(
                 propertiesCreationDto.Title,
                 propertiesCreationDto.Description!,
@@ -58,8 +77,8 @@ namespace application.Implementations
                 newAddress.Id
             );
             newProperty.Host = user;
-
             newProperty.Address = newAddress;
+            newProperty.Multimedia = newMultimedia;
 
             await _unitOfWork.Properties.AddAsync(newProperty);
 
