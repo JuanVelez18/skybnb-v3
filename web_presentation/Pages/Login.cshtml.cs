@@ -35,6 +35,7 @@ namespace web_presentation.Pages
             var tokens = await _authPresentation.LoginAsync(Credentials);
             Response.SetAuthTokenCookies(tokens);
 
+            TempData["ShouldPassCookiesToSPA"] = true;
             return RedirectToPage(Routes.Home);
         }
     }

@@ -7,6 +7,8 @@ namespace web_presentation.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
+        public bool ShouldPassCookiesToSPA { get; set; } = false;
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -14,7 +16,11 @@ namespace web_presentation.Pages
 
         public void OnGet()
         {
-
+            TempData.TryGetValue("ShouldPassCookiesToSPA", out var passTokensCookies);
+            if (passTokensCookies is bool shouldPass && shouldPass)
+            {
+                ShouldPassCookiesToSPA = true;
+            }
         }
     }
 }

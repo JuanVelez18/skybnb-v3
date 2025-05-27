@@ -42,6 +42,7 @@ builder.Services.AddScoped<ICitytApplication, CityApplication>();
 builder.Services.AddScoped<IPropertiesApplication, PropertiesApplication>();
 builder.Services.AddScoped<IBookingsApplication, BookingsApplication>();
 builder.Services.AddScoped<IReviewsApplication, ReviewsApplication>();
+builder.Services.AddScoped<IUserApplication, UserApplication>();
 
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
@@ -98,6 +99,12 @@ using (var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+}
 
 // Authentication Middleware
 app.UseAuthorization();
