@@ -51,5 +51,10 @@ namespace ut_presentation.Repositories
             await _conexion.SaveChangesAsync();
 
         }
+        [TestCleanup]
+        public void TearDown()
+        {
+            _conexion.Dispose();
+        }
     }
 }
