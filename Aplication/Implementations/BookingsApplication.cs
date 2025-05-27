@@ -2,6 +2,7 @@
 using application.DTOs;
 using application.Interfaces;
 using domain.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using repository.Interfaces;
 using System.Text.Json;
 
@@ -27,15 +28,29 @@ namespace application.Implementations
                 throw new NotFoundApplicationException("User not found.");
             }
 
+            var property = await _unitOfWork.Properties.GetByIdAsync(bookingDto.PropertyId);
+            if (property == null)
+            {
+                throw new NotFoundApplicationException("Property not found.");
+            }
+            if (property.HostId == userId) 
+            {
+                throw new InvalidOperationException("You cannot reserve your own property.");
+            }
+
             var newBooking = new Bookings(
-                propertyId: bookingDto.PropertyId,
-                guestId: bookingDto.GuestId,
-                checkInDate: bookingDto.CheckInDate,
-                checkOutDate: bookingDto.CheckOutDate,
-                numGuests: bookingDto.NumGuests,
-                totalPrice: bookingDto.TotalPrice
+                bookingDto.PropertyId,
+                userId,
+                bookingDto.CheckInDate,
+                bookingDto.CheckOutDate,
+                bookingDto.NumGuests,
+                bookingDto.TotalPrice
         );
+            newBooking.Property = property;
+            newBooking.Guest = user;
+
             await _unitOfWork.Bookings.AddAsync(newBooking);
+
 
 
             var auditory = new Auditories(
