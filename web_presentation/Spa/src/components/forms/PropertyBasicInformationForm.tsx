@@ -27,10 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type {
-  PropertyBasicInformation,
-  PropertyType,
-} from "@/models/properties";
+import type { PropertyBasicInformation } from "@/models/properties";
+import { useGetAllPropertyTypes } from "@/queries/properties.queries";
 
 type Props = {
   formId?: string;
@@ -56,15 +54,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-// TODO: Replace with real property types from the backend
-const propertyTypes: PropertyType[] = [
-  { id: "1", name: "Apartment" },
-  { id: "2", name: "Entire House" },
-  { id: "3", name: "Cabin" },
-  { id: "4", name: "Private Room" },
-  { id: "5", name: "Loft" },
-];
 
 const modelToFormValues = (model: PropertyBasicInformation): FormValues => ({
   title: model.title,
@@ -93,6 +82,15 @@ const PropertyBasicInformationForm = ({
   initialValues,
   onSubmit,
 }: Props) => {
+  const { propertyTypes, arePropertyTypesLoading, isPropertyTypesError } =
+    useGetAllPropertyTypes();
+
+  const propertyTypesPlaceholder = arePropertyTypesLoading
+    ? "Loading property types..."
+    : isPropertyTypesError
+    ? "Error loading property types"
+    : "Select a property type";
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues
@@ -243,18 +241,21 @@ const PropertyBasicInformationForm = ({
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={arePropertyTypesLoading || isPropertyTypesError}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select property type" />
+                          <SelectValue placeholder={propertyTypesPlaceholder} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {propertyTypes.map((type) => (
-                          <SelectItem key={type.id} value={type.id}>
-                            {type.name}
-                          </SelectItem>
-                        ))}
+                        {!arePropertyTypesLoading &&
+                          !isPropertyTypesError &&
+                          propertyTypes!.map((type) => (
+                            <SelectItem key={type.id} value={type.id}>
+                              {type.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
