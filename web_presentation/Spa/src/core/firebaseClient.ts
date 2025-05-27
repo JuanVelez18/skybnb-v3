@@ -12,4 +12,7 @@ const firebaseConfig: FirebaseOptions = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const storage = getStorage(app);
+export const storage = getStorage(
+  app,
+  `gs://${import.meta.env.VITE_FIREBASE_BUCKET_MULTIMEDIA}`
+);
