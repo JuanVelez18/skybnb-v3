@@ -22,6 +22,7 @@ namespace repository.Configuration
 
                 await InitializeCountriesAsync();
                 await InitializeCitiesAsync();
+                await InitializePropertyTypesAsync();
 
                 Console.WriteLine("Database initialized successfully.");
             }
