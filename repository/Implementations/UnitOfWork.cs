@@ -1,4 +1,5 @@
-﻿using repository.Conexions;
+﻿using domain.Entities;
+using repository.Conexions;
 using repository.Interfaces;
 
 namespace repository.Implementations
@@ -16,6 +17,7 @@ namespace repository.Implementations
         public IRefreshTokenRepository RefreshTokens { get; private set; }
         public ICountryRepository Countries { get; private set; }
         public ICityRepository Cities { get; private set; }
+        public IPropertyTypesRepository PropertyTypes { get; private set; }
         public IAuditoryRepository Auditories { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
@@ -31,6 +33,7 @@ namespace repository.Implementations
             RefreshTokens = new RefreshTokenRepository(_conexion);
             Countries = new CountryRepository(_conexion);
             Cities = new CityRepository(_conexion);
+            PropertyTypes = new PropertyTypesRepository(_conexion);
             Auditories = new AuditoryRepository(_conexion);
         }
 
