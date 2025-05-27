@@ -1,8 +1,52 @@
 {
-    // ...config
+    // Configuración de Tailwind CSS IntelliSense
+    "tailwindCSS.includeLanguages": {
+        "typescript": "javascript",
+        "typescriptreact": "javascript",
+        "javascript": "javascript",
+        "javascriptreact": "javascript",
+        "html": "html",
+        "razor": "html",
+        "cshtml": "html"
+    },
     "tailwindCSS.experimental.classRegex": [
         [
             "className\\s*:\\s*['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "className\\s*=\\s*['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "class\\s*:\\s*['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "class\\s*=\\s*['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "cn\\s*\\(['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "clsx\\s*\\(['\"]([^'\"]*)['\"]"
+        ],
+        [
+            "classNames\\s*\\(['\"]([^'\"]*)['\"]"
         ]
+    ],
+    "tailwindCSS.files.exclude": [
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/.hg/**",
+        "**/.svn/**",
+        "**/bin/**",
+        "**/obj/**"
+    ],
+    "css.validate": false,
+    "scss.validate": false,
+    "less.validate": false,
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.suggest.classAttributes": [
+        "class",
+        "className",
+        "ngClass"
     ]
 }
