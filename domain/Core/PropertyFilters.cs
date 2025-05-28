@@ -123,13 +123,8 @@ namespace domain.Core
             if (string.IsNullOrWhiteSpace(Location))
                 return null;
 
-            return p => (p.Address != null && p.Address.City != null &&
-                        p.Address.City.Name != null &&
-                        p.Address.City.Name.Contains(Location, StringComparison.OrdinalIgnoreCase)) ||
-                       (p.Address != null && p.Address.City != null &&
-                        p.Address.City.Country != null &&
-                        p.Address.City.Country.Name != null &&
-                        p.Address.City.Country.Name.Contains(Location, StringComparison.OrdinalIgnoreCase));
+            return p => p.Address!.City!.Name.Contains(Location, StringComparison.OrdinalIgnoreCase) ||
+                        p.Address!.City!.Country!.Name.Contains(Location, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -144,19 +139,20 @@ namespace domain.Core
             // Only check-in date: property available from this date onwards
             if (CheckInDate.HasValue && !CheckOutDate.HasValue)
             {
-                return p => p.Bookings.All(booking =>
+                return p => p.Bookings.Count == 0 || p.Bookings.All(booking =>
                     CheckInDate >= booking.CheckOutDate);
             }
 
             // Only check-out date: property available until this date
             if (!CheckInDate.HasValue && CheckOutDate.HasValue)
             {
-                return p => p.Bookings.All(booking =>
+                return p => p.Bookings.Count == 0 || p.Bookings.All(booking =>
                     CheckOutDate <= booking.CheckInDate);
             }
 
             // Both dates: check for no overlap with requested date range
             return p => p.Bookings.All(booking =>
+                p.Bookings.Count == 0 ||
                 CheckOutDate <= booking.CheckInDate ||
                 CheckInDate >= booking.CheckOutDate);
         }
@@ -192,7 +188,7 @@ namespace domain.Core
         /// <returns>Expression that filters by property types, or null if no types specified.</returns>
         private Expression<Func<Properties, bool>>? GetPropertyTypeFilter()
         {
-            if (PropertyTypes?.Any() != true)
+            if (PropertyTypes == null || PropertyTypes.Count == 0)
                 return null;
 
             return p => PropertyTypes.Contains(p.TypeId);
