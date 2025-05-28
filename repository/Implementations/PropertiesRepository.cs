@@ -39,7 +39,7 @@ namespace repository.Implementations
 
             long total = await query.CountAsync();
             List<Properties> properties = await query
-                .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Skip((int)((pagination.PageNumber - 1) * pagination.PageSize))
                 .Take(pagination.PageSize)
                 .ToListAsync();
 
