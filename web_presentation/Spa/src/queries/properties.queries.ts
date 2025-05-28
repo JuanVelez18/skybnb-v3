@@ -83,11 +83,12 @@ export function useInfinitePropertiesSearch(filters: PropertyFilters) {
   });
 
   const properties = useMemo(() => {
-    return data?.pages.flatMap((page) => page.results);
+    return data?.pages.flatMap((page) => page.results) ?? [];
   }, [data]);
 
   return {
     properties,
+    total: data?.pages[0].total ?? 0,
     arePropertiesLoading: isLoading,
     isLoadingNextPropertiesPage: isFetchingNextPage,
     isPropertiesError: isError,
