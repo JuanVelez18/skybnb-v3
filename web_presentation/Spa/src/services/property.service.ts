@@ -1,14 +1,19 @@
 import httpClient, { type ApiResponse } from "@/core/httpClient";
 import type { CreationMediaFile } from "@/models/multimedia";
-import type {
-  PropertyBasicInformation,
-  PropertyFilters,
-  PropertySummary,
-  PropertyType,
+import {
+  type PropertyBasicInformation,
+  type PropertyFilters,
+  type PropertySummary,
+  type PropertyType,
 } from "@/models/properties";
 import type { CreationAddress } from "@/models/ubication";
 import { MultimediaService } from "./multimedia.service";
-import type { Page, PaginationOptions } from "@/models/pagination";
+import {
+  dtoToPage,
+  type Page,
+  type PageDto,
+  type PaginationOptions,
+} from "@/models/pagination";
 import { getTokensFromStorage } from "@/utils/auth";
 
 type PropertyTypeDto = {
@@ -68,25 +73,22 @@ export class PropertyService {
     const params = {
       ...pagination,
       ...(filters ?? {}),
+      checkIn: filters?.checkIn?.toISOString().split("T")[0],
+      checkOut: filters?.checkOut?.toISOString().split("T")[0],
     };
 
-    let response: ApiResponse<Page<PropertySummary>>;
+    let response: ApiResponse<PageDto<PropertySummary>>;
 
     if (isAuthenticated) {
-      response = await httpClient.get<Page<PropertySummary>>(endpoint, {
+      response = await httpClient.get(endpoint, {
         params,
       });
     } else {
-      response = await httpClient.publicRequest<Page<PropertySummary>>(
-        "GET",
-        endpoint,
-        undefined,
-        {
-          params,
-        }
-      );
+      response = await httpClient.publicRequest("GET", endpoint, undefined, {
+        params,
+      });
     }
 
-    return response.data;
+    return dtoToPage(response.data);
   }
 }
