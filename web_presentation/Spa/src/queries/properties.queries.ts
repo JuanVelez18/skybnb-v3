@@ -62,6 +62,8 @@ export const useCreateProperty = () => {
 };
 
 export function useInfinitePropertiesSearch(filters: PropertyFilters) {
+  const PAGE_SIZE = 10;
+
   const {
     data,
     isLoading,
@@ -73,12 +75,12 @@ export function useInfinitePropertiesSearch(filters: PropertyFilters) {
     queryKey: PropertiesQueryKeys.filteredSearch(filters),
     queryFn: ({ pageParam }) =>
       PropertyService.searchProperties(pageParam, filters),
-    initialPageParam: {} as PaginationOptions,
+    initialPageParam: { page: 1, pageSize: PAGE_SIZE } as PaginationOptions,
     getNextPageParam({ page, totalPages }): PaginationOptions | undefined {
       const nextPage = page + 1;
       if (nextPage > totalPages) return undefined;
 
-      return { page: nextPage, pageSize: 10 };
+      return { page: nextPage, pageSize: PAGE_SIZE };
     },
   });
 
