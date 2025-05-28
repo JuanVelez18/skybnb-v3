@@ -26,7 +26,10 @@ namespace repository.Implementations
 
             if (filters != null && filters.IsValid())
             {
-                query = query.Where(p => filters.MatchesProperty(p));
+                foreach (var filter in filters.GetFilterExpressions())
+                {
+                    query = query.Where(filter);
+                }
 
                 var sortExpression = filters.GetSortExpression();
                 if (sortExpression != null)
