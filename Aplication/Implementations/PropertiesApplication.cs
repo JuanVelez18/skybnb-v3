@@ -34,7 +34,7 @@ namespace application.Implementations
             }
 
             var newAddress = new Addresses(
-                street: propertiesCreationDto.Address.Street,
+                street: propertiesCreationDto.Address!.Street,
                 streetNumber: propertiesCreationDto.Address.StreetNumber!.Value,
                 intersectionNumber: propertiesCreationDto.Address.IntersectionNumber!.Value,
                 doorNumber: propertiesCreationDto.Address.DoorNumber!.Value,
@@ -108,6 +108,25 @@ namespace application.Implementations
                 Name = pt.Name,
                 Description = pt.Description
             })];
+        }
+
+        public async Task<PageDto<PropertySummaryDto>> GetPropertiesAsync(PaginationOptionsDto paginationDto, PropertyFiltersDto? filtersDto)
+        {
+            var filters = filtersDto?.ToDomainPropertyFilters();
+            if (filters != null && !filters.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid filters provided.");
+            }
+
+            var pagination = paginationDto.ToDomainPaginationOptions();
+            if (!pagination.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid pagination options provided.");
+            }
+
+            var propertiesPage = await _unitOfWork.Properties.GetPropertiesAsync(pagination, filters);
+
+            return PageDto<PropertySummaryDto>.FromDomainPage(propertiesPage, PropertySummaryDto.FromDomainProperty);
         }
     }
 }
