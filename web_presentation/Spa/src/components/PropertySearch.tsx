@@ -21,6 +21,11 @@ import {
 import { usePropertiesStore } from "@/stores/properties.store";
 import { cn } from "@/lib/utils";
 
+type Props = {
+  onFiltersClick: () => void;
+  onSearch: () => void;
+};
+
 const dateToLocaleString = (date: Date) => {
   return date.toLocaleString(["en-US", "es-ES"], {
     year: "numeric",
@@ -29,13 +34,27 @@ const dateToLocaleString = (date: Date) => {
   });
 };
 
-type Props = {
-  onFiltersClick: () => void;
+const isPastDate = (date: Date) => {
+  const today = new Date();
+  return date < today || date < new Date("1900-01-01");
 };
 
-const PropertySearch = ({ onFiltersClick }: Props) => {
-  const { filters, updateLocation, updateCheckIn, updateGuests } =
-    usePropertiesStore();
+const PropertySearch = ({ onFiltersClick, onSearch }: Props) => {
+  const {
+    filters,
+    updateLocation,
+    updateCheckIn,
+    updateCheckOut,
+    updateGuests,
+  } = usePropertiesStore();
+
+  const isDisabledCheckInDate = (date: Date) => {
+    return isPastDate(date);
+  };
+
+  const isDisabledCheckOutDate = (date: Date) => {
+    return isPastDate(date) || (!!filters.checkIn && date <= filters.checkIn);
+  };
 
   return (
     <Card>
@@ -78,10 +97,8 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                 <Calendar
                   mode="single"
                   selected={filters.checkIn}
-                  onSelect={(date) => updateCheckIn(date)}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
+                  onSelect={updateCheckIn}
+                  disabled={isDisabledCheckInDate}
                 />
               </PopoverContent>
             </Popover>
@@ -110,10 +127,8 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                 <Calendar
                   mode="single"
                   selected={filters.checkOut}
-                  onSelect={(date) => updateCheckIn(date)}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
+                  onSelect={updateCheckOut}
+                  disabled={isDisabledCheckOutDate}
                 />
               </PopoverContent>
             </Popover>
@@ -154,7 +169,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
             )}
           </Button>
 
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center gap-2" onClick={onSearch}>
             <Search className="h-4 w-4" />
             Search
           </Button>
