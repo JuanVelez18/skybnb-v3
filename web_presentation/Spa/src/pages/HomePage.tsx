@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Grid3X3, List } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import PropertyFilters from "@/components/PropertyFilters";
+import PropertyFiltersComponent from "@/components/PropertyFilters";
 import PropertySearch from "@/components/PropertySearch";
-import type { PropertySummary, SortBy } from "@/models/properties";
+import type { PropertyFilters, SortBy } from "@/models/properties";
 import { usePropertiesStore } from "@/stores/properties.store";
 import PropertyCard from "@/components/cards/PropertyCard";
+import { useInfinitePropertiesSearch } from "@/queries/properties.queries";
+import { CardSkeleton } from "@/components/skeletons";
 
 const sortOptions: { value: SortBy; label: string }[] = [
   { value: "price-low", label: "Price: Low to High" },
@@ -23,119 +25,82 @@ const sortOptions: { value: SortBy; label: string }[] = [
   { value: "newest", label: "Newest" },
 ];
 
-const mockProperties: PropertySummary[] = [
-  {
-    id: "1",
-    title: "Beautiful Oceanfront House",
-    description: "Stunning beachfront property with panoramic ocean views",
-    photoUrl: "",
-    price: 150,
-    rating: 4.8,
-    reviews: 124,
-    city: "Miami Beach",
-    country: "USA",
-    bedrooms: 3,
-    bathrooms: 2,
-    maxGuests: 6,
-    propertyType: "Entire house",
-  },
-  {
-    id: "2",
-    title: "Modern Downtown Apartment",
-    description: "Stylish apartment in the heart of the city",
-    photoUrl: "",
-    price: 89,
-    rating: 4.6,
-    reviews: 89,
-    city: "New York",
-    country: "USA",
-    bedrooms: 2,
-    bathrooms: 1,
-    maxGuests: 4,
-    propertyType: "Apartment",
-  },
-  {
-    id: "3",
-    title: "Cozy Mountain Cabin",
-    description: "Perfect retreat in the mountains with fireplace",
-    photoUrl: "",
-    price: 120,
-    rating: 4.9,
-    reviews: 67,
-    city: "Aspen",
-    country: "USA",
-    bedrooms: 2,
-    bathrooms: 1,
-    maxGuests: 4,
-    propertyType: "Cabin",
-  },
-  {
-    id: "4",
-    title: "Luxury Villa with Pool",
-    description: "Spacious villa with private pool and garden",
-    photoUrl: "",
-    price: 280,
-    rating: 4.7,
-    reviews: 156,
-    city: "Los Angeles",
-    country: "USA",
-    bedrooms: 4,
-    bathrooms: 3,
-    maxGuests: 8,
-    propertyType: "Villa",
-  },
-  {
-    id: "5",
-    title: "Historic Loft in Arts District",
-    description: "Unique loft space with exposed brick and high ceilings",
-    photoUrl: "",
-    price: 95,
-    rating: 4.5,
-    reviews: 43,
-    city: "Chicago",
-    country: "USA",
-    bedrooms: 1,
-    bathrooms: 1,
-    maxGuests: 2,
-    propertyType: "Loft",
-  },
-  {
-    id: "6",
-    title: "Beachside Studio",
-    description: "Compact studio steps away from the beach",
-    photoUrl: "",
-    price: 75,
-    rating: 4.4,
-    reviews: 78,
-    city: "San Diego",
-    country: "USA",
-    bedrooms: 1,
-    bathrooms: 1,
-    maxGuests: 2,
-    propertyType: "Studio",
-  },
-];
-
 const HomePage = () => {
   const { filters, updateSortBy } = usePropertiesStore();
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [areFiltersVisible, setAreFiltersVisible] = useState(false);
+  const [queryFilters, setQueryFilters] = useState<PropertyFilters>(
+    structuredClone(filters)
+  );
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const {
+    properties,
+    total,
+    arePropertiesLoading,
+    isLoadingNextPropertiesPage,
+    hasMoreProperties,
+    fetchNextPropertiesPage,
+  } = useInfinitePropertiesSearch(queryFilters);
+
+  const showSkeleton =
+    arePropertiesLoading || isLoadingNextPropertiesPage || hasMoreProperties;
+
+  const handleSortChange = (value: SortBy) => {
+    updateSortBy(value);
+    setQueryFilters((prev) => ({ ...prev, sortBy: value }));
+  };
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target || !hasMoreProperties) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !arePropertiesLoading &&
+          !isLoadingNextPropertiesPage
+        ) {
+          fetchNextPropertiesPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "30px 0px",
+      }
+    );
+
+    observer.observe(target);
+
+    return () => observer.unobserve(target);
+  }, [
+    arePropertiesLoading,
+    hasMoreProperties,
+    isLoadingNextPropertiesPage,
+    fetchNextPropertiesPage,
+  ]);
 
   return (
-    <div className="space-y-6">
+    <div className="h-full space-y-6">
       <PropertySearch
         onFiltersClick={() => setAreFiltersVisible(!areFiltersVisible)}
+        onSearch={() => setQueryFilters(structuredClone(filters))}
       />
 
       <div className="flex gap-6">
-        {areFiltersVisible && <PropertyFilters />}
+        {areFiltersVisible && <PropertyFiltersComponent />}
 
         <div className="flex-1 space-y-4">
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-lg font-semibold">
-                {mockProperties.length} properties found
+                {arePropertiesLoading
+                  ? "Searching properties..."
+                  : `${total} properties found`}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {filters.location && `in ${filters.location}`}
@@ -143,7 +108,7 @@ const HomePage = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <Select value={filters.sortBy} onValueChange={updateSortBy}>
+              <Select value={filters.sortBy} onValueChange={handleSortChange}>
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
@@ -184,9 +149,17 @@ const HomePage = () => {
                 : "grid-cols-1"
             }`}
           >
-            {mockProperties.map((property) => (
+            {properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
+
+            {showSkeleton &&
+              [...Array(3)].map((_, index) => (
+                <CardSkeleton
+                  key={index}
+                  ref={index === 0 ? loadMoreRef : undefined}
+                />
+              ))}
           </div>
         </div>
       </div>

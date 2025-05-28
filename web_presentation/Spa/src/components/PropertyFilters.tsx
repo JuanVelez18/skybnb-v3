@@ -91,8 +91,8 @@ const PropertiesFilters = () => {
                 Bedrooms
               </Label>
               <Select
-                value={filters.bedrooms?.toString()}
-                onValueChange={(value) => updateBedrooms(+value)}
+                value={filters.bedrooms?.toString() ?? ""}
+                onValueChange={updateBedrooms}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Any" />
@@ -113,8 +113,8 @@ const PropertiesFilters = () => {
                 Bathrooms
               </Label>
               <Select
-                value={filters.bathrooms?.toString()}
-                onValueChange={(value) => updateBathrooms(+value)}
+                value={filters.bathrooms?.toString() ?? ""}
+                onValueChange={updateBathrooms}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Any" />

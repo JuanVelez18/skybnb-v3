@@ -9,14 +9,21 @@ type State = {
 type Action = {
   updatePriceRange: (min: number, max: number) => void;
   updatePropertyTypes: (types: number[]) => void;
-  updateBedrooms: (bedrooms: number) => void;
-  updateBathrooms: (bathrooms: number) => void;
+  updateBedrooms: (bedrooms?: string) => void;
+  updateBathrooms: (bathrooms?: string) => void;
   tooglePropertyType: (type: number) => void;
   updateLocation: (location: string) => void;
   updateCheckIn: (checkIn?: Date) => void;
   updateCheckOut: (checkOut?: Date) => void;
-  updateGuests: (guests: number) => void;
+  updateGuests: (guests?: string) => void;
   updateSortBy: (sortBy: SortBy) => void;
+};
+
+const stringToInteger = (str?: string): number | undefined => {
+  if (!str) return undefined;
+
+  const parsed = parseInt(str, 10);
+  return isNaN(parsed) ? undefined : parsed;
 };
 
 export const usePropertiesStore = create<State & Action>((set) => ({
@@ -34,7 +41,9 @@ export const usePropertiesStore = create<State & Action>((set) => ({
   },
 
   updateLocation: (location) =>
-    set((state) => ({ filters: { ...state.filters, location } })),
+    set((state) => ({
+      filters: { ...state.filters, location: location || undefined },
+    })),
 
   updatePriceRange: (min, max) =>
     set((state) => ({
@@ -45,10 +54,14 @@ export const usePropertiesStore = create<State & Action>((set) => ({
     set((state) => ({ filters: { ...state.filters, types } })),
 
   updateBedrooms: (bedrooms) =>
-    set((state) => ({ filters: { ...state.filters, bedrooms } })),
+    set((state) => ({
+      filters: { ...state.filters, bedrooms: stringToInteger(bedrooms) },
+    })),
 
   updateBathrooms: (bathrooms) =>
-    set((state) => ({ filters: { ...state.filters, bathrooms } })),
+    set((state) => ({
+      filters: { ...state.filters, bathrooms: stringToInteger(bathrooms) },
+    })),
 
   tooglePropertyType: (type) =>
     set((state) => {
@@ -69,7 +82,9 @@ export const usePropertiesStore = create<State & Action>((set) => ({
     set((state) => ({ filters: { ...state.filters, checkOut } })),
 
   updateGuests: (guests) =>
-    set((state) => ({ filters: { ...state.filters, guests } })),
+    set((state) => ({
+      filters: { ...state.filters, guests: stringToInteger(guests) },
+    })),
 
   updateSortBy: (sortBy) =>
     set((state) => ({ filters: { ...state.filters, sortBy } })),

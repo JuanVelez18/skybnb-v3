@@ -23,11 +23,38 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   onFiltersClick: () => void;
+  onSearch: () => void;
 };
 
-const PropertySearch = ({ onFiltersClick }: Props) => {
-  const { filters, updateLocation, updateCheckIn, updateGuests } =
-    usePropertiesStore();
+const dateToLocaleString = (date: Date) => {
+  return date.toLocaleString(["en-US", "es-ES"], {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
+
+const isPastDate = (date: Date) => {
+  const today = new Date();
+  return date < today || date < new Date("1900-01-01");
+};
+
+const PropertySearch = ({ onFiltersClick, onSearch }: Props) => {
+  const {
+    filters,
+    updateLocation,
+    updateCheckIn,
+    updateCheckOut,
+    updateGuests,
+  } = usePropertiesStore();
+
+  const isDisabledCheckInDate = (date: Date) => {
+    return isPastDate(date);
+  };
+
+  const isDisabledCheckOutDate = (date: Date) => {
+    return isPastDate(date) || (!!filters.checkIn && date <= filters.checkIn);
+  };
 
   return (
     <Card>
@@ -59,7 +86,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                   )}
                 >
                   {filters.checkIn ? (
-                    filters.checkIn.toLocaleString()
+                    dateToLocaleString(filters.checkIn)
                   ) : (
                     <span>mm/dd/yyyy</span>
                   )}
@@ -70,24 +97,12 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                 <Calendar
                   mode="single"
                   selected={filters.checkIn}
-                  onSelect={(date) => updateCheckIn(date)}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
+                  onSelect={updateCheckIn}
+                  disabled={isDisabledCheckInDate}
                 />
               </PopoverContent>
             </Popover>
           </div>
-
-          {/* <div className="space-y-2">
-            <Label htmlFor="checkout">Check-out</Label>
-            <Input
-              id="checkout"
-              type="date"
-              value={filters.checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-            />
-          </div> */}
 
           <div className="space-y-2">
             <Label>Check-out</Label>
@@ -101,7 +116,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                   )}
                 >
                   {filters.checkOut ? (
-                    filters.checkOut.toLocaleString()
+                    dateToLocaleString(filters.checkOut)
                   ) : (
                     <span>mm/dd/yyyy</span>
                   )}
@@ -112,10 +127,8 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                 <Calendar
                   mode="single"
                   selected={filters.checkOut}
-                  onSelect={(date) => updateCheckIn(date)}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
+                  onSelect={updateCheckOut}
+                  disabled={isDisabledCheckOutDate}
                 />
               </PopoverContent>
             </Popover>
@@ -124,8 +137,8 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
           <div className="space-y-2">
             <Label htmlFor="guests">Guests</Label>
             <Select
-              value={filters.guests?.toString()}
-              onValueChange={(value) => updateGuests(+value)}
+              value={filters.guests?.toString() ?? ""}
+              onValueChange={updateGuests}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -156,7 +169,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
             )}
           </Button>
 
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center gap-2" onClick={onSearch}>
             <Search className="h-4 w-4" />
             Search
           </Button>
