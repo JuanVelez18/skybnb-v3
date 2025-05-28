@@ -34,7 +34,7 @@ namespace application.Implementations
             }
 
             var newAddress = new Addresses(
-                street: propertiesCreationDto.Address.Street,
+                street: propertiesCreationDto.Address!.Street,
                 streetNumber: propertiesCreationDto.Address.StreetNumber!.Value,
                 intersectionNumber: propertiesCreationDto.Address.IntersectionNumber!.Value,
                 doorNumber: propertiesCreationDto.Address.DoorNumber!.Value,
@@ -108,6 +108,36 @@ namespace application.Implementations
                 Name = pt.Name,
                 Description = pt.Description
             })];
+        }
+
+        public async Task<PageDto<PropertySummaryDto>> GetPropertiesAsync(PaginationOptionsDto paginationDto, PropertyFiltersDto? filtersDto, Guid? userId)
+        {
+            var filters = filtersDto?.ToDomainPropertyFilters();
+            if (filters != null && !filters.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid filters provided.");
+            }
+
+            var pagination = paginationDto.ToDomainPaginationOptions();
+            if (!pagination.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid pagination options provided.");
+            }
+
+            var auditory = new Auditories(
+                userId,
+                action: "Get Properties",
+                entity: "Property",
+                entityId: null,
+                details: filtersDto != null ? JsonSerializer.Serialize(filtersDto) : null,
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+
+            var propertiesPage = await _unitOfWork.Properties.GetPropertiesAsync(pagination, filters);
+
+            return PageDto<PropertySummaryDto>.FromDomainPage(propertiesPage, PropertySummaryDto.FromDomainProperty);
         }
     }
 }

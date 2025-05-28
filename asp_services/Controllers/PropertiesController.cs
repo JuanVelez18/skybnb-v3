@@ -24,7 +24,16 @@ namespace asp_services.Controllers
             var hostId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _propertiesApplication.CreateProperties(propertiesCreationDto, hostId);
             return Created();
-    }
-        
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProperties([FromQuery] PaginationOptionsDto paginationDto, [FromQuery] PropertyFiltersDto? filtersDto)
+        {
+            var identifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid? userId = identifier != null ? Guid.Parse(identifier) : null;
+
+            var properties = await _propertiesApplication.GetPropertiesAsync(paginationDto, filtersDto, userId);
+            return Ok(properties);
+        }
     }
 }
