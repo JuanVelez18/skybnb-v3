@@ -78,7 +78,7 @@ export default function SkyBnBLayout() {
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Building2 className="h-4 w-4" />
-            </div>{" "}
+            </div>
             <div className="flex flex-col">
               <span className="text-lg font-bold text-primary">SkyBnB</span>
               <span className="text-xs text-muted-foreground">
@@ -111,7 +111,7 @@ export default function SkyBnBLayout() {
 
       <SidebarInset>
         {/* Header con menú de usuario */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b px-6">
+        <header className="sticky top-0 z-10 flex h-16 bg-background shrink-0 items-center justify-between border-b px-6">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">{title}</h1>
           </div>
@@ -184,9 +184,9 @@ export default function SkyBnBLayout() {
         </header>
 
         {/* Contenido principal */}
-        <main className="flex-1 space-y-4 p-6">
+        <section className="flex-1 space-y-4 p-6">
           <Outlet />
-        </main>
+        </section>
       </SidebarInset>
     </SidebarProvider>
   );
