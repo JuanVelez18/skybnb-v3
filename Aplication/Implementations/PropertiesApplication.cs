@@ -110,7 +110,7 @@ namespace application.Implementations
             })];
         }
 
-        public async Task<PageDto<PropertySummaryDto>> GetPropertiesAsync(PaginationOptionsDto paginationDto, PropertyFiltersDto? filtersDto)
+        public async Task<PageDto<PropertySummaryDto>> GetPropertiesAsync(PaginationOptionsDto paginationDto, PropertyFiltersDto? filtersDto, Guid? userId)
         {
             var filters = filtersDto?.ToDomainPropertyFilters();
             if (filters != null && !filters.IsValid())
@@ -123,6 +123,17 @@ namespace application.Implementations
             {
                 throw new InvalidDataApplicationException("Invalid pagination options provided.");
             }
+
+            var auditory = new Auditories(
+                userId,
+                action: "Get Properties",
+                entity: "Property",
+                entityId: null,
+                details: filtersDto != null ? JsonSerializer.Serialize(filtersDto) : null,
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
 
             var propertiesPage = await _unitOfWork.Properties.GetPropertiesAsync(pagination, filters);
 
