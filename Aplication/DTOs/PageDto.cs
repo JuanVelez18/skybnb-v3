@@ -9,9 +9,9 @@ namespace application.DTOs
         public long TotalPages { get; set; }
         public long TotalCount { get; set; }
 
-        static public PageDto<U> FromDomainPage<U>(Page<U> page) where U : class
+        static public PageDto<T> FromDomainPage(Page<T> page)
         {
-            return new PageDto<U>
+            return new PageDto<T>
             {
                 Results = page.Items,
                 Page = page.CurrentPage,
@@ -20,9 +20,9 @@ namespace application.DTOs
             };
         }
 
-        static public PageDto<V> FromDomainPage<U, V>(Page<U> page, Func<U, V> converter) where U : class where V : class
+        static public PageDto<T> FromDomainPage<U>(Page<U> page, Func<U, T> converter) where U : class
         {
-            return new PageDto<V>
+            return new PageDto<T>
             {
                 Results = page.Items.Select(converter).ToList(),
                 Page = page.CurrentPage,
