@@ -21,6 +21,14 @@ import {
 import { usePropertiesStore } from "@/stores/properties.store";
 import { cn } from "@/lib/utils";
 
+const dateToLocaleString = (date: Date) => {
+  return date.toLocaleString(["en-US", "es-ES"], {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
+
 type Props = {
   onFiltersClick: () => void;
 };
@@ -59,7 +67,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                   )}
                 >
                   {filters.checkIn ? (
-                    filters.checkIn.toLocaleString()
+                    dateToLocaleString(filters.checkIn)
                   ) : (
                     <span>mm/dd/yyyy</span>
                   )}
@@ -79,16 +87,6 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
             </Popover>
           </div>
 
-          {/* <div className="space-y-2">
-            <Label htmlFor="checkout">Check-out</Label>
-            <Input
-              id="checkout"
-              type="date"
-              value={filters.checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-            />
-          </div> */}
-
           <div className="space-y-2">
             <Label>Check-out</Label>
             <Popover>
@@ -101,7 +99,7 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
                   )}
                 >
                   {filters.checkOut ? (
-                    filters.checkOut.toLocaleString()
+                    dateToLocaleString(filters.checkOut)
                   ) : (
                     <span>mm/dd/yyyy</span>
                   )}
@@ -124,8 +122,8 @@ const PropertySearch = ({ onFiltersClick }: Props) => {
           <div className="space-y-2">
             <Label htmlFor="guests">Guests</Label>
             <Select
-              value={filters.guests?.toString()}
-              onValueChange={(value) => updateGuests(+value)}
+              value={filters.guests?.toString() ?? ""}
+              onValueChange={updateGuests}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
