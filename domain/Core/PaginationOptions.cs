@@ -2,14 +2,18 @@
 {
     public class PaginationOptions
     {
-        public int PageNumber { get; set; } = 1;
-        private int _PageSize { get; set; } = 10;
-        private const int MaxPageSize = 50;
+        public long PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
 
-        public int PageSize
+        public static readonly long MinPageNumber = 1;
+        public static readonly int MinPageSize = 1;
+        public static readonly int MaxPageSize = 50;
+
+        public bool IsValid()
         {
-            get => _PageSize;
-            set => _PageSize = (value > MaxPageSize) ? MaxPageSize : value;
+            return PageNumber >= MinPageNumber &&
+                   PageSize >= MinPageSize &&
+                   PageSize <= MaxPageSize;
         }
     }
 }
