@@ -23,5 +23,8 @@ namespace application.DTOs
         [Required(ErrorMessage = "Base price per night is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Total price must be greater than 0")]
         public decimal TotalPrice { get; set; }
+
+        [MaxLength(500, ErrorMessage = "Comment cannot exceed 500 characters")]
+        public string? Comment { get; set; }
     }
 }

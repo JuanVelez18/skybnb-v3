@@ -44,7 +44,8 @@ namespace application.Implementations
                 bookingDto.CheckInDate,
                 bookingDto.CheckOutDate,
                 bookingDto.NumGuests,
-                bookingDto.TotalPrice
+                bookingDto.TotalPrice,
+                bookingDto.Comment
         );
             newBooking.Property = property;
             newBooking.Guest = user;
@@ -58,10 +59,6 @@ namespace application.Implementations
                 action: "Create Booking",
                 entity: "Bookings",
                 entityId: newBooking.Id.ToString(),
-                details: JsonSerializer.Serialize(newBooking, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
