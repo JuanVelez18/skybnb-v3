@@ -7,7 +7,7 @@ namespace domain.Entities
         string name,
         string isoCode,
         string? phoneCode
-        ) : ISoftDeletable
+        ) : IDisabled
     {
         public int Id { get; private set; }
 

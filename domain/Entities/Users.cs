@@ -7,7 +7,7 @@ namespace domain.Entities
     public class Users(
         string email,
         string passwordHash
-    ) : ISoftDeletable
+    ) : IDisabled
     {
         public Guid Id { get; private set; }
 

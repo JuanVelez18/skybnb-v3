@@ -12,7 +12,7 @@ namespace domain.Entities
         string? complement,
         decimal? latitude,
         decimal? longitude
-        ): ISoftDeletable
+        )
     {
         public Guid Id { get; private set; }
 
@@ -39,7 +39,6 @@ namespace domain.Entities
         [Precision(11, 8)]
         public decimal? Longitude { get; set; } = longitude;
 
-        public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

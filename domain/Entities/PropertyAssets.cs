@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace domain.Entities
 {
+    [Index(nameof(Url), IsUnique = true)]
     public class PropertyAssets
     {
         public Guid Id { get; set; }
@@ -18,7 +20,7 @@ namespace domain.Entities
 
         public Guid PropertyId { get; set; }
 
-        public bool IsActive { get; set; } = true;
+
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

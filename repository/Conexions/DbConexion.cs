@@ -26,7 +26,7 @@ namespace repository.Conexions
         private static LambdaExpression CreateSoftDeletedFilter(Type type)
         {
             var parameter = Expression.Parameter(type, "e");
-            var propertyAccess = Expression.Property(Expression.Convert(parameter, typeof(ISoftDeletable)), nameof(ISoftDeletable.IsActive));
+            var propertyAccess = Expression.Property(Expression.Convert(parameter, typeof(IDisabled)), nameof(IDisabled.IsActive));
             var constantTrue = Expression.Constant(true);
             var body = Expression.Equal(propertyAccess, constantTrue);
             return Expression.Lambda(body, parameter);
@@ -110,7 +110,7 @@ namespace repository.Conexions
             // Apply soft delete filter to all entities implementing ISoftDeletable
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType) && entityType.BaseType == null)
+                if (typeof(IDisabled).IsAssignableFrom(entityType.ClrType) && entityType.BaseType == null)
                 {
                     var filter = CreateSoftDeletedFilter(entityType.ClrType);
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);

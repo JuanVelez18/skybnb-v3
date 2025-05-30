@@ -8,7 +8,7 @@ namespace domain.Entities
         int countryId,
         decimal? latitude,
         decimal? longitude
-        ): ISoftDeletable
+        ): IDisabled
     {
         public int Id { get; private set; }
 
