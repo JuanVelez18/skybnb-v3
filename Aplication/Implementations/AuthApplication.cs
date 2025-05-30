@@ -174,7 +174,7 @@ namespace application.Implementations
 
         public async Task<TokensDto> Login(UserCredentialsDto credentials)
         {
-            var user = await _unitOfWork.Customers.GetByEmailAsync(credentials.Email!);
+            var user = await _unitOfWork.Users.GetByEmailAsync(credentials.Email!);
             if (user == null)
             {
                 throw new InvalidDataApplicationException("Invalid email or password.");
@@ -240,7 +240,7 @@ namespace application.Implementations
 
         public async Task Logout(Guid userId, string refreshToken)
         {
-            var user = await _unitOfWork.Customers.GetByIdAsync(userId);
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
             if (user == null)
             {
                 throw new NotFoundApplicationException("User not found.");
@@ -256,6 +256,7 @@ namespace application.Implementations
             }
 
             token.Revoke();
+            _unitOfWork.RefreshTokens.Update(token);
 
             var auditory = new Auditories(
                 userId: user.Id,
