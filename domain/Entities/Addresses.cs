@@ -38,5 +38,8 @@ namespace domain.Entities
 
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public Properties? Property { get; set; }
+        public Guests? Guest { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace domain.Entities
         int countryId,
         decimal? latitude,
         decimal? longitude
-        ): IDisabled
+        ) : IDisabled
     {
         public int Id { get; private set; }
 
@@ -29,5 +29,7 @@ namespace domain.Entities
 
 
         public Countries? Country { get; set; }
+        public List<Guests> Guests { get; set; } = [];
+        public List<Properties> Properties { get; set; } = [];
     }
 }

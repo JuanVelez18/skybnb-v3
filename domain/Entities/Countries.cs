@@ -29,5 +29,7 @@ namespace domain.Entities
 
         public List<Cities> Cities { get; set; } = [];
         public List<Customers> Customers { get; set; } = [];
+        public List<Guests> Guests { get; set; } = [];
+        public List<Properties> Properties { get; set; } = [];
     }
 }

@@ -24,5 +24,6 @@ namespace domain.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public List<Roles> Roles { get; set; } = [];
+        public List<RefreshTokens> RefreshTokens { get; set; } = [];
     }
 }
