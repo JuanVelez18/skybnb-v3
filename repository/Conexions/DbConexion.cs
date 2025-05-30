@@ -65,9 +65,9 @@ namespace repository.Conexions
 
             modelBuilder
                 .Entity<Guests>()
-                .HasOne(g => g.User)
-                .WithOne(u => u.Guest)
-                .HasForeignKey<Guests>(g => g.UserId)
+                .HasOne(g => g.Customer)
+                .WithOne(u => u.GuestProfile)
+                .HasForeignKey<Guests>(g => g.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Roles>().HasData(
@@ -110,7 +110,7 @@ namespace repository.Conexions
             // Apply soft delete filter to all entities implementing ISoftDeletable
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
+                if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType) && entityType.BaseType == null)
                 {
                     var filter = CreateSoftDeletedFilter(entityType.ClrType);
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);

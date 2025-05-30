@@ -13,7 +13,7 @@ namespace domain.Entities
         DateOnly birthday,
         int countryId,
         string? phone
-        ) : Users(email, passwordHash), ISoftDeletable
+        ) : Users(email, passwordHash)
     {
         [Unicode(false)]
         [MaxLength(20)]
