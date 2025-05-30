@@ -5,18 +5,18 @@ using repository.Interfaces;
 
 namespace repository.Implementations
 {
-    public class UserRepository : BaseRepository<Users, Guid>, IUserRepository
+    public class CustomerRepository : BaseRepository<Customers, Guid>, ICustomerRepository
     {
-        public UserRepository(DbConexion conexion) : base(conexion) { }
+        public CustomerRepository(DbConexion conexion) : base(conexion) { }
 
-        public async Task<Users?> GetByEmailAsync(string email)
+        public async Task<Customers?> GetByEmailAsync(string email)
         {
             return await _dbSet
                 .Include(user => user.Roles)
                 .FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public override async Task<Users?> GetByIdAsync(Guid id)
+        public override async Task<Customers?> GetByIdAsync(Guid id)
         {
             return await _dbSet
                 .Include(user => user.Roles)
@@ -34,7 +34,7 @@ namespace repository.Implementations
                 .ToListAsync();
         }
 
-        public void AssignRole(Users user, Roles role)
+        public void AssignRole(Customers user, Roles role)
         {
             user.Roles!.Add(role);
         }

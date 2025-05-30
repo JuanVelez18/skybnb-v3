@@ -34,6 +34,6 @@ namespace domain.Entities
 
         public Bookings? Booking { get; set; }
         public Properties? Property { get; set; }
-        public Users? Guest { get; set; }
+        public Customers? Guest { get; set; }
     }
 }

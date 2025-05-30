@@ -35,7 +35,7 @@ namespace domain.Entities
 
 
         public Properties? Property { get; set; }
-        public Users? Guest { get; set; }
+        public Customers? Guest { get; set; }
         public Reviews? Review { get; set; }
     }
 }

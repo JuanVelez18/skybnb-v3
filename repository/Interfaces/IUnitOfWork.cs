@@ -2,7 +2,7 @@
 {
         public interface IUnitOfWork : IDisposable
         {
-                IUserRepository Users { get; }
+                ICustomerRepository Customers { get; }
                 IGuestRepository Guests { get; }
                 IAddressRepository Addresses { get; }
                 IRoleRepository Roles { get; }
@@ -16,6 +16,6 @@
                 IAuditoryRepository Auditories { get; }
                 IPropertyAssetsRepository PropertyAssets { get; }
 
-        Task<int> CommitAsync();
+                Task<int> CommitAsync();
         }
 }

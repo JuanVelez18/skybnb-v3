@@ -58,7 +58,7 @@ namespace domain.Entities
 
 
         public PropertyTypes? Type { get; set; }
-        public Users? Host { get; set; }
+        public Customers? Host { get; set; }
         public Addresses? Address { get; set; }
         public List<Bookings> Bookings { get; set; } = [];
         public List<Reviews> Reviews { get; set; } = [];

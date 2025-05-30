@@ -21,7 +21,7 @@ namespace application.Implementations
         public async Task CreateBooking(BookingsDto bookingDto, Guid userId)
 
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(userId);
 
             if (user == null)
             {
@@ -33,7 +33,7 @@ namespace application.Implementations
             {
                 throw new NotFoundApplicationException("Property not found.");
             }
-            if (property.HostId == userId) 
+            if (property.HostId == userId)
             {
                 throw new InvalidOperationException("You cannot reserve your own property.");
             }

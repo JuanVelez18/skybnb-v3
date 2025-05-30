@@ -21,7 +21,7 @@ namespace application.Implementations
         public async Task CreateProperties(PropertiesCreationDto propertiesCreationDto, Guid hostId)
 
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(hostId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(hostId);
 
             if (user == null)
             {

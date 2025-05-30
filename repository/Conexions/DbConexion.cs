@@ -11,6 +11,7 @@ namespace repository.Conexions
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<Customers> Customers { get; set; }
         public DbSet<Guests> Guests { get; set; }
         public DbSet<Countries> Countries { get; set; }
         public DbSet<Cities> Cities { get; set; }
@@ -33,6 +34,10 @@ namespace repository.Conexions
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Users>()
+                .UseTptMappingStrategy();
+
             // Configure on delete behavior for entities with circular references
             modelBuilder
                 .Entity<Properties>()
