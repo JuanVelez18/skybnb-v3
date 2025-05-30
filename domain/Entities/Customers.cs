@@ -34,7 +34,6 @@ namespace domain.Entities
         public string? Phone { get; set; } = phone;
 
 
-        public Users? User { get; set; }
         public Countries? Country { get; set; }
         public Guests? GuestProfile { get; set; }
         public List<Properties> HostedProperties { get; set; } = [];
