@@ -14,7 +14,9 @@ namespace domain.Entities
         decimal basePricePerNight,
         int typeId,
         Guid hostId,
-        Guid addressId
+        Guid addressId,
+        int CityId,
+        int CountryId
         ) : IDisabled
     {
         public Guid Id { get; private set; }
@@ -45,6 +47,8 @@ namespace domain.Entities
         public Guid HostId { get; private set; } = hostId;
 
         public Guid AddressId { get; set; } = addressId;
+        public int CityId { get; set; } = CityId;
+        public int CountryId { get; set; } = CountryId;
 
         [Range(0, int.MaxValue)]
         public int ReviewsCount { get; set; } = 0;

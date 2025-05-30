@@ -8,7 +8,6 @@ namespace domain.Entities
         int streetNumber,
         int intersectionNumber,
         int doorNumber,
-        int cityId,
         string? complement,
         decimal? latitude,
         decimal? longitude
@@ -28,8 +27,6 @@ namespace domain.Entities
         [Range(1, int.MaxValue)]
         public int DoorNumber { get; set; } = doorNumber;
 
-        public int CityId { get; set; } = cityId;
-
         [MaxLength(200)]
         public string? Complement { get; set; } = complement;
 
@@ -41,8 +38,5 @@ namespace domain.Entities
 
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-
-        public Cities? City { get; set; }
     }
 }
