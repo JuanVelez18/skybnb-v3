@@ -256,7 +256,6 @@ namespace application.Implementations
             }
 
             token.Revoke();
-            _unitOfWork.RefreshTokens.Update(token);
 
             var auditory = new Auditories(
                 userId: user.Id,
