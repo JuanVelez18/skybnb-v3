@@ -24,8 +24,5 @@ namespace domain.Entities
         public string? Entity { get; private set; } = entity;
 
         public string? EntityId { get; private set; } = entityId;
-
-
-        public Users? User { get; set; }
     }
 }
