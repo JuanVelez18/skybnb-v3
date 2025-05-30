@@ -39,6 +39,7 @@ namespace domain.Entities
         public Guests? GuestProfile { get; set; }
         public List<Properties> HostedProperties { get; set; } = [];
         public List<Bookings> Bookings { get; set; } = [];
+        public List<Payments> Payments { get; set; } = [];
         public List<Reviews> ReviewsWritten { get; set; } = [];
     }
 }
