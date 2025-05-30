@@ -55,6 +55,12 @@ namespace application.DTOs
         [Required(ErrorMessage = "Address is required")]
         public AddressDto? Address { get; set; }
 
+        [Required(ErrorMessage = "City is required")]
+        public int? City { get; set; }
+
+        [Required(ErrorMessage = "Country is required")]
+        public int? Country { get; set; }
+
         [Required(ErrorMessage = "At least one asset is required")]
         [MinLength(1, ErrorMessage = "At least one asset is required")]
         [MaxLength(10, ErrorMessage = "A maximum of 10 assets can be added")]

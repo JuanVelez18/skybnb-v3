@@ -97,7 +97,6 @@ namespace application.Implementations
                 action: "Register host",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user),
                 timestamp: DateTime.UtcNow
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
@@ -123,7 +122,6 @@ namespace application.Implementations
                 streetNumber: guestCreationDto.Address.StreetNumber!.Value,
                 intersectionNumber: guestCreationDto.Address.IntersectionNumber!.Value,
                 doorNumber: guestCreationDto.Address.DoorNumber!.Value,
-                cityId: guestCreationDto.Address.CityId!.Value,
                 complement: guestCreationDto.Address.Complement,
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
@@ -133,7 +131,9 @@ namespace application.Implementations
 
             var guest = new Guests(
                 customerId: user.Id,
-                addressId: address.Id
+                addressId: address.Id,
+                guestCreationDto.City!.Value,
+                guestCreationDto.Country!.Value
             );
             await _unitOfWork.Guests.AddAsync(guest);
 
@@ -143,10 +143,6 @@ namespace application.Implementations
                 action: "Register guest",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: auditoryNow
             );
             var addressAuditory = new Auditories(
@@ -154,7 +150,6 @@ namespace application.Implementations
                 action: "Register guest address",
                 entity: "Address",
                 entityId: address.Id.ToString(),
-                details: JsonSerializer.Serialize(address),
                 timestamp: auditoryNow
             );
             await _unitOfWork.Auditories.AddAsync(userAuditory);
@@ -199,8 +194,7 @@ namespace application.Implementations
                 action: "User login",
                 timestamp: DateTime.UtcNow,
                 entity: null,
-                entityId: null,
-                details: null
+                entityId: null
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
 
@@ -262,8 +256,7 @@ namespace application.Implementations
                 action: "User logout",
                 timestamp: DateTime.UtcNow,
                 entity: null,
-                entityId: null,
-                details: null
+                entityId: null
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
 

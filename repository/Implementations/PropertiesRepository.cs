@@ -17,8 +17,8 @@ namespace repository.Implementations
             IQueryable<Properties> query = _dbSet
                 .AsNoTracking()
                 .Include(p => p.Address)
-                    .ThenInclude(a => a!.City)
-                    .ThenInclude(c => c!.Country)
+                .Include(p => p.City)
+                .Include(p => p.Country)
                 .Include(p => p.Multimedia)
                 .Include(p => p.Type)
                 .Include(p => p.Reviews);

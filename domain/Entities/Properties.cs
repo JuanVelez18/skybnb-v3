@@ -64,6 +64,8 @@ namespace domain.Entities
         public PropertyTypes? Type { get; set; }
         public Customers? Host { get; set; }
         public Addresses? Address { get; set; }
+        public Cities? City { get; set; }
+        public Countries? Country { get; set; }
         public List<Bookings> Bookings { get; set; } = [];
         public List<Reviews> Reviews { get; set; } = [];
         public List<PropertyAssets> Multimedia { get; set; } = [];

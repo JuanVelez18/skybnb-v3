@@ -60,10 +60,6 @@ namespace application.Implementations
                 action: "Create Review",
                 entity: "Reviews",
                 entityId: newReview.Id.ToString(),
-                details: JsonSerializer.Serialize(newReview, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
@@ -95,10 +91,6 @@ namespace application.Implementations
                 action: "Delete Review",
                 entity: "Reviews",
                 entityId: review.Id.ToString(),
-                details: JsonSerializer.Serialize(review, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
