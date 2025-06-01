@@ -7,7 +7,7 @@ namespace domain.Entities
     public class Reviews(
         Guid bookingId,
         Guid propertyId,
-        Guid guestId,
+        Guid? guestId,
         decimal rating,
         string comment
         )
@@ -18,7 +18,7 @@ namespace domain.Entities
 
         public Guid PropertyId { get; private set; } = propertyId;
 
-        public Guid GuestId { get; private set; } = guestId;
+        public Guid? GuestId { get; private set; } = guestId;
 
         [Range(1, 5)]
         [Precision(2, 1)]

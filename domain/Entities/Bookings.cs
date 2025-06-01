@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 namespace domain.Entities
 {
     public class Bookings(
-        Guid propertyId,
-        Guid guestId,
+        Guid? propertyId,
+        Guid? guestId,
         DateOnly checkInDate,
         DateOnly checkOutDate,
         int numGuests,
@@ -15,9 +15,9 @@ namespace domain.Entities
     {
         public Guid Id { get; private set; }
 
-        public Guid PropertyId { get; private set; } = propertyId;
+        public Guid? PropertyId { get; private set; } = propertyId;
 
-        public Guid GuestId { get; private set; } = guestId;
+        public Guid? GuestId { get; private set; } = guestId;
 
         public DateOnly CheckInDate { get; private set; } = checkInDate;
 

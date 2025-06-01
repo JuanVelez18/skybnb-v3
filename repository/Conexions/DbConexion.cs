@@ -38,36 +38,95 @@ namespace repository.Conexions
                 .Entity<Users>()
                 .UseTptMappingStrategy();
 
-            // Configure on delete behavior for entities with circular references
+            modelBuilder
+                .Entity<Customers>()
+                .HasOne(c => c.Country)
+                .WithMany(c => c.Customers)
+                .HasForeignKey(c => c.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Guests>()
+                .HasOne(g => g.Country)
+                .WithMany(c => c.Guests)
+                .HasForeignKey(g => g.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Guests>()
+                .HasOne(g => g.City)
+                .WithMany(c => c.Guests)
+                .HasForeignKey(g => g.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Guests>()
+                .HasOne(g => g.Address)
+                .WithOne(a => a.Guest)
+                .HasForeignKey<Guests>(g => g.AddressId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder
                 .Entity<Properties>()
-                .HasOne(p => p.Host)
-                .WithMany(u => u.HostedProperties)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .HasOne(p => p.Type)
+                .WithMany(pt => pt.Properties)
+                .HasForeignKey(p => p.TypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Properties>()
+                .HasOne(p => p.Country)
+                .WithMany(c => c.Properties)
+                .HasForeignKey(p => p.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Properties>()
+                .HasOne(p => p.City)
+                .WithMany(c => c.Properties)
+                .HasForeignKey(p => p.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Properties>()
+                .HasOne(p => p.Address)
+                .WithOne(a => a.Property)
+                .HasForeignKey<Properties>(p => p.AddressId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Bookings>()
+                .HasOne(b => b.Guest)
+                .WithMany(g => g.Bookings)
+                .HasForeignKey(b => b.GuestId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder
                 .Entity<Bookings>()
                 .HasOne(b => b.Property)
                 .WithMany(p => p.Bookings)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .HasForeignKey(b => b.PropertyId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder
+                .Entity<Payments>()
+                .HasOne(p => p.User)
+                .WithMany(g => g.Payments)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder
                 .Entity<Reviews>()
                 .HasOne(r => r.Guest)
-                .WithMany(u => u.ReviewsWritten)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .WithMany(g => g.ReviewsWritten)
+                .HasForeignKey(r => r.GuestId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder
                 .Entity<Reviews>()
                 .HasOne(r => r.Property)
                 .WithMany(p => p.Reviews)
-                .OnDelete(DeleteBehavior.ClientCascade);
-
-            modelBuilder
-                .Entity<Guests>()
-                .HasOne(g => g.Customer)
-                .WithOne(u => u.GuestProfile)
-                .HasForeignKey<Guests>(g => g.CustomerId)
+                .HasForeignKey(r => r.PropertyId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Roles>().HasData(

@@ -5,7 +5,7 @@ namespace domain.Entities
 {
     public class Payments(
         Guid bookingId,
-        Guid userId,
+        Guid? userId,
         decimal amount,
         decimal fee,
         string paymentMethod,
@@ -24,7 +24,7 @@ namespace domain.Entities
 
         public Guid BookingId { get; private set; } = bookingId;
 
-        public Guid UserId { get; private set; } = userId;
+        public Guid? UserId { get; private set; } = userId;
 
         [Precision(13, 2)]
         public decimal Amount { get; private set; } = amount;
