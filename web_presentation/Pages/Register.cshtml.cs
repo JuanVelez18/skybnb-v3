@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using application.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using presentations.Interfaces;
 using web_presentation.Core;
@@ -33,6 +35,16 @@ namespace web_presentation.Pages
         [BindProperty]
         public AddressDto Address { get; set; } = new();
 
+        [BindProperty]
+        [Required(ErrorMessage = "Residence city is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Residence city must be a valid city")]
+        public int? ResidenceCity { get; set; }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Residence country is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Residence country must be a valid country")]
+        public int? ResidenceCountry { get; set; }
+
         public List<CountryListDto> Countries { get; set; } = [];
         public List<CityListDto> Cities { get; set; } = [];
 
@@ -62,14 +74,15 @@ namespace web_presentation.Pages
             {
                 var keysToRemove = new List<string>
                 {
-                    nameof(Address.Street),
-                    nameof(Address.StreetNumber),
-                    nameof(Address.IntersectionNumber),
-                    nameof(Address.DoorNumber),
-                    nameof(Address.CityId),
-                    nameof(Address.Complement),
-                    nameof(Address.Latitude),
-                    nameof(Address.Longitude)
+                    "Street",
+                    "StreetNumber",
+                    "IntersectionNumber",
+                    "DoorNumber",
+                    "Complement",
+                    "Latitude",
+                    "Longitude",
+                    "ResidenceCity",
+                    "ResidenceCountry"
                 };
 
                 foreach (var key in keysToRemove)
@@ -97,9 +110,11 @@ namespace web_presentation.Pages
                     Email = UserCreation.Email,
                     Password = UserCreation.Password,
                     Birthday = UserCreation.Birthday,
-                    CountryId = UserCreation.CountryId,
+                    NationalityCountry = UserCreation.NationalityCountry,
                     Phone = UserCreation.Phone,
-                    Address = Address
+                    Address = Address,
+                    City = ResidenceCity,
+                    ResidenceCountry = ResidenceCountry,
                 });
             }
             else
@@ -110,7 +125,7 @@ namespace web_presentation.Pages
             Response.SetAuthTokenCookies(tokens);
 
             TempData["ShouldPassCookiesToSPA"] = true;
-            return RedirectToPage(Routes.Home, new { ShouldPassCookiesToSPA = true });
+            return RedirectToPage(Routes.Home);
         }
     }
 }
