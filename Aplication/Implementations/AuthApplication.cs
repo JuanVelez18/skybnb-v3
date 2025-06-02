@@ -41,7 +41,7 @@ namespace application.Implementations
                     userCreationDto.Password
                 ),
                 birthday: userCreationDto.Birthday!.Value,
-                countryId: userCreationDto.CountryId!.Value,
+                countryId: userCreationDto.NationalityCountry!.Value,
                 phone: userCreationDto.Phone
             );
         }
@@ -133,7 +133,7 @@ namespace application.Implementations
                 customerId: user.Id,
                 addressId: address.Id,
                 guestCreationDto.City!.Value,
-                guestCreationDto.Country!.Value
+                guestCreationDto.ResidenceCountry!.Value
             );
             await _unitOfWork.Guests.AddAsync(guest);
 
