@@ -12,7 +12,7 @@ using repository.Conexions;
 namespace repository.Migrations
 {
     [DbContext(typeof(DbConexion))]
-    [Migration("20250601043842_InitialMigration")]
+    [Migration("20250602023429_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -58,6 +58,11 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 5
                         },
                         new
@@ -69,6 +74,11 @@ namespace repository.Migrations
                         {
                             RolesId = 1,
                             PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 8
                         },
                         new
                         {
@@ -88,7 +98,32 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 12
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 13
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 14
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 15
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 16
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 17
                         },
                         new
                         {
@@ -103,12 +138,92 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 20
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 21
                         },
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 23
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 24
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 25
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 26
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 29
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 30
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 34
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 36
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 2
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 3
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 5
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 12
                         },
                         new
                         {
@@ -118,26 +233,6 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 2,
-                            PermissionsId = 18
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 19
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 20
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 10
-                        },
-                        new
-                        {
-                            RolesId = 2,
                             PermissionsId = 22
                         },
                         new
@@ -148,42 +243,107 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 2,
-                            PermissionsId = 26
+                            PermissionsId = 24
                         },
                         new
                         {
-                            RolesId = 3,
-                            PermissionsId = 18
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 10
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 21
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 22
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 23
-                        },
-                        new
-                        {
-                            RolesId = 3,
+                            RolesId = 2,
                             PermissionsId = 25
                         },
                         new
                         {
-                            RolesId = 3,
+                            RolesId = 2,
                             PermissionsId = 26
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 29
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 31
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 2
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 3
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 5
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 12
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 17
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 23
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 27
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 31
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 35
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 36
                         });
                 });
 
@@ -505,152 +665,218 @@ namespace repository.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Permission to create a user",
+                            Name = "create:user"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Permission to read a user",
+                            Name = "read:user"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Permission to update a user",
+                            Name = "update:user"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Permission to deactivate a user",
+                            Name = "deactivate:user"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Permission to delete a user",
+                            Name = "delete:user"
+                        },
+                        new
+                        {
+                            Id = 6,
                             Description = "Permission to create a country",
                             Name = "create:country"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 7,
                             Description = "Permission to read a country",
                             Name = "read:country"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 8,
                             Description = "Permission to update a country",
                             Name = "update:country"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 9,
+                            Description = "Permission to deactivate a country",
+                            Name = "deactivate:country"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Permission to delete a country",
+                            Name = "delete:country"
+                        },
+                        new
+                        {
+                            Id = 11,
                             Description = "Permission to create a city",
                             Name = "create:city"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 12,
                             Description = "Permission to read a city",
                             Name = "read:city"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = 13,
                             Description = "Permission to update a city",
                             Name = "update:city"
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 14,
+                            Description = "Permission to deactivate a city",
+                            Name = "deactivate:city"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Permission to delete a city",
+                            Name = "delete:city"
+                        },
+                        new
+                        {
+                            Id = 16,
                             Description = "Permission to create a property type",
                             Name = "create:propertyType"
                         },
                         new
                         {
-                            Id = 10,
+                            Id = 17,
                             Description = "Permission to read a property type",
                             Name = "read:propertyType"
                         },
                         new
                         {
-                            Id = 11,
+                            Id = 18,
                             Description = "Permission to update a property type",
                             Name = "update:propertyType"
                         },
                         new
                         {
-                            Id = 13,
-                            Description = "Permission to create an address",
-                            Name = "create:address"
+                            Id = 19,
+                            Description = "Permission to deactivate a property type",
+                            Name = "deactivate:propertyType"
                         },
                         new
                         {
-                            Id = 14,
-                            Description = "Permission to read an address",
-                            Name = "read:address"
+                            Id = 20,
+                            Description = "Permission to delete a property type",
+                            Name = "delete:propertyType"
                         },
                         new
                         {
-                            Id = 15,
-                            Description = "Permission to update an address",
-                            Name = "update:address"
+                            Id = 21,
+                            Description = "Permission to read auditories",
+                            Name = "read:auditories"
                         },
                         new
                         {
-                            Id = 16,
-                            Description = "Permission to delete an address",
-                            Name = "delete:address"
-                        },
-                        new
-                        {
-                            Id = 17,
+                            Id = 22,
                             Description = "Permission to create a property",
                             Name = "create:property"
                         },
                         new
                         {
-                            Id = 18,
+                            Id = 23,
                             Description = "Permission to read a property",
                             Name = "read:property"
                         },
                         new
                         {
-                            Id = 19,
+                            Id = 24,
                             Description = "Permission to update a property",
                             Name = "update:property"
                         },
                         new
                         {
-                            Id = 20,
+                            Id = 25,
+                            Description = "Permission to deactivate a property",
+                            Name = "deactivate:property"
+                        },
+                        new
+                        {
+                            Id = 26,
                             Description = "Permission to delete a property",
                             Name = "delete:property"
                         },
                         new
                         {
-                            Id = 21,
+                            Id = 27,
                             Description = "Permission to create a booking",
                             Name = "create:booking"
                         },
                         new
                         {
-                            Id = 22,
+                            Id = 28,
                             Description = "Permission to read a booking",
                             Name = "read:booking"
                         },
                         new
                         {
-                            Id = 23,
+                            Id = 29,
                             Description = "Permission to update a booking",
                             Name = "update:booking"
                         },
                         new
                         {
-                            Id = 24,
+                            Id = 30,
                             Description = "Permission to delete a booking",
                             Name = "delete:booking"
                         },
                         new
                         {
-                            Id = 25,
+                            Id = 31,
                             Description = "Permission to create a review",
                             Name = "create:review"
                         },
                         new
                         {
-                            Id = 26,
+                            Id = 32,
                             Description = "Permission to read a review",
                             Name = "read:review"
                         },
                         new
                         {
-                            Id = 27,
+                            Id = 33,
                             Description = "Permission to update a review",
                             Name = "update:review"
                         },
                         new
                         {
-                            Id = 28,
+                            Id = 34,
                             Description = "Permission to delete a review",
                             Name = "delete:review"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Permission to create a payment",
+                            Name = "create:payment"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Permission to read a payment",
+                            Name = "read:payment"
                         });
                 });
 
@@ -780,6 +1006,9 @@ namespace repository.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
