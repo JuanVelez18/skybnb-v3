@@ -41,7 +41,7 @@ namespace application.Implementations
                     userCreationDto.Password
                 ),
                 birthday: userCreationDto.Birthday!.Value,
-                countryId: userCreationDto.NationalityCountry!.Value,
+                countryId: userCreationDto.Country!.Value,
                 phone: userCreationDto.Phone
             );
         }

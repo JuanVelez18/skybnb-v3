@@ -63,17 +63,17 @@
 					</div>
 
 					<div align="form-group">
-						<label asp-for="UserCreation.NationalityCountry" class="control-label">
+						<label asp-for="UserCreation.Country" class="control-label">
 							Country
 						</label>
-						<select asp-for="UserCreation.NationalityCountry" class="form-control">
+						<select asp-for="UserCreation.Country" class="form-control">
 							<option value="">Select a country</option>
 							@foreach (var country in Model.Countries)
 							{
 								<option value="@country.Id">@country.Name (@country.IsoCode)</option>
 							}
 						</select>
-						<span asp-validation-for="UserCreation.NationalityCountry" class="text-danger"></span>
+						<span asp-validation-for="UserCreation.Country" class="text-danger"></span>
 					</div>
 
 					<div align="form-group">

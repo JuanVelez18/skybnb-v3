@@ -110,7 +110,7 @@ namespace web_presentation.Pages
                     Email = UserCreation.Email,
                     Password = UserCreation.Password,
                     Birthday = UserCreation.Birthday,
-                    NationalityCountry = UserCreation.NationalityCountry,
+                    Country = UserCreation.Country,
                     Phone = UserCreation.Phone,
                     Address = Address,
                     City = ResidenceCity,
