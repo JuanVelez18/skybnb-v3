@@ -43,8 +43,8 @@ const formSchema = z.object({
     .max(100, "Title cannot exceed 100 characters"),
   description: z
     .string()
-    .max(1000, "Description cannot exceed 1000 characters")
-    .optional(),
+    .min(30, "Description must be at least 30 characters long")
+    .max(2000, "Description cannot exceed 2000 characters"),
   bathrooms: z.string().min(1, "There must be at least one bathroom"),
   bedrooms: z.string().min(1, "There must be at least one bedroom"),
   beds: z.string().min(1, "There must be at least one bed"),
@@ -156,7 +156,7 @@ const PropertyBasicInformationForm = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Description *</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe your property, its special features, the environment and what makes it unique..."
