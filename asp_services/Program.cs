@@ -88,6 +88,18 @@ builder.Services.AddAuthentication(options =>
             };
 
             return context.Response.WriteAsJsonAsync(problemDetails);
+        },
+        OnForbidden = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "Forbidden",
+                Detail = "User does not have permission to perform this action"
+            };
+
+            return context.Response.WriteAsJsonAsync(problemDetails);
         }
     };
 });
