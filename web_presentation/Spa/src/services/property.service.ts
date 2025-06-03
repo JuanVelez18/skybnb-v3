@@ -14,7 +14,7 @@ import {
   type PageDto,
   type PaginationOptions,
 } from "@/models/pagination";
-import { getTokensFromStorage } from "@/utils/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 type PropertyTypeDto = {
   id: number;
@@ -68,7 +68,7 @@ export class PropertyService {
     pagination: PaginationOptions,
     filters?: PropertyFilters
   ): Promise<Page<PropertySummary>> {
-    const isAuthenticated = getTokensFromStorage() !== null;
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
     const endpoint = "/properties";
     const params = {
       ...pagination,
