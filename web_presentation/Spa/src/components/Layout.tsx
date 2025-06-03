@@ -1,14 +1,6 @@
 "use client";
-import {
-  Search,
-  Building2,
-  Settings,
-  User,
-  LogOut,
-  CreditCard,
-  Bell,
-} from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { Building2, Bell } from "lucide-react";
+import { useMemo } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,25 +28,54 @@ import {
 } from "@/components/ui/sidebar";
 
 import { RouteNames } from "@/router/routes";
-import { initializeSession, logout } from "@/utils/auth";
 import { useGetUserSummary } from "@/queries/users.queries";
+import { useAuthStore } from "@/stores/auth.store";
+import {
+  AUTHENTICATED_MENU_ITEMS,
+  navigationItems,
+  NO_AUTHENTICATED_ITEMS,
+  type MenuItem,
+} from "@/utils/layout";
+import CanAccess from "./auth/CanAccess";
 
-const navigationItems = [
-  {
-    title: "Search Accommodations",
-    icon: Search,
-    url: RouteNames.HOME,
-  },
-  {
-    title: "My Properties",
-    icon: Building2,
-    url: RouteNames.CREATE_PROPERTY,
-  },
-];
+const RenderMenuItem = (item: MenuItem) => {
+  if ("action" in item) {
+    return (
+      <DropdownMenuItem>
+        <button
+          className="w-full flex items-center gap-2 cursor-pointer"
+          onClick={item.action}
+        >
+          <item.icon className="mr-2 h-4 w-4" />
+          <span>{item.title}</span>
+        </button>
+      </DropdownMenuItem>
+    );
+  }
+
+  return (
+    <DropdownMenuItem>
+      {item.razor ? (
+        <a href={item.url} className="w-full flex items-center gap-2">
+          <item.icon className="mr-2 h-4 w-4" />
+          <span>{item.title}</span>
+        </a>
+      ) : (
+        <Link to={item.url} className="w-full flex items-center gap-2">
+          <item.icon className="mr-2 h-4 w-4" />
+          <span>{item.title}</span>
+        </Link>
+      )}
+    </DropdownMenuItem>
+  );
+};
 
 export default function SkyBnBLayout() {
   const { pathname } = useLocation();
-  const { user, isUserLoading, isUserError } = useGetUserSummary();
+
+  const { isAuthenticated } = useAuthStore();
+  const { user, isUserLoading, isUserError } =
+    useGetUserSummary(isAuthenticated);
 
   const title = useMemo(() => {
     switch (pathname) {
@@ -67,9 +88,18 @@ export default function SkyBnBLayout() {
     }
   }, [pathname]);
 
-  useEffect(() => {
-    initializeSession();
-  }, []);
+  const userInitials = useMemo(() => {
+    if (!user) return "NN";
+    const firstNameInitial = user.firstName?.charAt(0).toUpperCase() || "";
+    const lastNameInitial = user.lastName?.charAt(0).toUpperCase() || "";
+
+    return `${firstNameInitial}${lastNameInitial}`;
+  }, [user]);
+
+  const menuItems = useMemo(() => {
+    if (isAuthenticated) return AUTHENTICATED_MENU_ITEMS;
+    return NO_AUTHENTICATED_ITEMS;
+  }, [isAuthenticated]);
 
   return (
     <SidebarProvider>
@@ -93,14 +123,16 @@ export default function SkyBnBLayout() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {navigationItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.url} className="flex items-center gap-3">
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  <CanAccess key={item.title} permission={item.permission}>
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <Link to={item.url} className="flex items-center gap-3">
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </CanAccess>
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
@@ -132,52 +164,51 @@ export default function SkyBnBLayout() {
                   {" "}
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                    <AvatarFallback>JD</AvatarFallback>
+                    {userInitials && (
+                      <AvatarFallback>{userInitials}</AvatarFallback>
+                    )}
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {isUserLoading ? (
-                        "Loading..."
-                      ) : isUserError ? (
-                        "Error loading name"
-                      ) : (
-                        <>
-                          <span className="capitalize">{user!.firstName}</span>{" "}
-                          <span className="capitalize">{user!.lastName}</span>
-                        </>
-                      )}
-                    </p>
+                  {isAuthenticated && (
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {isUserLoading ? (
+                          "Loading..."
+                        ) : isUserError ? (
+                          "Error loading name"
+                        ) : (
+                          <>
+                            <span className="capitalize">
+                              {user?.firstName ?? "No"}
+                            </span>{" "}
+                            <span className="capitalize">
+                              {user?.lastName ?? "User"}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {isUserLoading
+                          ? "Loading..."
+                          : isUserError
+                          ? "Error loading email"
+                          : user?.email ?? ""}
+                      </p>
+                    </div>
+                  )}
+                  {!isAuthenticated && (
                     <p className="text-xs leading-none text-muted-foreground">
-                      {isUserLoading
-                        ? "Loading..."
-                        : isUserError
-                        ? "Error loading email"
-                        : user!.email}
+                      Not logged in
                     </p>
-                  </div>
+                  )}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />{" "}
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>My Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log Out</span>
-                </DropdownMenuItem>
+                {menuItems.map((item) => (
+                  <RenderMenuItem key={item.title} {...item} />
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
