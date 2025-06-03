@@ -50,7 +50,6 @@ export type AddressDto = {
   StreetNumber: number;
   IntersectionNumber: number;
   DoorNumber: number;
-  CityId: number;
   Complement: string;
 };
 
@@ -70,5 +69,7 @@ export type CreationPropertyDto = {
   NumBathrooms: number;
   BasePricePerNight: number;
   Address: AddressDto;
-  MediaFiles: MediaFileDto[];
+  City: number;
+  Country: number;
+  Multimedia: MediaFileDto[];
 };

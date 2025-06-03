@@ -1,6 +1,7 @@
 import httpClient, { type ApiResponse } from "@/core/httpClient";
 import type { CreationMediaFile } from "@/models/multimedia";
 import {
+  type CreationPropertyDto,
   type PropertyBasicInformation,
   type PropertyFilters,
   type PropertySummary,
@@ -41,7 +42,7 @@ export class PropertyService {
   ): Promise<void> {
     const multimediaDto = await MultimediaService.uploadMultimedia(multimedia);
 
-    const propertyDto = {
+    const propertyDto: CreationPropertyDto = {
       Title: information.title,
       TypeId: parseInt(information.propertyType, 10),
       NumBeds: information.beds,
@@ -55,9 +56,10 @@ export class PropertyService {
         StreetNumber: address.streetNumber,
         IntersectionNumber: address.intersectionNumber,
         DoorNumber: address.doorNumber,
-        CityId: address.cityId,
         Complement: address.complement,
       },
+      City: address.cityId,
+      Country: address.countryId,
       Multimedia: multimediaDto,
     };
 

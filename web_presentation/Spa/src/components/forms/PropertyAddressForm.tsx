@@ -27,7 +27,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { CreationAddress } from "@/models/ubication";
-import { useGetAllCities } from "@/queries/ubication.queries";
+import {
+  useGetAllCities,
+  useGetAllCountries,
+} from "@/queries/ubication.queries";
 
 type Props = {
   formId?: string;
@@ -51,6 +54,9 @@ const addressFormSchema = z.object({
   city: z.string().min(1, {
     message: "Please select a city.",
   }),
+  country: z.string().min(1, {
+    message: "Country is required.",
+  }),
   complement: z
     .string()
     .max(200, {
@@ -69,6 +75,7 @@ const modelToFormValues = (address: CreationAddress): AddressFormValues => ({
   intersectionNumber: address.intersectionNumber.toString(),
   doorNumber: address.doorNumber.toString(),
   city: address.cityId.toString(),
+  country: address.countryId.toString(),
   complement: address.complement || "",
   latitude: address.latitude ? address.latitude.toString() : "",
   longitude: address.longitude ? address.longitude.toString() : "",
@@ -82,6 +89,7 @@ const formValuesToModel = (values: AddressFormValues): CreationAddress => ({
     : 0,
   doorNumber: values.doorNumber ? parseInt(values.doorNumber, 10) : 0,
   cityId: values.city ? parseInt(values.city, 10) : 0,
+  countryId: values.country ? parseInt(values.country, 10) : 0,
   complement: values.complement || "",
   latitude: values.latitude ? parseFloat(values.latitude) : null,
   longitude: values.longitude ? parseFloat(values.longitude) : null,
@@ -89,6 +97,8 @@ const formValuesToModel = (values: AddressFormValues): CreationAddress => ({
 
 const PropertyAddressForm = ({ formId, initialValues, onSubmit }: Props) => {
   const { cities, areCitiesLoading, isCitiesError } = useGetAllCities();
+  const { countries, areCountriesLoading, isCountriesError } =
+    useGetAllCountries();
 
   const addressForm = useForm<AddressFormValues>({
     resolver: zodResolver(addressFormSchema),
@@ -111,6 +121,12 @@ const PropertyAddressForm = ({ formId, initialValues, onSubmit }: Props) => {
     : isCitiesError
     ? "Error loading cities"
     : "Select a city";
+
+  const countriesPlaceholder = areCountriesLoading
+    ? "Loading countries..."
+    : isCountriesError
+    ? "Error loading countries"
+    : "Select a country";
 
   const handleSubmit = (values: AddressFormValues) => {
     const address = formValuesToModel(values);
@@ -203,38 +219,73 @@ const PropertyAddressForm = ({ formId, initialValues, onSubmit }: Props) => {
 
             {/* City and Complement */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <FormField
-                control={addressForm.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>City *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={citiesPlaceholder} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {!areCitiesLoading &&
-                          !isCitiesError &&
-                          cities!.map((city) => (
-                            <SelectItem
-                              key={city.id}
-                              value={city.id.toString()}
-                            >
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="w-full flex flex-row gap-6">
+                <FormField
+                  control={addressForm.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 gap-0">
+                      <FormLabel>City *</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={citiesPlaceholder} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {!areCitiesLoading &&
+                            !isCitiesError &&
+                            cities!.map((city) => (
+                              <SelectItem
+                                key={city.id}
+                                value={city.id.toString()}
+                              >
+                                {city.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={addressForm.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 gap-0">
+                      <FormLabel>Country *</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={countriesPlaceholder} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {!areCountriesLoading &&
+                            !isCountriesError &&
+                            countries!.map((country) => (
+                              <SelectItem
+                                key={country.id}
+                                value={country.id.toString()}
+                              >
+                                {country.name} ({country.code})
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={addressForm.control}
