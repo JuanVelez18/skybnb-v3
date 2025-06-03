@@ -25,7 +25,7 @@ namespace application.DTOs
                 Id = property.Id,
                 Title = property.Title,
                 Description = property.Description,
-                PhotoUrl = property.Multimedia.First()?.Url?.ToString(),
+                PhotoUrl = property.Multimedia.FirstOrDefault()?.Url?.ToString(),
                 City = property.City!.Name,
                 Country = property.Country!.Name,
                 MaxGuests = property.MaxGuests,
