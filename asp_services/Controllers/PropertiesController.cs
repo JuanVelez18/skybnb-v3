@@ -18,7 +18,7 @@ namespace asp_services.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize("create:property")]
         public async Task<IActionResult> CreateProperty([FromBody] PropertiesCreationDto propertiesCreationDto)
         {
             var hostId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
