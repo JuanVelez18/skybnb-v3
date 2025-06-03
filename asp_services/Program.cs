@@ -34,6 +34,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 // Dependecies Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<UserCredentialsDto>>();
+builder.Services.AddScoped<IPasswordHasher<object>, PasswordHasher<object>>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
@@ -91,13 +92,6 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Initialize the database
-using (var scope = app.Services.CreateScope())
-{
-    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
-    await dataInitializer.InitializeAsync();
-}
-
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
@@ -105,6 +99,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+    // Initialize the database for development environment
+    using var scope = app.Services.CreateScope();
+    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
+    await dataInitializer.InitializeAsync();
 }
 
 // Authentication Middleware
