@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using web_presentation.Extensions;
 
 namespace web_presentation.Pages
 {
@@ -21,6 +21,8 @@ namespace web_presentation.Pages
             {
                 ShouldPassCookiesToSPA = true;
             }
+
+            Response.ClearAuthTokenCookies();
         }
     }
 }
