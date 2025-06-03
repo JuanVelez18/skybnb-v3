@@ -6,11 +6,11 @@ export const UserQueryKeys = {
   me: () => [...UserQueryKeys.all, "me"] as const,
 };
 
-export const useGetUserSummary = () => {
+export const useGetUserSummary = (enabled?: boolean) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: UserQueryKeys.me(),
     queryFn: async () => UserService.getUserSummary(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: enabled ?? true,
   });
 
   return {
