@@ -3,8 +3,10 @@ using application.Core;
 using application.DTOs;
 using application.Implementations;
 using application.Interfaces;
+using asp_services.Core;
 using asp_services.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +51,7 @@ builder.Services.AddScoped<IPropertyTypesApplication, PropertyTypesApplication>(
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
 
-// Inyecta instancia de conexi�n a la base de datos
+// Add instance of DbContext
 builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
 // Add authentication
@@ -89,6 +91,10 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+
+// Add authorization
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
 var app = builder.Build();
 
