@@ -10,8 +10,7 @@ namespace domain.Entities
         string action,
         DateTime timestamp,
         string? entity,
-        string? entityId,
-        string? details
+        string? entityId
         )
     {
         public long Id { get; private set; }
@@ -25,10 +24,5 @@ namespace domain.Entities
         public string? Entity { get; private set; } = entity;
 
         public string? EntityId { get; private set; } = entityId;
-
-        public string? Details { get; private set; } = details;
-
-
-        public Users? User { get; set; }
     }
 }

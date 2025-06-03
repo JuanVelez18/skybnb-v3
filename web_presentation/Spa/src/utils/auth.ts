@@ -1,3 +1,4 @@
+import httpClient from "@/core/httpClient";
 import { dtoToTokens, type Tokens, type RazorTokensDto } from "../models/auth";
 
 const TOKENS_KEY = "tokens";
@@ -50,7 +51,11 @@ export const initializeSession = async () => {
   redirectToLogout();
 };
 
-export const logout = () => {
+export const logout = async () => {
+  await httpClient.post("/auth/logout", {
+    RefreshToken: getTokensFromStorage()?.refreshToken,
+  });
+
   localStorage.removeItem(TOKENS_KEY);
   redirectToLogout();
 };

@@ -11,7 +11,7 @@ namespace domain.Entities
         public long Id { get; set; }
 
         [Required]
-        public string TokenValue { get; set; }
+        public required string TokenValue { get; set; }
 
         [Required]
         public Guid UserId { get; set; }

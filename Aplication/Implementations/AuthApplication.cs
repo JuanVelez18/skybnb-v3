@@ -29,9 +29,9 @@ namespace application.Implementations
             _tokenHasher = tokenHasher;
         }
 
-        private Users CreateBaseUser(UserCreationDto userCreationDto)
+        private Customers CreateBaseCustomer(UserCreationDto userCreationDto)
         {
-            return new Users(
+            return new Customers(
                 dni: userCreationDto.Dni,
                 firstName: userCreationDto.FirstName,
                 lastName: userCreationDto.LastName,
@@ -41,7 +41,7 @@ namespace application.Implementations
                     userCreationDto.Password
                 ),
                 birthday: userCreationDto.Birthday!.Value,
-                countryId: userCreationDto.CountryId!.Value,
+                countryId: userCreationDto.NationalityCountry!.Value,
                 phone: userCreationDto.Phone
             );
         }
@@ -65,7 +65,7 @@ namespace application.Implementations
             return (entity, token);
         }
 
-        private async Task<(Users, Roles)> GetUserAndRole(UserCreationDto userDto, int roleId)
+        private async Task<(Customers, Roles)> GetCustomerAndRole(UserCreationDto userDto, int roleId)
         {
             var role = await _unitOfWork.Roles.GetByIdAsync(roleId);
             if (role == null)
@@ -73,11 +73,11 @@ namespace application.Implementations
                 throw new InvalidOperationException($"The role {roleId} does not exist.");
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userDto.Email);
+            var user = await _unitOfWork.Customers.GetByEmailAsync(userDto.Email);
             if (user == null)
             {
-                user = CreateBaseUser(userDto);
-                user = await _unitOfWork.Users.AddAsync(user);
+                user = CreateBaseCustomer(userDto);
+                user = await _unitOfWork.Customers.AddAsync(user);
             }
             else if (user.Roles.Any(r => r.Id == roleId))
             {
@@ -89,15 +89,14 @@ namespace application.Implementations
 
         public async Task<TokensDto> RegisterHost(UserCreationDto userCreationDto)
         {
-            var (user, role) = await GetUserAndRole(userCreationDto, InitialData.HostRole.Id);
-            _unitOfWork.Users.AssignRole(user, role);
+            var (user, role) = await GetCustomerAndRole(userCreationDto, InitialData.HostRole.Id);
+            _unitOfWork.Customers.AssignRole(user, role);
 
             var auditory = new Auditories(
                 userId: user.Id,
                 action: "Register host",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user),
                 timestamp: DateTime.UtcNow
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
@@ -116,24 +115,25 @@ namespace application.Implementations
 
         public async Task<TokensDto> RegisterGuest(GuestCreationDto guestCreationDto)
         {
-            var (user, role) = await GetUserAndRole(guestCreationDto, InitialData.GuestRole.Id);
+            var (user, role) = await GetCustomerAndRole(guestCreationDto, InitialData.GuestRole.Id);
 
             var address = new Addresses(
                 street: guestCreationDto.Address.Street,
                 streetNumber: guestCreationDto.Address.StreetNumber!.Value,
                 intersectionNumber: guestCreationDto.Address.IntersectionNumber!.Value,
                 doorNumber: guestCreationDto.Address.DoorNumber!.Value,
-                cityId: guestCreationDto.Address.CityId!.Value,
                 complement: guestCreationDto.Address.Complement,
                 latitude: guestCreationDto.Address.Latitude,
                 longitude: guestCreationDto.Address.Longitude
             );
             address = await _unitOfWork.Addresses.AddAsync(address);
-            _unitOfWork.Users.AssignRole(user, role);
+            _unitOfWork.Customers.AssignRole(user, role);
 
             var guest = new Guests(
-                userId: user.Id,
-                addressId: address.Id
+                customerId: user.Id,
+                addressId: address.Id,
+                guestCreationDto.City!.Value,
+                guestCreationDto.ResidenceCountry!.Value
             );
             await _unitOfWork.Guests.AddAsync(guest);
 
@@ -143,10 +143,6 @@ namespace application.Implementations
                 action: "Register guest",
                 entity: "User",
                 entityId: user.Id.ToString(),
-                details: JsonSerializer.Serialize(user, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: auditoryNow
             );
             var addressAuditory = new Auditories(
@@ -154,7 +150,6 @@ namespace application.Implementations
                 action: "Register guest address",
                 entity: "Address",
                 entityId: address.Id.ToString(),
-                details: JsonSerializer.Serialize(address),
                 timestamp: auditoryNow
             );
             await _unitOfWork.Auditories.AddAsync(userAuditory);
@@ -174,7 +169,7 @@ namespace application.Implementations
 
         public async Task<TokensDto> Login(UserCredentialsDto credentials)
         {
-            var user = await _unitOfWork.Users.GetByEmailAsync(credentials.Email);
+            var user = await _unitOfWork.Users.GetByEmailAsync(credentials.Email!);
             if (user == null)
             {
                 throw new InvalidDataApplicationException("Invalid email or password.");
@@ -183,7 +178,7 @@ namespace application.Implementations
             var result = _passwordHasher.VerifyHashedPassword(
                 credentials,
                 user.PasswordHash,
-                credentials.Password
+                credentials.Password!
             );
 
             if (result == PasswordVerificationResult.Failed)
@@ -199,8 +194,7 @@ namespace application.Implementations
                 action: "User login",
                 timestamp: DateTime.UtcNow,
                 entity: null,
-                entityId: null,
-                details: null
+                entityId: null
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
 
@@ -262,8 +256,7 @@ namespace application.Implementations
                 action: "User logout",
                 timestamp: DateTime.UtcNow,
                 entity: null,
-                entityId: null,
-                details: null
+                entityId: null
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
 

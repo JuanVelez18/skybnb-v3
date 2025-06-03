@@ -16,13 +16,13 @@ namespace application.Implementations
 
         public async Task<UserSummaryDto> GetUserSummaryByIdAsync(Guid id)
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            var user = await _unitOfWork.Customers.GetByIdAsync(id);
             if (user == null)
             {
                 throw new NotFoundApplicationException($"User not found.");
             }
 
-            var permissions = await _unitOfWork.Users.GetUserPermissionsAsync(id);
+            var permissions = await _unitOfWork.Customers.GetUserPermissionsAsync(id);
 
             return new UserSummaryDto
             {

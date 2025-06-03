@@ -17,6 +17,7 @@ namespace web_presentation.Pages
         }
         [BindProperty]
         public UserCredentialsDto Credentials { get; set; } = new UserCredentialsDto();
+        public string? Error { get; set; }
 
         public IActionResult OnGet()
         {
@@ -32,8 +33,21 @@ namespace web_presentation.Pages
                 return Page();
             }
 
-            var tokens = await _authPresentation.LoginAsync(Credentials);
-            Response.SetAuthTokenCookies(tokens);
+            try
+            {
+                var tokens = await _authPresentation.LoginAsync(Credentials);
+                Response.SetAuthTokenCookies(tokens);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Error = "Invalid credentials. Please try again.";
+                return Page();
+            }
+            catch (Exception)
+            {
+                Error = "An unexpected error ocurred. Please try again later.";
+                return Page();
+            }
 
             TempData["ShouldPassCookiesToSPA"] = true;
             return RedirectToPage(Routes.Home);

@@ -3,8 +3,6 @@ using application.Core;
 using application.DTOs;
 using application.Interfaces;
 using domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using repository.Configuration;
 using repository.Interfaces;
 using System.Text.Json;
 
@@ -23,15 +21,15 @@ namespace application.Implementations
         public async Task CreateReview(ReviewsDto reviewsDto, Guid guestId)
 
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(guestId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(guestId);
             if (user == null)
             {
                 throw new NotFoundApplicationException("User not found.");
             }
 
             var property = await _unitOfWork.Properties.GetByIdAsync(reviewsDto.PropertyId);
-            if (property == null) 
-            { 
+            if (property == null)
+            {
                 throw new NotFoundApplicationException("Property not found.");
             }
 
@@ -62,10 +60,6 @@ namespace application.Implementations
                 action: "Create Review",
                 entity: "Reviews",
                 entityId: newReview.Id.ToString(),
-                details: JsonSerializer.Serialize(newReview, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
@@ -82,7 +76,7 @@ namespace application.Implementations
             {
                 throw new NotFoundApplicationException("Review not found.");
             }
-            var user = await _unitOfWork.Users.GetByIdAsync(guestId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(guestId);
             if (user == null)
             {
                 throw new NotFoundApplicationException("User not found.");
@@ -97,17 +91,13 @@ namespace application.Implementations
                 action: "Delete Review",
                 entity: "Reviews",
                 entityId: review.Id.ToString(),
-                details: JsonSerializer.Serialize(review, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
             await _unitOfWork.Auditories.AddAsync(auditory);
-            _unitOfWork.Reviews.Delete(review);          
+            _unitOfWork.Reviews.Delete(review);
             await _unitOfWork.CommitAsync();
         }
-        
+
     }
 }

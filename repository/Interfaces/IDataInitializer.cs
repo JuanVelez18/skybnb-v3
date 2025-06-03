@@ -6,5 +6,7 @@
         Task InitializeCountriesAsync();
         Task InitializeCitiesAsync();
         Task InitializePropertyTypesAsync();
+        Task InitializeCustomersAsync();
+        Task InitializePropertiesAsync();
     }
 }

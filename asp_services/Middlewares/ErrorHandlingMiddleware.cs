@@ -38,6 +38,7 @@ namespace asp_services.Middlewares
                 innerException = innerException.InnerException;
             }
             Console.WriteLine($"Url: {context.Request.Path}, Method: {context.Request.Method}, Exception: {innerException.Message}");
+            Console.WriteLine($"Stack Trace: {innerException.StackTrace}");
 
             switch (exception)
             {

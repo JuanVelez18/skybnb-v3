@@ -21,7 +21,7 @@ namespace application.Implementations
         public async Task CreateProperties(PropertiesCreationDto propertiesCreationDto, Guid hostId)
 
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(hostId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(hostId);
 
             if (user == null)
             {
@@ -38,7 +38,6 @@ namespace application.Implementations
                 streetNumber: propertiesCreationDto.Address.StreetNumber!.Value,
                 intersectionNumber: propertiesCreationDto.Address.IntersectionNumber!.Value,
                 doorNumber: propertiesCreationDto.Address.DoorNumber!.Value,
-                cityId: propertiesCreationDto.Address.CityId!.Value,
                 complement: propertiesCreationDto.Address.Complement,
                 latitude: propertiesCreationDto.Address.Latitude,
                 longitude: propertiesCreationDto.Address.Longitude
@@ -74,7 +73,9 @@ namespace application.Implementations
                 propertiesCreationDto.BasePricePerNight,
                 propertiesCreationDto.TypeId!.Value,
                 propertiesCreationDto.HostId,
-                newAddress.Id
+                newAddress.Id,
+                propertiesCreationDto.City!.Value,
+                propertiesCreationDto.Country!.Value
             );
             newProperty.Host = user;
             newProperty.Address = newAddress;
@@ -87,10 +88,6 @@ namespace application.Implementations
                 action: "Register Property",
                 entity: "Property",
                 entityId: newProperty.Id.ToString(),
-                details: JsonSerializer.Serialize(newProperty, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 
@@ -129,7 +126,6 @@ namespace application.Implementations
                 action: "Get Properties",
                 entity: "Property",
                 entityId: null,
-                details: filtersDto != null ? JsonSerializer.Serialize(filtersDto) : null,
                 timestamp: DateTime.UtcNow
             );
             await _unitOfWork.Auditories.AddAsync(auditory);
