@@ -12,7 +12,7 @@ const PropertyCard = ({ property }: Props) => {
   return (
     <Card
       key={property.id}
-      className="overflow-hidden hover:shadow-lg transition-shadow"
+      className="h-full overflow-hidden hover:shadow-lg transition-shadow"
     >
       <div className="relative">
         <img

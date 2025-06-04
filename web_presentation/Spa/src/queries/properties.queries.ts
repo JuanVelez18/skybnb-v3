@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { CreationMediaFile } from "@/models/multimedia";
@@ -39,6 +44,7 @@ export const useGetAllPropertyTypes = () => {
 };
 
 export const useCreateProperty = () => {
+  const queryClient = useQueryClient();
   const { mutate, isPending, isError } = useMutation({
     mutationFn: (data: CreationPropertyData) =>
       PropertyService.createProperty(
@@ -47,6 +53,9 @@ export const useCreateProperty = () => {
         data.multimedia
       ),
     onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: PropertiesQueryKeys.search(),
+      });
       toast.success("Property created successfully!");
     },
     onError() {

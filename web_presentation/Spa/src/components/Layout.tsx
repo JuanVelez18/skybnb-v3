@@ -1,7 +1,13 @@
 "use client";
-import { Building2, Bell } from "lucide-react";
+import { Building2, Bell, ChevronLeft } from "lucide-react";
 import { useMemo } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  Link,
+  matchPath,
+  Outlet,
+  useLocation,
+  useMatches,
+} from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -27,7 +33,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import { RouteNames } from "@/router/routes";
 import { useGetUserSummary } from "@/queries/users.queries";
 import { useAuthStore } from "@/stores/auth.store";
 import {
@@ -36,6 +41,8 @@ import {
   NO_AUTHENTICATED_ITEMS,
   type MenuItem,
 } from "@/utils/layout";
+import type { RouteConfig } from "@/router";
+
 import CanAccess from "./auth/CanAccess";
 
 const RenderMenuItem = (item: MenuItem) => {
@@ -72,21 +79,14 @@ const RenderMenuItem = (item: MenuItem) => {
 
 export default function SkyBnBLayout() {
   const { pathname } = useLocation();
+  const matches = useMatches();
 
   const { isAuthenticated } = useAuthStore();
   const { user, isUserLoading, isUserError } =
     useGetUserSummary(isAuthenticated);
 
-  const title = useMemo(() => {
-    switch (pathname) {
-      case RouteNames.HOME:
-        return "Search Accommodations";
-      case RouteNames.CREATE_PROPERTY:
-        return "Create New Property";
-      default:
-        return "SkyBnB";
-    }
-  }, [pathname]);
+  const currentRoute = matches.at(-1);
+  const { layoutConfig = {} } = currentRoute?.handle as RouteConfig;
 
   const userInitials = useMemo(() => {
     if (!user) return "NN";
@@ -125,7 +125,10 @@ export default function SkyBnBLayout() {
                 {navigationItems.map((item) => (
                   <CanAccess key={item.title} permission={item.permission}>
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={matchPath(item.url, pathname) !== null}
+                      >
                         <Link to={item.url} className="flex items-center gap-3">
                           <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
@@ -145,7 +148,14 @@ export default function SkyBnBLayout() {
         {/* Header con menú de usuario */}
         <header className="sticky top-0 z-10 flex h-16 bg-background shrink-0 items-center justify-between border-b px-6">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold">{title}</h1>
+            {layoutConfig.backTo && (
+              <Link to={layoutConfig.backTo}>
+                <ChevronLeft className="h-4 w-4" />
+              </Link>
+            )}
+            <h1 className="text-xl font-semibold">
+              {layoutConfig.title ?? "SkyBnB"}
+            </h1>
           </div>
 
           <div className="flex items-center gap-4">
