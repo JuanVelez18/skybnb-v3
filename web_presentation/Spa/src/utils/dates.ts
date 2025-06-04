@@ -8,5 +8,5 @@ export const dateToLocaleString = (date: Date) => {
 
 export const isPastDate = (date: Date) => {
   const today = new Date();
-  return date < today || date < new Date("1900-01-01");
+  return date < today;
 };
