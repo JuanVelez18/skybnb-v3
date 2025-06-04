@@ -5,14 +5,8 @@ namespace web_presentation.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
 
         public bool ShouldPassCookiesToSPA { get; set; } = false;
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
 
         public void OnGet()
         {

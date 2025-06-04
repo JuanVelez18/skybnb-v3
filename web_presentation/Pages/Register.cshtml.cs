@@ -64,7 +64,15 @@ namespace web_presentation.Pages
                 return RedirectToPage(Routes.Home);
             }
 
-            await LoadCountriesAsync();
+            try
+            {
+                await LoadCountriesAsync();
+            }
+            catch (Exception ex)
+            {
+                ViewData["Message"] = ex.Message;
+            }
+
             return Page();
         }
 
@@ -93,39 +101,60 @@ namespace web_presentation.Pages
 
             if (!ModelState.IsValid)
             {
-                await LoadCountriesAsync();
-                await LoadCitiesAsync();
+                try
+                {
+                    await LoadCountriesAsync();
+                    await LoadCitiesAsync();
+                }
+                catch (Exception ex)
+                {
+                    ViewData["Message"] = ex.Message;
+                }
+
                 return Page();
             }
 
-            TokensDto tokens;
-
-            if (LikeGuest)
+            try
             {
-                tokens = await _authPresentation.RegisterGuestAsync(new GuestCreationDto
+                TokensDto tokens;
+
+                if (LikeGuest)
                 {
-                    Dni = UserCreation.Dni,
-                    FirstName = UserCreation.FirstName,
-                    LastName = UserCreation.LastName,
-                    Email = UserCreation.Email,
-                    Password = UserCreation.Password,
-                    Birthday = UserCreation.Birthday,
-                    Country = UserCreation.Country,
-                    Phone = UserCreation.Phone,
-                    Address = Address,
-                    City = ResidenceCity,
-                    ResidenceCountry = ResidenceCountry,
-                });
+                    tokens = await _authPresentation.RegisterGuestAsync(new GuestCreationDto
+                    {
+                        Dni = UserCreation.Dni,
+                        FirstName = UserCreation.FirstName,
+                        LastName = UserCreation.LastName,
+                        Email = UserCreation.Email,
+                        Password = UserCreation.Password,
+                        Birthday = UserCreation.Birthday,
+                        Country = UserCreation.Country,
+                        Phone = UserCreation.Phone,
+                        Address = Address,
+                        City = ResidenceCity,
+                        ResidenceCountry = ResidenceCountry,
+                    });
+                }
+                else
+                {
+                    tokens = await _authPresentation.RegisterHostAsync(UserCreation);
+                }
+
+                Response.SetAuthTokenCookies(tokens);
+
+                TempData["ShouldPassCookiesToSPA"] = true;
+                return RedirectToPage(Routes.Home);
             }
-            else
+            catch (Exception ex)
             {
-                tokens = await _authPresentation.RegisterHostAsync(UserCreation);
+                ViewData["Message"] = ex.Message;
+                return Page();
             }
+        }
 
-            Response.SetAuthTokenCookies(tokens);
-
-            TempData["ShouldPassCookiesToSPA"] = true;
-            return RedirectToPage(Routes.Home);
+        public IActionResult OnPostBtnClose()
+        {
+            return Page();
         }
     }
 }

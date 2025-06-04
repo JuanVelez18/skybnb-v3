@@ -38,19 +38,19 @@ namespace web_presentation.Pages
                 var tokens = await _authPresentation.LoginAsync(Credentials);
                 Response.SetAuthTokenCookies(tokens);
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                Error = "Invalid credentials. Please try again.";
-                return Page();
-            }
-            catch (Exception)
-            {
-                Error = "An unexpected error ocurred. Please try again later.";
+                ViewData["Message"] = ex.Message;
                 return Page();
             }
 
             TempData["ShouldPassCookiesToSPA"] = true;
             return RedirectToPage(Routes.Home);
+        }
+
+        public IActionResult OnPostBtnClose()
+        {
+            return Page();
         }
     }
 }
