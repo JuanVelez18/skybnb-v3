@@ -1,18 +1,25 @@
 import { MapPin, Star } from "lucide-react";
+import { useMemo, useRef } from "react";
+import { useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import Carousel from "@/components/Carousel";
 import ReviewsSummarySection from "@/components/ReviewsSummarySection";
+import BookingSheet, {
+  type BookingFormData,
+  type PropertySummary,
+  type BookingSheetRef,
+} from "@/components/BookingSheet";
 import {
   LocationCard,
   NoReviewsCard,
   PropertyHostCard,
   PropertyInfoDetailCard,
 } from "@/components/cards";
-import { useParams } from "react-router-dom";
 import { useGetPropertyDetail } from "@/queries/properties.queries";
+import { useBooking } from "@/hooks/useBooking";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMemo } from "react";
+import CanAccess from "@/components/auth/CanAccess";
 
 const fallbackImages = [
   {
@@ -31,8 +38,14 @@ const fallbackImages = [
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
+  const bookingSheetRef = useRef<BookingSheetRef>(null);
   const { propertyDetail, isPropertyDetailLoading, isPropertyDetailError } =
     useGetPropertyDetail(id ?? "");
+
+  const { isLoading: isBookingLoading, submitBooking } = useBooking(() => {
+    bookingSheetRef.current?.closeSheet();
+    bookingSheetRef.current?.resetForm();
+  });
 
   const reviews = useMemo(
     () =>
@@ -44,6 +57,25 @@ const PropertyDetailPage = () => {
       })),
     [propertyDetail?.reviews]
   );
+
+  const propertyForBooking = useMemo((): PropertySummary | null => {
+    if (!propertyDetail) return null;
+
+    return {
+      id: propertyDetail.id,
+      title: propertyDetail.title,
+      location: `${propertyDetail.location.city}, ${propertyDetail.location.country}`,
+      rating: propertyDetail.rating,
+      price: propertyDetail.price,
+      maxGuests: propertyDetail.guests,
+      image: propertyDetail.multimedia[0]?.url,
+    };
+  }, [propertyDetail]);
+
+  const handleBookingSubmit = async (formData: BookingFormData) => {
+    if (!propertyDetail) return;
+    await submitBooking(propertyDetail.id, formData);
+  };
 
   if (isPropertyDetailLoading)
     return (
@@ -101,7 +133,20 @@ const PropertyDetailPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">{/* Form Sheet */}</div>
+          <CanAccess permission="create:booking">
+            <div className="flex items-center gap-2">
+              {propertyForBooking && (
+                <BookingSheet
+                  ref={bookingSheetRef}
+                  property={propertyForBooking}
+                  onSubmit={handleBookingSubmit}
+                  isLoading={isBookingLoading}
+                >
+                  <Button className="px-8">Reserve Now</Button>
+                </BookingSheet>
+              )}
+            </div>
+          </CanAccess>
         </div>
       </div>
 

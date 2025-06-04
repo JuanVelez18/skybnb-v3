@@ -20,23 +20,11 @@ import {
 } from "@/components/ui/select";
 import { usePropertiesStore } from "@/stores/properties.store";
 import { cn } from "@/lib/utils";
+import { dateToLocaleString, isPastDate } from "@/utils/dates";
 
 type Props = {
   onFiltersClick: () => void;
   onSearch: () => void;
-};
-
-const dateToLocaleString = (date: Date) => {
-  return date.toLocaleString(["en-US", "es-ES"], {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-};
-
-const isPastDate = (date: Date) => {
-  const today = new Date();
-  return date < today || date < new Date("1900-01-01");
 };
 
 const PropertySearch = ({ onFiltersClick, onSearch }: Props) => {
