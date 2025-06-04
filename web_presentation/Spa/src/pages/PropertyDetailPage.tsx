@@ -131,7 +131,8 @@ const PropertyDetailPage = () => {
                 </span>
               </div>
             </div>
-          </div>{" "}
+          </div>
+
           <CanAccess permission="create:booking">
             <div className="flex items-center gap-2">
               {propertyForBooking && (
