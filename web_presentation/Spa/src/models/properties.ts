@@ -45,6 +45,49 @@ export type PropertyFilters = {
   sortBy?: SortBy;
 };
 
+export type PropertyDetailLocation = {
+  address: string;
+  city: string;
+  country: string;
+  latitude: number | null;
+  longitude: number | null;
+};
+
+export type PropertyDetailHost = {
+  fullName: string;
+  createdAt: Date;
+};
+
+export type PropertyDetailAsset = {
+  url: string;
+  type: string;
+};
+
+export type PropertyDetailReview = {
+  guestFullName: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+};
+
+export type PropertyDetail = {
+  id: string;
+  title: string;
+  description: string;
+  guests: number;
+  bedrooms: number;
+  bathrooms: number;
+  beds: number;
+  price: number;
+  type: string;
+  location: PropertyDetailLocation;
+  host: PropertyDetailHost;
+  rating: number;
+  reviewsCount: number;
+  reviews: PropertyDetailReview[];
+  multimedia: PropertyDetailAsset[];
+};
+
 export type AddressDto = {
   Street: string;
   StreetNumber: number;
@@ -72,4 +115,84 @@ export type CreationPropertyDto = {
   City: number;
   Country: number;
   Multimedia: MediaFileDto[];
+};
+
+export interface PropertyDetailHostDto {
+  fullName: string;
+  createdAt: Date;
+}
+
+export interface PropertyDetailLocationDto {
+  address: string;
+  city: string;
+  country: string;
+  latitude: null;
+  longitude: null;
+}
+
+export interface PropertyDetailAssetDto {
+  url: string;
+  type: string;
+}
+
+export interface PropertyDetailReviewDto {
+  guestFullName: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+}
+
+export interface PropertyDetailDto {
+  id: string;
+  title: string;
+  description: string;
+  guests: number;
+  bedrooms: number;
+  beds: number;
+  bathrooms: number;
+  pricePerNight: number;
+  type: string;
+  rating: number;
+  reviewsCount: number;
+  location: PropertyDetailLocationDto;
+  host: PropertyDetailHostDto;
+  lastReviews: PropertyDetailReviewDto[];
+  multimedia: PropertyDetailAssetDto[];
+}
+
+export const dtoToPropertyDetail = (dto: PropertyDetailDto): PropertyDetail => {
+  return {
+    id: dto.id,
+    title: dto.title,
+    description: dto.description,
+    guests: dto.guests,
+    bedrooms: dto.bedrooms,
+    bathrooms: dto.bathrooms,
+    beds: dto.beds,
+    price: dto.pricePerNight,
+    type: dto.type,
+    location: {
+      address: dto.location.address,
+      city: dto.location.city,
+      country: dto.location.country,
+      latitude: dto.location.latitude,
+      longitude: dto.location.longitude,
+    },
+    host: {
+      fullName: dto.host.fullName,
+      createdAt: new Date(dto.host.createdAt),
+    },
+    rating: dto.rating,
+    reviewsCount: dto.reviewsCount,
+    reviews: dto.lastReviews.map((review) => ({
+      guestFullName: review.guestFullName,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: new Date(review.createdAt),
+    })),
+    multimedia: dto.multimedia.map((asset) => ({
+      url: asset.url,
+      type: asset.type,
+    })),
+  };
 };
