@@ -63,6 +63,8 @@ type Props = {
   onOpenChange?: (open: boolean) => void;
 };
 
+const DEFAULT_SERVICE_FEE = 25;
+
 const BookingSheet = forwardRef<BookingSheetRef, Props>(
   (
     { property, onSubmit, isLoading = false, children, open, onOpenChange },
@@ -115,7 +117,7 @@ const BookingSheet = forwardRef<BookingSheetRef, Props>(
 
     const nights = calculateNights();
     const subtotal = property.price * nights;
-    const serviceFee = 25;
+    const serviceFee = DEFAULT_SERVICE_FEE;
     const total = subtotal + serviceFee;
 
     return (
