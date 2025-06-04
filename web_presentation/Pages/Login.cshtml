@@ -27,11 +27,10 @@
                         style="display: block; width: 100%; text-align: left;"></span>
                 </div>
 
-                @if (Model.Error != null)
+                @if (ViewData.ContainsKey("Message"))
                 {
-                    <span class="text-danger" style="display: block; width: 100%; text-align: left;">
-                        @Model.Error
-                    </span>
+                    @await Html.PartialAsync("./_Messages.cshtml")
+                    ;
                 }
                 <button type="submit" class="btn btn-primary">Login</button>
                 <p>Don't have an account? <a asp-page="@Routes.Register">Register</a></p>

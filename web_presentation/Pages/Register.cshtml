@@ -196,6 +196,12 @@
 					</p>
 				</div>
 			</div>
+
+			@if (ViewData.ContainsKey("Message"))
+			{
+				@await Html.PartialAsync("./_Messages.cshtml")
+				;
+			}
 		</form>
 	</div>
 </center>
