@@ -105,7 +105,7 @@ const HomePage = () => {
                   : `${total} properties found`}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {filters.location && `in ${filters.location}`}
+                {queryFilters.location && `in ${queryFilters.location}`}
               </p>
             </div>
 
