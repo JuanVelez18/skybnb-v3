@@ -44,6 +44,7 @@ import {
 import type { RouteConfig } from "@/router";
 
 import CanAccess from "./auth/CanAccess";
+import { useScrollTop } from "@/hooks/useScrollTop";
 
 const RenderMenuItem = (item: MenuItem) => {
   if ("action" in item) {
@@ -86,7 +87,7 @@ export default function SkyBnBLayout() {
     useGetUserSummary(isAuthenticated);
 
   const currentRoute = matches.at(-1);
-  const { layoutConfig = {} } = currentRoute?.handle as RouteConfig;
+  const { layoutConfig = {} } = (currentRoute?.handle ?? {}) as RouteConfig;
 
   const userInitials = useMemo(() => {
     if (!user) return "NN";
@@ -100,6 +101,8 @@ export default function SkyBnBLayout() {
     if (isAuthenticated) return AUTHENTICATED_MENU_ITEMS;
     return NO_AUTHENTICATED_ITEMS;
   }, [isAuthenticated]);
+
+  useScrollTop();
 
   return (
     <SidebarProvider>
