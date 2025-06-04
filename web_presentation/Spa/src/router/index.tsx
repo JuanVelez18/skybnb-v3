@@ -5,6 +5,8 @@ import NotFoundPage from "../pages/NotFoundPage.tsx";
 import { RouteNames } from "./routes.ts";
 import PropertyCreationPage from "@/pages/PropertyCreationPage.tsx";
 import ProtectedRoute from "@/components/auth/ProtectedRoute.tsx";
+import PropertyDetailPage from "@/pages/PropertyDetailPage.tsx";
+
 export interface RouteConfig {
   layoutConfig?: {
     title?: string;
@@ -23,6 +25,16 @@ export const routes: RouteObject[] = [
         handle: {
           layoutConfig: {
             title: "Search Properties",
+          },
+        } as RouteConfig,
+      },
+      {
+        path: RouteNames.PROPERTY_DETAIL,
+        element: <PropertyDetailPage />,
+        handle: {
+          layoutConfig: {
+            title: "Property Details",
+            backTo: RouteNames.HOME,
           },
         } as RouteConfig,
       },
