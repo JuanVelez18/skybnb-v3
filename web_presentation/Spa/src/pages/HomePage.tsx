@@ -17,6 +17,8 @@ import { usePropertiesStore } from "@/stores/properties.store";
 import PropertyCard from "@/components/cards/PropertyCard";
 import { useInfinitePropertiesSearch } from "@/queries/properties.queries";
 import { CardSkeleton } from "@/components/skeletons";
+import { Link } from "react-router-dom";
+import { RouteNames } from "@/router/routes";
 
 const sortOptions: { value: SortBy; label: string }[] = [
   { value: "price-low", label: "Price: Low to High" },
@@ -150,7 +152,12 @@ const HomePage = () => {
             }`}
           >
             {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+              <Link
+                to={RouteNames.PROPERTY_DETAIL.replace(":id", property.id)}
+                key={property.id}
+              >
+                <PropertyCard key={property.id} property={property} />
+              </Link>
             ))}
 
             {showSkeleton &&
