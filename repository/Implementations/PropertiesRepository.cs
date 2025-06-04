@@ -54,5 +54,28 @@ namespace repository.Implementations
                 PageSize = pagination.PageSize
             };
         }
+
+        public async Task<Properties?> GetDetailByIdAsync(Guid propertyId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(p => p.Type)
+                .Include(p => p.Host)
+                .Include(p => p.Address)
+                .Include(p => p.City)
+                .Include(p => p.Country)
+                .Include(p => p.Reviews.OrderByDescending(r => r.CreatedAt).Take(3))
+                    .ThenInclude(r => r.Guest)
+                .Include(p => p.Multimedia.OrderBy(m => m.Order))
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
+        }
+
+        public async Task<long> GetReviewsCountAsync(Guid propertyId)
+        {
+            return await _dbSet
+                .Where(p => p.Id == propertyId)
+                .SelectMany(p => p.Reviews)
+                .LongCountAsync();
+        }
     }
 }
