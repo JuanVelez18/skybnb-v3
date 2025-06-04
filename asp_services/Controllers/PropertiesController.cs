@@ -35,5 +35,16 @@ namespace asp_services.Controllers
             var properties = await _propertiesApplication.GetPropertiesAsync(paginationDto, filtersDto, userId);
             return Ok(properties);
         }
+
+        [HttpGet("{propertyId:guid}")]
+        public async Task<IActionResult> GetPropertyDetail(Guid propertyId)
+        {
+            var identifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid? userId = identifier != null ? Guid.Parse(identifier) : null;
+
+            var propertyDetail = await _propertiesApplication.GetDetailByIdAsync(propertyId, userId);
+
+            return Ok(propertyDetail);
+        }
     }
 }
