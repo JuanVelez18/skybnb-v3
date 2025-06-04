@@ -239,7 +239,7 @@ const BookingForm = ({
         </Popover>
       </div>
       <div className="space-y-2">
-        <Label>Check-in</Label>
+        <Label>Check-out</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
