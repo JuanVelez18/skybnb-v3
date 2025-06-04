@@ -126,8 +126,8 @@ export interface PropertyDetailLocationDto {
   address: string;
   city: string;
   country: string;
-  latitude: null;
-  longitude: null;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface PropertyDetailAssetDto {
