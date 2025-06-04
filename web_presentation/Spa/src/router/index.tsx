@@ -5,16 +5,26 @@ import NotFoundPage from "../pages/NotFoundPage.tsx";
 import { RouteNames } from "./routes.ts";
 import PropertyCreationPage from "@/pages/PropertyCreationPage.tsx";
 import ProtectedRoute from "@/components/auth/ProtectedRoute.tsx";
+export interface RouteConfig {
+  layoutConfig?: {
+    title?: string;
+    backTo?: string;
+  };
+}
 
 // Centralized route configuration
 export const routes: RouteObject[] = [
   {
-    path: RouteNames.HOME,
     element: <Layout />,
     children: [
       {
-        index: true,
+        path: RouteNames.HOME,
         element: <HomePage />,
+        handle: {
+          layoutConfig: {
+            title: "Search Properties",
+          },
+        } as RouteConfig,
       },
       {
         path: RouteNames.CREATE_PROPERTY,
@@ -23,6 +33,11 @@ export const routes: RouteObject[] = [
             <PropertyCreationPage />
           </ProtectedRoute>
         ),
+        handle: {
+          layoutConfig: {
+            title: "Create Property",
+          },
+        } as RouteConfig,
       },
       {
         path: "*",
