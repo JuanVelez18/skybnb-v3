@@ -35,7 +35,7 @@ namespace ut_presentation.Repositories
         }
 
         [TestMethod] 
-        public async Task SoftDeleteReviews() 
+        public async Task DeleteReviews() 
         {
             var reviewToSoftDelete = new Reviews(
                 bookingId: Guid.NewGuid(),
@@ -50,15 +50,13 @@ namespace ut_presentation.Repositories
 
             var reviewFromDb = await _repository.GetByIdAsync(reviewToSoftDelete.Id);
             Assert.IsNotNull(reviewFromDb);
-            Assert.IsTrue(reviewFromDb.IsActive);
 
             _repository.Delete(reviewFromDb); // Esto ejecuta la lógica de soft delete
             await _conexion.SaveChangesAsync();
 
             var softDeletedReview = await _repository.GetByIdAsync(reviewToSoftDelete.Id);
 
-            Assert.IsNotNull(softDeletedReview);
-            Assert.IsFalse(softDeletedReview.IsActive);
+            Assert.IsNull(softDeletedReview);
         }
         [TestCleanup] 
         public void TearDown()
