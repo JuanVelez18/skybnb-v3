@@ -3,29 +3,44 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-type Props = {
-  images: string[];
+type Asset = {
+  url: string;
+  type: string;
 };
 
-const Carousel = ({ images }: Props) => {
+type Props = {
+  assets: Asset[];
+};
+
+const Carousel = ({ assets }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % assets.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + assets.length) % assets.length);
   };
 
   return (
     <div className="relative">
       <div className="relative h-96 md:h-[500px] rounded-xl overflow-hidden">
-        <img
-          src={images[currentImageIndex] || "/placeholder.svg"}
-          alt={`Property image ${currentImageIndex + 1}`}
-          className="w-full h-full object-cover"
-        />
+        {assets[currentImageIndex].type === "image" && (
+          <img
+            src={assets[currentImageIndex].url || "/placeholder.svg"}
+            alt={`Property image ${currentImageIndex + 1}`}
+            className="w-full h-full object-cover"
+          />
+        )}
+
+        {assets[currentImageIndex].type === "video" && (
+          <video
+            src={assets[currentImageIndex].url}
+            className="w-full h-full object-cover"
+            controls
+          />
+        )}
 
         {/* Navigation Buttons */}
         <Button
@@ -46,16 +61,15 @@ const Carousel = ({ images }: Props) => {
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
-
         {/* Image Counter */}
         <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-          {currentImageIndex + 1} / {images.length}
+          {currentImageIndex + 1} / {assets.length}
         </div>
       </div>
 
       {/* Thumbnail Strip */}
       <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-        {images.map((image, index) => (
+        {assets.map((image, index) => (
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
@@ -65,11 +79,21 @@ const Carousel = ({ images }: Props) => {
                 : "border-transparent"
             }`}
           >
-            <img
-              src={image || "/placeholder.svg"}
-              alt={`Thumbnail ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
+            {image.type === "image" && (
+              <img
+                src={image.url || "/placeholder.svg"}
+                alt={`Thumbnail ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            )}
+
+            {image.type === "video" && (
+              <video
+                src={image.url}
+                className="w-full h-full object-cover"
+                muted
+              />
+            )}
           </button>
         ))}
       </div>

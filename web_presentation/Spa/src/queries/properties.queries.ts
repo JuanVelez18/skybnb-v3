@@ -28,6 +28,8 @@ export const PropertiesQueryKeys = {
   search: () => [...PropertiesQueryKeys.all, "search"] as const,
   filteredSearch: (filters: PropertyFilters) =>
     [...PropertiesQueryKeys.search(), filters] as const,
+  detail: (propertyId: string) =>
+    [...PropertiesQueryKeys.all, "detail", propertyId] as const,
 };
 
 export const useGetAllPropertyTypes = () => {
@@ -108,3 +110,17 @@ export function useInfinitePropertiesSearch(filters: PropertyFilters) {
     fetchNextPropertiesPage: fetchNextPage,
   };
 }
+
+export const useGetPropertyDetail = (propertyId: string) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: PropertiesQueryKeys.detail(propertyId),
+    queryFn: () => PropertyService.getPropertyDetail(propertyId),
+    enabled: !!propertyId,
+  });
+
+  return {
+    propertyDetail: data,
+    isPropertyDetailLoading: isLoading,
+    isPropertyDetailError: isError,
+  };
+};

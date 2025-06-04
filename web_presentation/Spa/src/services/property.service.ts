@@ -1,8 +1,11 @@
 import httpClient, { type ApiResponse } from "@/core/httpClient";
 import type { CreationMediaFile } from "@/models/multimedia";
 import {
+  dtoToPropertyDetail,
   type CreationPropertyDto,
   type PropertyBasicInformation,
+  type PropertyDetail,
+  type PropertyDetailDto,
   type PropertyFilters,
   type PropertySummary,
   type PropertyType,
@@ -92,5 +95,24 @@ export class PropertyService {
     }
 
     return dtoToPage(response.data);
+  }
+
+  public static async getPropertyDetail(
+    propertyId: string
+  ): Promise<PropertyDetail> {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
+
+    let response: ApiResponse<PropertyDetailDto>;
+
+    if (isAuthenticated) {
+      response = await httpClient.get(`/properties/${propertyId}`);
+    } else {
+      response = await httpClient.publicRequest(
+        "GET",
+        `/properties/${propertyId}`
+      );
+    }
+
+    return dtoToPropertyDetail(response.data);
   }
 }
