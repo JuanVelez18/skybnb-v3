@@ -38,7 +38,7 @@ namespace repository.Implementations
 
         public virtual void Delete(TEntity entity)
         {
-            if (entity is ISoftDeletable softDeletableEntity)
+            if (entity is IDisabled softDeletableEntity)
             {
                 softDeletableEntity.IsActive = false;
                 _dbSet.Update(entity);

@@ -5,8 +5,8 @@ import type {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { getTokensFromStorage, saveTokens, logout } from "../utils/auth";
 import { type Tokens } from "../models/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 // Base HTTP client configuration
 const API_BASE_URL =
@@ -49,9 +49,9 @@ class HttpClient {
     // Request interceptor to add authorization token
     this.client.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        const tokens = getTokensFromStorage();
-        if (tokens?.accessToken) {
-          config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+        const accessToken = useAuthStore.getState().accessToken;
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;
       },
@@ -103,7 +103,11 @@ class HttpClient {
             }
           } catch (refreshError) {
             this.processQueue(refreshError as Error, null);
-            logout(); // Log out if token cannot be refreshed
+            const logout = await import("@/utils/auth").then(
+              (module) => module.logout
+            );
+            logout();
+
             return Promise.reject(refreshError);
           } finally {
             this.isRefreshing = false;
@@ -129,14 +133,14 @@ class HttpClient {
 
   private async refreshToken(): Promise<Tokens | null> {
     try {
-      const tokens = getTokensFromStorage();
-      if (!tokens?.refreshToken) {
+      const refreshToken = useAuthStore.getState().refreshToken;
+      if (!refreshToken) {
         throw new Error("No refresh token available");
       }
 
       const response = await axios.post<Tokens>(
         `${API_BASE_URL}/auth/refresh`,
-        { RefreshToken: tokens.refreshToken },
+        { RefreshToken: refreshToken },
         {
           headers: {
             "Content-Type": "application/json",
@@ -146,7 +150,7 @@ class HttpClient {
 
       const newTokens = response.data;
 
-      saveTokens(newTokens);
+      useAuthStore.getState().authenticate(newTokens);
       return newTokens;
     } catch (error) {
       console.error("Error refreshing token:", error);

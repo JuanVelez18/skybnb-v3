@@ -67,7 +67,7 @@ const PropertyCard = ({ property }: Props) => {
             </span>
           </div>
 
-          <div className="flex justify-between items-center pt-2">
+          <div className="flex justify-end items-center pt-2">
             <div className="text-right">
               <p className="text-lg font-bold">${property.price}</p>
               <p className="text-xs text-muted-foreground">per night</p>

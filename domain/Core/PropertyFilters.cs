@@ -123,8 +123,8 @@ namespace domain.Core
             if (string.IsNullOrWhiteSpace(Location))
                 return null;
 
-            return p => p.Address!.City!.Name.Contains(Location, StringComparison.OrdinalIgnoreCase) ||
-                        p.Address!.City!.Country!.Name.Contains(Location, StringComparison.OrdinalIgnoreCase);
+            return p => p.City!.Name.ToLower().Contains(Location.ToLower()) ||
+                        p.Country!.Name.ToLower().Contains(Location.ToLower());
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace asp_services.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize]
+        [Authorize("read:user")]
         public async Task<IActionResult> GetUserSummaryByIdAsync()
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

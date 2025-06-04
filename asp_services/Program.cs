@@ -3,8 +3,10 @@ using application.Core;
 using application.DTOs;
 using application.Implementations;
 using application.Interfaces;
+using asp_services.Core;
 using asp_services.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 // Dependecies Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPasswordHasher<UserCredentialsDto>, PasswordHasher<UserCredentialsDto>>();
+builder.Services.AddScoped<IPasswordHasher<object>, PasswordHasher<object>>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 builder.Services.AddScoped<IUsersApplication, AuthApplication>();
@@ -48,7 +51,7 @@ builder.Services.AddScoped<IPropertyTypesApplication, PropertyTypesApplication>(
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
 
-// Inyecta instancia de conexi�n a la base de datos
+// Add instance of DbContext
 builder.Services.AddDbContext<DbConexion>(options => options.UseSqlServer(connectionString));
 
 // Add authentication
@@ -85,18 +88,27 @@ builder.Services.AddAuthentication(options =>
             };
 
             return context.Response.WriteAsJsonAsync(problemDetails);
+        },
+        OnForbidden = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = "Forbidden",
+                Detail = "User does not have permission to perform this action"
+            };
+
+            return context.Response.WriteAsJsonAsync(problemDetails);
         }
     };
 });
 
-var app = builder.Build();
+// Add authorization
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
-// Initialize the database
-using (var scope = app.Services.CreateScope())
-{
-    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
-    await dataInitializer.InitializeAsync();
-}
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
@@ -105,6 +117,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+    // Initialize the database for development environment
+    using var scope = app.Services.CreateScope();
+    var dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
+    await dataInitializer.InitializeAsync();
 }
 
 // Authentication Middleware

@@ -1,56 +1,30 @@
-import { dtoToTokens, type Tokens, type RazorTokensDto } from "../models/auth";
+import httpClient from "@/core/httpClient";
+import { useAuthStore } from "@/stores/auth.store";
+import { getTokensFromRazor, getTokensFromStorage } from "./tokens";
+import type { UserSummary } from "@/models/users";
+import { queryClient } from "@/core/queryClient";
 
-const TOKENS_KEY = "tokens";
-const LOGOUT_URL = "/Logout";
+export const initializeSession = () => {
+  const tokens = getTokensFromStorage() ?? getTokensFromRazor();
+  if (!tokens) return;
 
-export const getTokensFromStorage = (): Tokens | null => {
-  const tokens = localStorage.getItem(TOKENS_KEY);
-  if (!tokens) return null;
-
-  try {
-    return JSON.parse(tokens) as Tokens;
-  } catch (error) {
-    console.error("Failed to parse tokens from localStorage", error);
-    return null;
-  }
+  useAuthStore.getState().authenticate(tokens);
 };
 
-const getTokensFromRazor = (): Tokens | null => {
-  const tokensTag = document.getElementById(TOKENS_KEY);
-  if (!tokensTag) return null;
+export const logout = async () => {
+  await httpClient.post("/auth/logout", {
+    RefreshToken: useAuthStore.getState().refreshToken,
+  });
 
-  tokensTag.remove();
-
-  const tokensDto = JSON.parse(tokensTag.textContent!.trim()) as RazorTokensDto;
-  const tokens = dtoToTokens(tokensDto);
-
-  return tokens;
+  useAuthStore.getState().clearAuthentication();
+  queryClient.clear();
 };
 
-export const saveTokens = (tokens: Tokens) => {
-  localStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
-};
-
-export const redirectToLogout = () => {
-  const anchor = document.createElement("a");
-  anchor.href = LOGOUT_URL;
-  anchor.click();
-};
-
-export const initializeSession = async () => {
-  const localStorageTokens = getTokensFromStorage();
-  if (localStorageTokens) return;
-
-  const razorTokens = getTokensFromRazor();
-  if (razorTokens) {
-    saveTokens(razorTokens);
-    return;
-  }
-
-  redirectToLogout();
-};
-
-export const logout = () => {
-  localStorage.removeItem(TOKENS_KEY);
-  redirectToLogout();
+export const hasPermission = (
+  user: UserSummary,
+  permission: string
+): boolean => {
+  return user.permissions.some(
+    (userPermission) => userPermission === permission
+  );
 };

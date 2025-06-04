@@ -7,7 +7,7 @@ namespace domain.Entities
         string name,
         string isoCode,
         string? phoneCode
-        ): ISoftDeletable
+        ) : IDisabled
     {
         public int Id { get; private set; }
 
@@ -28,6 +28,8 @@ namespace domain.Entities
 
 
         public List<Cities> Cities { get; set; } = [];
-        public List<Users> Users { get; set; } = [];
+        public List<Customers> Customers { get; set; } = [];
+        public List<Guests> Guests { get; set; } = [];
+        public List<Properties> Properties { get; set; } = [];
     }
 }

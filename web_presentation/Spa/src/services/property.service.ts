@@ -1,11 +1,21 @@
-import httpClient from "@/core/httpClient";
+import httpClient, { type ApiResponse } from "@/core/httpClient";
 import type { CreationMediaFile } from "@/models/multimedia";
-import type {
-  PropertyBasicInformation,
-  PropertyType,
+import {
+  type CreationPropertyDto,
+  type PropertyBasicInformation,
+  type PropertyFilters,
+  type PropertySummary,
+  type PropertyType,
 } from "@/models/properties";
 import type { CreationAddress } from "@/models/ubication";
 import { MultimediaService } from "./multimedia.service";
+import {
+  dtoToPage,
+  type Page,
+  type PageDto,
+  type PaginationOptions,
+} from "@/models/pagination";
+import { useAuthStore } from "@/stores/auth.store";
 
 type PropertyTypeDto = {
   id: number;
@@ -32,7 +42,7 @@ export class PropertyService {
   ): Promise<void> {
     const multimediaDto = await MultimediaService.uploadMultimedia(multimedia);
 
-    const propertyDto = {
+    const propertyDto: CreationPropertyDto = {
       Title: information.title,
       TypeId: parseInt(information.propertyType, 10),
       NumBeds: information.beds,
@@ -46,12 +56,41 @@ export class PropertyService {
         StreetNumber: address.streetNumber,
         IntersectionNumber: address.intersectionNumber,
         DoorNumber: address.doorNumber,
-        CityId: address.cityId,
         Complement: address.complement,
       },
+      City: address.cityId,
+      Country: address.countryId,
       Multimedia: multimediaDto,
     };
 
     await httpClient.post("/properties", propertyDto);
+  }
+
+  public static async searchProperties(
+    pagination: PaginationOptions,
+    filters?: PropertyFilters
+  ): Promise<Page<PropertySummary>> {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
+    const endpoint = "/properties";
+    const params = {
+      ...pagination,
+      ...(filters ?? {}),
+      checkIn: filters?.checkIn?.toISOString().split("T")[0],
+      checkOut: filters?.checkOut?.toISOString().split("T")[0],
+    };
+
+    let response: ApiResponse<PageDto<PropertySummary>>;
+
+    if (isAuthenticated) {
+      response = await httpClient.get(endpoint, {
+        params,
+      });
+    } else {
+      response = await httpClient.publicRequest("GET", endpoint, undefined, {
+        params,
+      });
+    }
+
+    return dtoToPage(response.data);
   }
 }

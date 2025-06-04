@@ -1,18 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using web_presentation.Extensions;
 
 namespace web_presentation.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
 
         public bool ShouldPassCookiesToSPA { get; set; } = false;
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
 
         public void OnGet()
         {
@@ -21,6 +15,8 @@ namespace web_presentation.Pages
             {
                 ShouldPassCookiesToSPA = true;
             }
+
+            Response.ClearAuthTokenCookies();
         }
     }
 }

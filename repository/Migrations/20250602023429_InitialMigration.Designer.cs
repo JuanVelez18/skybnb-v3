@@ -12,8 +12,8 @@ using repository.Conexions;
 namespace repository.Migrations
 {
     [DbContext(typeof(DbConexion))]
-    [Migration("20250524185437_UpdateFKInRefreshTokens")]
-    partial class UpdateFKInRefreshTokens
+    [Migration("20250602023429_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,11 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 5
                         },
                         new
@@ -69,6 +74,11 @@ namespace repository.Migrations
                         {
                             RolesId = 1,
                             PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 8
                         },
                         new
                         {
@@ -88,7 +98,32 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 12
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 13
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 14
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 15
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 16
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 17
                         },
                         new
                         {
@@ -103,12 +138,92 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 20
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 21
                         },
                         new
                         {
                             RolesId = 1,
+                            PermissionsId = 23
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 24
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 25
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 26
+                        },
+                        new
+                        {
+                            RolesId = 1,
                             PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 29
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 30
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 34
+                        },
+                        new
+                        {
+                            RolesId = 1,
+                            PermissionsId = 36
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 2
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 3
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 5
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 12
                         },
                         new
                         {
@@ -118,26 +233,6 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 2,
-                            PermissionsId = 18
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 19
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 20
-                        },
-                        new
-                        {
-                            RolesId = 2,
-                            PermissionsId = 10
-                        },
-                        new
-                        {
-                            RolesId = 2,
                             PermissionsId = 22
                         },
                         new
@@ -148,42 +243,107 @@ namespace repository.Migrations
                         new
                         {
                             RolesId = 2,
-                            PermissionsId = 26
+                            PermissionsId = 24
                         },
                         new
                         {
-                            RolesId = 3,
-                            PermissionsId = 18
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 10
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 21
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 22
-                        },
-                        new
-                        {
-                            RolesId = 3,
-                            PermissionsId = 23
-                        },
-                        new
-                        {
-                            RolesId = 3,
+                            RolesId = 2,
                             PermissionsId = 25
                         },
                         new
                         {
-                            RolesId = 3,
+                            RolesId = 2,
                             PermissionsId = 26
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 29
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 31
+                        },
+                        new
+                        {
+                            RolesId = 2,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 2
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 3
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 4
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 5
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 7
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 12
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 17
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 23
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 27
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 28
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 31
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 32
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 35
+                        },
+                        new
+                        {
+                            RolesId = 3,
+                            PermissionsId = 36
                         });
                 });
 
@@ -208,9 +368,6 @@ namespace repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Complement")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -223,9 +380,6 @@ namespace repository.Migrations
 
                     b.Property<int>("IntersectionNumber")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<decimal?>("Latitude")
                         .HasPrecision(10, 8)
@@ -248,8 +402,6 @@ namespace repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId");
-
                     b.ToTable("Addresses");
                 });
 
@@ -265,9 +417,6 @@ namespace repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Entity")
                         .HasColumnType("nvarchar(max)");
 
@@ -277,7 +426,7 @@ namespace repository.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -306,13 +455,17 @@ namespace repository.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("GuestId")
+                    b.Property<string>("GuestComment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("NumGuests")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("PropertyId")
+                    b.Property<Guid?>("PropertyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -414,17 +567,74 @@ namespace repository.Migrations
 
             modelBuilder.Entity("domain.Entities.Guests", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("UserId");
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AddressId");
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Guests");
+                });
+
+            modelBuilder.Entity("domain.Entities.Payments", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(13, 2)
+                        .HasColumnType("decimal(13,2)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Fee")
+                        .HasPrecision(13, 2)
+                        .HasColumnType("decimal(13,2)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("domain.Entities.Permissions", b =>
@@ -455,152 +665,218 @@ namespace repository.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Permission to create a user",
+                            Name = "create:user"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Permission to read a user",
+                            Name = "read:user"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Permission to update a user",
+                            Name = "update:user"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Permission to deactivate a user",
+                            Name = "deactivate:user"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Permission to delete a user",
+                            Name = "delete:user"
+                        },
+                        new
+                        {
+                            Id = 6,
                             Description = "Permission to create a country",
                             Name = "create:country"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 7,
                             Description = "Permission to read a country",
                             Name = "read:country"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 8,
                             Description = "Permission to update a country",
                             Name = "update:country"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 9,
+                            Description = "Permission to deactivate a country",
+                            Name = "deactivate:country"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Permission to delete a country",
+                            Name = "delete:country"
+                        },
+                        new
+                        {
+                            Id = 11,
                             Description = "Permission to create a city",
                             Name = "create:city"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 12,
                             Description = "Permission to read a city",
                             Name = "read:city"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = 13,
                             Description = "Permission to update a city",
                             Name = "update:city"
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 14,
+                            Description = "Permission to deactivate a city",
+                            Name = "deactivate:city"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Permission to delete a city",
+                            Name = "delete:city"
+                        },
+                        new
+                        {
+                            Id = 16,
                             Description = "Permission to create a property type",
                             Name = "create:propertyType"
                         },
                         new
                         {
-                            Id = 10,
+                            Id = 17,
                             Description = "Permission to read a property type",
                             Name = "read:propertyType"
                         },
                         new
                         {
-                            Id = 11,
+                            Id = 18,
                             Description = "Permission to update a property type",
                             Name = "update:propertyType"
                         },
                         new
                         {
-                            Id = 13,
-                            Description = "Permission to create an address",
-                            Name = "create:address"
+                            Id = 19,
+                            Description = "Permission to deactivate a property type",
+                            Name = "deactivate:propertyType"
                         },
                         new
                         {
-                            Id = 14,
-                            Description = "Permission to read an address",
-                            Name = "read:address"
+                            Id = 20,
+                            Description = "Permission to delete a property type",
+                            Name = "delete:propertyType"
                         },
                         new
                         {
-                            Id = 15,
-                            Description = "Permission to update an address",
-                            Name = "update:address"
+                            Id = 21,
+                            Description = "Permission to read auditories",
+                            Name = "read:auditories"
                         },
                         new
                         {
-                            Id = 16,
-                            Description = "Permission to delete an address",
-                            Name = "delete:address"
-                        },
-                        new
-                        {
-                            Id = 17,
+                            Id = 22,
                             Description = "Permission to create a property",
                             Name = "create:property"
                         },
                         new
                         {
-                            Id = 18,
+                            Id = 23,
                             Description = "Permission to read a property",
                             Name = "read:property"
                         },
                         new
                         {
-                            Id = 19,
+                            Id = 24,
                             Description = "Permission to update a property",
                             Name = "update:property"
                         },
                         new
                         {
-                            Id = 20,
+                            Id = 25,
+                            Description = "Permission to deactivate a property",
+                            Name = "deactivate:property"
+                        },
+                        new
+                        {
+                            Id = 26,
                             Description = "Permission to delete a property",
                             Name = "delete:property"
                         },
                         new
                         {
-                            Id = 21,
+                            Id = 27,
                             Description = "Permission to create a booking",
                             Name = "create:booking"
                         },
                         new
                         {
-                            Id = 22,
+                            Id = 28,
                             Description = "Permission to read a booking",
                             Name = "read:booking"
                         },
                         new
                         {
-                            Id = 23,
+                            Id = 29,
                             Description = "Permission to update a booking",
                             Name = "update:booking"
                         },
                         new
                         {
-                            Id = 24,
+                            Id = 30,
                             Description = "Permission to delete a booking",
                             Name = "delete:booking"
                         },
                         new
                         {
-                            Id = 25,
+                            Id = 31,
                             Description = "Permission to create a review",
                             Name = "create:review"
                         },
                         new
                         {
-                            Id = 26,
+                            Id = 32,
                             Description = "Permission to read a review",
                             Name = "read:review"
                         },
                         new
                         {
-                            Id = 27,
+                            Id = 33,
                             Description = "Permission to update a review",
                             Name = "update:review"
                         },
                         new
                         {
-                            Id = 28,
+                            Id = 34,
                             Description = "Permission to delete a review",
                             Name = "delete:review"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Permission to create a payment",
+                            Name = "create:payment"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Permission to read a payment",
+                            Name = "read:payment"
                         });
                 });
 
@@ -620,6 +896,12 @@ namespace repository.Migrations
                     b.Property<decimal>("BasePricePerNight")
                         .HasPrecision(12, 2)
                         .HasColumnType("decimal(12,2)");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -666,11 +948,51 @@ namespace repository.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
+
                     b.HasIndex("HostId");
 
                     b.HasIndex("TypeId");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("domain.Entities.PropertyAssets", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("Url")
+                        .IsUnique();
+
+                    b.ToTable("PropertyAssets");
                 });
 
             modelBuilder.Entity("domain.Entities.PropertyTypes", b =>
@@ -684,6 +1006,9 @@ namespace repository.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -754,11 +1079,8 @@ namespace repository.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("GuestId")
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("PropertyId")
                         .HasColumnType("uniqueidentifier");
@@ -833,38 +1155,16 @@ namespace repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly>("Birthday")
-                        .HasColumnType("date");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -872,25 +1172,57 @@ namespace repository.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(120)");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("Dni")
-                        .IsUnique();
-
                     b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("domain.Entities.Customers", b =>
+                {
+                    b.HasBaseType("domain.Entities.Users");
+
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("Dni")
+                        .IsUnique()
+                        .HasFilter("[Dni] IS NOT NULL");
+
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("RolesPermissions", b =>
@@ -923,41 +1255,17 @@ namespace repository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("domain.Entities.Addresses", b =>
-                {
-                    b.HasOne("domain.Entities.Cities", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("domain.Entities.Auditories", b =>
-                {
-                    b.HasOne("domain.Entities.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("domain.Entities.Bookings", b =>
                 {
-                    b.HasOne("domain.Entities.Users", "Guest")
+                    b.HasOne("domain.Entities.Customers", "Guest")
                         .WithMany("Bookings")
                         .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("domain.Entities.Properties", "Property")
                         .WithMany("Bookings")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Guest");
 
@@ -978,18 +1286,52 @@ namespace repository.Migrations
             modelBuilder.Entity("domain.Entities.Guests", b =>
                 {
                     b.HasOne("domain.Entities.Addresses", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
+                        .WithOne("Guest")
+                        .HasForeignKey("domain.Entities.Guests", "AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Cities", "City")
+                        .WithMany("Guests")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Countries", "Country")
+                        .WithMany("Guests")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Customers", "Customer")
+                        .WithOne("GuestProfile")
+                        .HasForeignKey("domain.Entities.Guests", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("domain.Entities.Users", "User")
-                        .WithOne("Guest")
-                        .HasForeignKey("domain.Entities.Guests", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                    b.Navigation("Address");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("domain.Entities.Payments", b =>
+                {
+                    b.HasOne("domain.Entities.Bookings", "Booking")
+                        .WithMany("Payments")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.HasOne("domain.Entities.Customers", "User")
+                        .WithMany("Payments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Booking");
 
                     b.Navigation("User");
                 });
@@ -997,28 +1339,55 @@ namespace repository.Migrations
             modelBuilder.Entity("domain.Entities.Properties", b =>
                 {
                     b.HasOne("domain.Entities.Addresses", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("Property")
+                        .HasForeignKey("domain.Entities.Properties", "AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("domain.Entities.Users", "Host")
+                    b.HasOne("domain.Entities.Cities", "City")
+                        .WithMany("Properties")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Countries", "Country")
+                        .WithMany("Properties")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Customers", "Host")
                         .WithMany("HostedProperties")
                         .HasForeignKey("HostId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("domain.Entities.PropertyTypes", "Type")
-                        .WithMany()
+                        .WithMany("Properties")
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
 
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
+
                     b.Navigation("Host");
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("domain.Entities.PropertyAssets", b =>
+                {
+                    b.HasOne("domain.Entities.Properties", "Property")
+                        .WithMany("Multimedia")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("domain.Entities.RefreshTokens", b =>
@@ -1028,7 +1397,7 @@ namespace repository.Migrations
                         .HasForeignKey("ReplacedByTokenId");
 
                     b.HasOne("domain.Entities.Users", "User")
-                        .WithMany()
+                        .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1046,16 +1415,15 @@ namespace repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("domain.Entities.Users", "Guest")
+                    b.HasOne("domain.Entities.Customers", "Guest")
                         .WithMany("ReviewsWritten")
                         .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("domain.Entities.Properties", "Property")
                         .WithMany("Reviews")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Booking");
@@ -1065,34 +1433,67 @@ namespace repository.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("domain.Entities.Users", b =>
+            modelBuilder.Entity("domain.Entities.Customers", b =>
                 {
                     b.HasOne("domain.Entities.Countries", "Country")
-                        .WithMany("Users")
+                        .WithMany("Customers")
                         .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("domain.Entities.Users", null)
+                        .WithOne()
+                        .HasForeignKey("domain.Entities.Customers", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("domain.Entities.Addresses", b =>
+                {
+                    b.Navigation("Guest");
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("domain.Entities.Bookings", b =>
                 {
+                    b.Navigation("Payments");
+
                     b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("domain.Entities.Cities", b =>
+                {
+                    b.Navigation("Guests");
+
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("domain.Entities.Countries", b =>
                 {
                     b.Navigation("Cities");
 
-                    b.Navigation("Users");
+                    b.Navigation("Customers");
+
+                    b.Navigation("Guests");
+
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("domain.Entities.Properties", b =>
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("Multimedia");
+
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("domain.Entities.PropertyTypes", b =>
+                {
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("domain.Entities.RefreshTokens", b =>
@@ -1102,11 +1503,18 @@ namespace repository.Migrations
 
             modelBuilder.Entity("domain.Entities.Users", b =>
                 {
+                    b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("domain.Entities.Customers", b =>
+                {
                     b.Navigation("Bookings");
 
-                    b.Navigation("Guest");
+                    b.Navigation("GuestProfile");
 
                     b.Navigation("HostedProperties");
+
+                    b.Navigation("Payments");
 
                     b.Navigation("ReviewsWritten");
                 });

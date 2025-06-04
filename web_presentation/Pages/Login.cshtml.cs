@@ -17,6 +17,7 @@ namespace web_presentation.Pages
         }
         [BindProperty]
         public UserCredentialsDto Credentials { get; set; } = new UserCredentialsDto();
+        public string? Error { get; set; }
 
         public IActionResult OnGet()
         {
@@ -32,11 +33,24 @@ namespace web_presentation.Pages
                 return Page();
             }
 
-            var tokens = await _authPresentation.LoginAsync(Credentials);
-            Response.SetAuthTokenCookies(tokens);
+            try
+            {
+                var tokens = await _authPresentation.LoginAsync(Credentials);
+                Response.SetAuthTokenCookies(tokens);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Message"] = ex.Message;
+                return Page();
+            }
 
             TempData["ShouldPassCookiesToSPA"] = true;
             return RedirectToPage(Routes.Home);
+        }
+
+        public IActionResult OnPostBtnClose()
+        {
+            return Page();
         }
     }
 }

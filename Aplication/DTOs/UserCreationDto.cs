@@ -28,7 +28,7 @@ namespace application.DTOs
         public DateOnly? Birthday { get; set; }
 
         [Required(ErrorMessage = "Country is required")]
-        public int? CountryId { get; set; }
+        public int? Country { get; set; }
 
         [MinLength(9, ErrorMessage = "Phone must be at least 8 characters long")]
         [MaxLength(20, ErrorMessage = "Phone must be at most 20 characters long")]

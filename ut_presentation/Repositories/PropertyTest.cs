@@ -29,8 +29,7 @@ namespace ut_presentation.Repositories
                 streetNumber: 41,
                 intersectionNumber: 27,
                 doorNumber: 32,
-                cityId: 2,
-                complement: "Apto 302" ,
+                complement: "Apto 302",
                 latitude: 0.1m,
                 longitude: 0.2m
             );
@@ -44,7 +43,9 @@ namespace ut_presentation.Repositories
                 basePricePerNight: 150000,
                 typeId: 1,
                 hostId: Guid.NewGuid(),
-                addressId: newAddress.Id
+                addressId: newAddress.Id,
+                1,
+                1
             );
 
             await _repository.AddAsync(property);

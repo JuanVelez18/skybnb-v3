@@ -10,7 +10,8 @@
 			<h3>Create an account</h3>
 
 			<div style="width: 60%; flex-direction: column; gap: 1rem; display: flex;">
-				<div style="flex-direction: column; gap: 1rem; @(!Model.LikeGuest ? "display: flex;" : "display: none;")">
+				<div
+					style="flex-direction: column; gap: 1rem; @(!Model.LikeGuest ? "display: flex;" : "display: none;")">
 					<div align="form-group">
 						<label asp-for="UserCreation.Email" class="control-label">
 							Email
@@ -24,7 +25,8 @@
 							Password
 						</label>
 						@*TODO: Search a better solution for the password*@
-						<input asp-for="UserCreation.Password" class="form-control" value="@(Model.UserCreation.Password)" type="password" />
+						<input asp-for="UserCreation.Password" class="form-control"
+							value="@(Model.UserCreation.Password)" type="password" />
 						<span asp-validation-for="UserCreation.Password" class="text-danger"></span>
 					</div>
 
@@ -61,17 +63,17 @@
 					</div>
 
 					<div align="form-group">
-						<label asp-for="UserCreation.CountryId" class="control-label">
+						<label asp-for="UserCreation.Country" class="control-label">
 							Country
 						</label>
-						<select asp-for="UserCreation.CountryId" class="form-control">
+						<select asp-for="UserCreation.Country" class="form-control">
 							<option value="">Select a country</option>
 							@foreach (var country in Model.Countries)
 							{
 								<option value="@country.Id">@country.Name (@country.IsoCode)</option>
 							}
 						</select>
-						<span asp-validation-for="UserCreation.CountryId" class="text-danger"></span>
+						<span asp-validation-for="UserCreation.Country" class="text-danger"></span>
 					</div>
 
 					<div align="form-group">
@@ -94,7 +96,7 @@
 				{
 					<div style=" flex-direction: column; gap: 1rem; display: flex;">
 						<p>
-							You are registering as a guest. This means you will to provide an address
+							You are registering as a guest. This means you will to provide an residence address
 						</p>
 
 						<div align="form-group">
@@ -130,17 +132,31 @@
 						</div>
 
 						<div align="form-group">
-							<label asp-for="Address.CityId" class="control-label">
+							<label asp-for="ResidenceCountry" class="control-label">
+								Country
+							</label>
+							<select asp-for="ResidenceCountry" class="form-control">
+								<option value="">Select a country</option>
+								@foreach (var country in Model.Countries)
+								{
+									<option value="@country.Id">@country.Name (@country.IsoCode)</option>
+								}
+							</select>
+							<span asp-validation-for="ResidenceCountry" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="ResidenceCity" class="control-label">
 								City
 							</label>
-							<select asp-for="Address.CityId" class="form-control">
+							<select asp-for="ResidenceCity" class="form-control">
 								<option value="">Select a city</option>
 								@foreach (var city in Model.Cities)
 								{
 									<option value="@city.Id">@city.Name</option>
 								}
 							</select>
-							<span asp-validation-for="Address.CityId" class="text-danger"></span>
+							<span asp-validation-for="ResidenceCity" class="text-danger"></span>
 						</div>
 
 						<div align="form-group">
@@ -180,6 +196,12 @@
 					</p>
 				</div>
 			</div>
+
+			@if (ViewData.ContainsKey("Message"))
+			{
+				@await Html.PartialAsync("./_Messages.cshtml")
+				;
+			}
 		</form>
 	</div>
-</center>	   
+</center>

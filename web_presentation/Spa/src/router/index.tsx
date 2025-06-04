@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage.tsx";
 import NotFoundPage from "../pages/NotFoundPage.tsx";
 import { RouteNames } from "./routes.ts";
 import PropertyCreationPage from "@/pages/PropertyCreationPage.tsx";
+import ProtectedRoute from "@/components/auth/ProtectedRoute.tsx";
 
 // Centralized route configuration
 export const routes: RouteObject[] = [
@@ -17,13 +18,17 @@ export const routes: RouteObject[] = [
       },
       {
         path: RouteNames.CREATE_PROPERTY,
-        element: <PropertyCreationPage />,
+        element: (
+          <ProtectedRoute authenticated permission="create:property">
+            <PropertyCreationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ];
 

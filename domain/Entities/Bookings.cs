@@ -4,19 +4,20 @@ using Microsoft.EntityFrameworkCore;
 namespace domain.Entities
 {
     public class Bookings(
-        Guid propertyId,
-        Guid guestId,
+        Guid? propertyId,
+        Guid? guestId,
         DateOnly checkInDate,
         DateOnly checkOutDate,
         int numGuests,
-        decimal totalPrice
+        decimal totalPrice,
+        string? guestComment
         )
     {
         public Guid Id { get; private set; }
 
-        public Guid PropertyId { get; private set; } = propertyId;
+        public Guid? PropertyId { get; private set; } = propertyId;
 
-        public Guid GuestId { get; private set; } = guestId;
+        public Guid? GuestId { get; private set; } = guestId;
 
         public DateOnly CheckInDate { get; private set; } = checkInDate;
 
@@ -30,12 +31,16 @@ namespace domain.Entities
         [Precision(13, 2)]
         public decimal TotalPrice { get; private set; } = totalPrice;
 
+        [MaxLength(500)]
+        public string? GuestComment { get; private set; } = guestComment;
+
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         public Properties? Property { get; set; }
-        public Users? Guest { get; set; }
+        public Customers? Guest { get; set; }
+        public List<Payments> Payments { get; set; } = [];
         public Reviews? Review { get; set; }
     }
 }

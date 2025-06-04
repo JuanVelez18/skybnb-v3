@@ -21,7 +21,7 @@ namespace application.Implementations
         public async Task CreateBooking(BookingsDto bookingDto, Guid userId)
 
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            var user = await _unitOfWork.Customers.GetByIdAsync(userId);
 
             if (user == null)
             {
@@ -33,7 +33,7 @@ namespace application.Implementations
             {
                 throw new NotFoundApplicationException("Property not found.");
             }
-            if (property.HostId == userId) 
+            if (property.HostId == userId)
             {
                 throw new InvalidOperationException("You cannot reserve your own property.");
             }
@@ -44,7 +44,8 @@ namespace application.Implementations
                 bookingDto.CheckInDate,
                 bookingDto.CheckOutDate,
                 bookingDto.NumGuests,
-                bookingDto.TotalPrice
+                bookingDto.TotalPrice,
+                bookingDto.Comment
         );
             newBooking.Property = property;
             newBooking.Guest = user;
@@ -58,10 +59,6 @@ namespace application.Implementations
                 action: "Create Booking",
                 entity: "Bookings",
                 entityId: newBooking.Id.ToString(),
-                details: JsonSerializer.Serialize(newBooking, new JsonSerializerOptions
-                {
-                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-                }),
                 timestamp: DateTime.UtcNow
             );
 

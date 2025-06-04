@@ -27,6 +27,11 @@
                         style="display: block; width: 100%; text-align: left;"></span>
                 </div>
 
+                @if (ViewData.ContainsKey("Message"))
+                {
+                    @await Html.PartialAsync("./_Messages.cshtml")
+                    ;
+                }
                 <button type="submit" class="btn btn-primary">Login</button>
                 <p>Don't have an account? <a asp-page="@Routes.Register">Register</a></p>
             </div>

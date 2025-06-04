@@ -24,16 +24,18 @@ namespace ut_presentation.Repositories
         public async Task CreateBooking()
         {
             var booking = new Bookings(
-                 propertyId: Guid.NewGuid(),
-                 guestId: Guid.NewGuid(),
-                 checkInDate: new DateOnly(2025, 12, 24),
-                 checkOutDate: new DateOnly(2025, 12, 31),
-                 numGuests: 2,
-                 totalPrice: 600000
-                 );
+                propertyId: Guid.NewGuid(),
+                guestId: Guid.NewGuid(),
+                checkInDate: new DateOnly(2025, 12, 24),
+                checkOutDate: new DateOnly(2025, 12, 31),
+                numGuests: 2,
+                totalPrice: 600000,
+                guestComment: "Looking forward to my stay!"
+            );
             await _repository.AddAsync(booking);
             await _conexion.SaveChangesAsync();
         }
+        
         [TestCleanup]
         public void TearDown()
         {

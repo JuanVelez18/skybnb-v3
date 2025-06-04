@@ -14,8 +14,10 @@ namespace domain.Entities
         decimal basePricePerNight,
         int typeId,
         Guid hostId,
-        Guid addressId
-        ) : ISoftDeletable
+        Guid addressId,
+        int CityId,
+        int CountryId
+        ) : IDisabled
     {
         public Guid Id { get; private set; }
 
@@ -45,6 +47,8 @@ namespace domain.Entities
         public Guid HostId { get; private set; } = hostId;
 
         public Guid AddressId { get; set; } = addressId;
+        public int CityId { get; set; } = CityId;
+        public int CountryId { get; set; } = CountryId;
 
         [Range(0, int.MaxValue)]
         public int ReviewsCount { get; set; } = 0;
@@ -58,8 +62,10 @@ namespace domain.Entities
 
 
         public PropertyTypes? Type { get; set; }
-        public Users? Host { get; set; }
+        public Customers? Host { get; set; }
         public Addresses? Address { get; set; }
+        public Cities? City { get; set; }
+        public Countries? Country { get; set; }
         public List<Bookings> Bookings { get; set; } = [];
         public List<Reviews> Reviews { get; set; } = [];
         public List<PropertyAssets> Multimedia { get; set; } = [];

@@ -11,12 +11,12 @@ namespace asp_services.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewsApplication _reviewsApplication;
-        public ReviewsController (IReviewsApplication reviewsApplication)
+        public ReviewsController(IReviewsApplication reviewsApplication)
         {
             _reviewsApplication = reviewsApplication;
         }
         [HttpPost]
-        [Authorize]
+        [Authorize("create:review")]
         public async Task<IActionResult> CreateReview([FromBody] ReviewsDto reviewsDto)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -25,7 +25,7 @@ namespace asp_services.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
+        [Authorize("delete:review")]
         public async Task<IActionResult> DeleteReview(Guid reviewId)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
