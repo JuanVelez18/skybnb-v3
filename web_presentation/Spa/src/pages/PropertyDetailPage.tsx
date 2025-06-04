@@ -12,67 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useGetPropertyDetail } from "@/queries/properties.queries";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// TODO: Replace with actual data fetching logic
-const mockProperty = {
-  id: 1,
-  title: "Beautiful Oceanfront House with Stunning Views",
-  description:
-    "Experience the ultimate beachfront getaway in this stunning oceanfront house. Wake up to breathtaking sunrise views over the Atlantic Ocean from your private balcony. This spacious and elegantly furnished home features an open-concept living area with floor-to-ceiling windows that showcase the spectacular ocean panorama. The fully equipped gourmet kitchen is perfect for preparing meals with fresh local ingredients. Relax in the comfortable living room or step outside to your private deck where you can enjoy morning coffee or evening cocktails while listening to the soothing sounds of the waves. The master bedroom offers a king-size bed and direct ocean views, while the additional bedrooms provide comfortable accommodations for family and friends.",
-  images: [
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-    "/placeholder.svg?height=400&width=600",
-  ],
-  price: 150,
-  rating: 4.8,
-  reviewCount: 124,
-  location: "Miami Beach, FL",
-  bedrooms: 3,
-  beds: 4,
-  bathrooms: 2,
-  maxGuests: 6,
-  propertyType: "Entire house",
-  amenities: ["wifi", "parking", "kitchen", "tv", "ac"],
-  host: {
-    name: "Sarah Johnson",
-    avatar: undefined,
-    memberSince: "2019",
-    responseRate: 98,
-    responseTime: "within an hour",
-  },
-  reviews: [
-    {
-      id: "1",
-      author: "Michael Chen",
-      avatar: undefined,
-      rating: 5,
-      date: "December 2024",
-      comment:
-        "Absolutely incredible stay! The ocean views were breathtaking and the house was even better than the photos. Sarah was an amazing host - very responsive and helpful with local recommendations. The kitchen was fully stocked and the beds were super comfortable. We'll definitely be back!",
-    },
-    {
-      id: "2",
-      author: "Emma Rodriguez",
-      avatar: undefined,
-      rating: 5,
-      date: "November 2024",
-      comment:
-        "Perfect location right on the beach! The house was spotless and had everything we needed for our family vacation. The kids loved being able to walk straight out to the beach. Sarah provided great local restaurant recommendations too.",
-    },
-    {
-      id: "3",
-      author: "David Thompson",
-      avatar: undefined,
-      rating: 4,
-      date: "October 2024",
-      comment:
-        "Beautiful property with stunning views. The house is spacious and well-maintained. Only minor issue was the WiFi was a bit slow, but that didn't detract from our overall amazing experience. Highly recommend!",
-    },
-  ],
-};
+import { useMemo } from "react";
 
 const fallbackImages = [
   {
@@ -93,6 +33,17 @@ const PropertyDetailPage = () => {
   const { id } = useParams();
   const { propertyDetail, isPropertyDetailLoading, isPropertyDetailError } =
     useGetPropertyDetail(id ?? "");
+
+  const reviews = useMemo(
+    () =>
+      propertyDetail?.reviews.map((review) => ({
+        ...review,
+        author: review.guestFullName,
+        avatar: undefined,
+        rating: review.rating,
+      })),
+    [propertyDetail?.reviews]
+  );
 
   if (isPropertyDetailLoading)
     return (
@@ -192,10 +143,10 @@ const PropertyDetailPage = () => {
 
             {propertyDetail!.reviewsCount > 0 ? (
               <>
-                <ReviewsSummarySection reviews={mockProperty.reviews} />
+                <ReviewsSummarySection reviews={reviews!} />
 
                 <Button variant="outline" className="w-full">
-                  Show all {mockProperty.reviewCount} reviews
+                  Show all {propertyDetail!.reviewsCount} reviews
                 </Button>
               </>
             ) : (

@@ -3,11 +3,10 @@ import { Star } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 type Review = {
-  id: string;
   author: string;
   avatar?: string;
   rating: number;
-  date: string;
+  createdAt: Date;
   comment: string;
 };
 
@@ -19,7 +18,7 @@ const ReviewsSummarySection = ({ reviews }: Props) => {
   return (
     <div className="space-y-6">
       {reviews.map((review) => (
-        <div key={review.id} className="space-y-3">
+        <div key={review.comment} className="space-y-3">
           <div className="flex items-center gap-3">
             <Avatar>
               <AvatarImage
@@ -44,7 +43,10 @@ const ReviewsSummarySection = ({ reviews }: Props) => {
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  {review.date}
+                  {review.createdAt.toLocaleDateString("en-US", {
+                    month: "long",
+                  })}{" "}
+                  {review.createdAt.getFullYear()}
                 </span>
               </div>
             </div>
