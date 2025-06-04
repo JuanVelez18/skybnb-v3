@@ -154,7 +154,6 @@ namespace web_presentation.Pages
 
         public IActionResult OnPostBtnClose()
         {
-            ViewData["Message"] = null;
             return Page();
         }
     }
