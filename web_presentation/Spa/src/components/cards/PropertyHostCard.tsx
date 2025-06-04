@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type Props = {
   name: string;
-  yearSince: string;
+  yearSince: number;
   avatar?: string;
 };
 
