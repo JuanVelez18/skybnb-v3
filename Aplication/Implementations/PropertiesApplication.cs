@@ -135,5 +135,28 @@ namespace application.Implementations
 
             return PageDto<PropertySummaryDto>.FromDomainPage(propertiesPage, PropertySummaryDto.FromDomainProperty);
         }
+
+        public async Task<PropertyDetailDto> GetDetailByIdAsync(Guid propertyId, Guid? userId)
+        {
+            var property = await _unitOfWork.Properties.GetDetailByIdAsync(propertyId);
+            if (property == null)
+            {
+                throw new NotFoundApplicationException("Property not found.");
+            }
+
+            var reviewsCount = await _unitOfWork.Properties.GetReviewsCountAsync(propertyId);
+
+            var auditory = new Auditories(
+                userId,
+                action: "Get Property Detail",
+                entity: "Property",
+                entityId: propertyId.ToString(),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+
+            return new PropertyDetailDto(property, reviewsCount);
+        }
     }
 }
