@@ -20,6 +20,7 @@ namespace repository.Implementations
         public IPropertyTypeRepository PropertyTypes { get; private set; }
         public IAuditoryRepository Auditories { get; private set; }
         public IPropertyAssetsRepository PropertyAssets { get; private set; }
+        public IPaymentRepository Payments { get; private set; }
 
         public UnitOfWork(DbConexion conexion)
         {
@@ -38,6 +39,7 @@ namespace repository.Implementations
             PropertyTypes = new PropertyTypeRepository(_conexion);
             Auditories = new AuditoryRepository(_conexion);
             PropertyAssets = new PropertyAssetsRepository(_conexion);
+            Payments = new PaymentRepository(_conexion);
         }
 
         public async Task<int> CommitAsync()

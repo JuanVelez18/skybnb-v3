@@ -16,6 +16,7 @@
                 IPropertyTypeRepository PropertyTypes { get; }
                 IAuditoryRepository Auditories { get; }
                 IPropertyAssetsRepository PropertyAssets { get; }
+                IPaymentRepository Payments { get; }
 
                 Task<int> CommitAsync();
         }
