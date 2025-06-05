@@ -59,12 +59,18 @@ namespace repository.Implementations
             };
         }
 
-        public async Task<List<Bookings>> GetConfirmedBookingsByPropertyIdAsync(Guid propertyId)
+        public async Task<List<Bookings>> GetBookingsByPropertyIdAsync(Guid propertyId, BookingStatus? status)
         {
-            return await _dbSet
+            IQueryable<Bookings> query = _dbSet
                 .AsNoTracking()
-                .Where(b => b.PropertyId == propertyId && b.Status == BookingStatus.Confirmed)
-                .ToListAsync();
+                .Where(b => b.PropertyId == propertyId);
+
+            if (status.HasValue)
+            {
+                query = query.Where(b => b.Status == status.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<List<Bookings>> GetPendingBookingsByGuestIdAsync(Guid guestId)
@@ -73,6 +79,11 @@ namespace repository.Implementations
                 .AsNoTracking()
                 .Where(b => b.GuestId == guestId && b.Status == BookingStatus.Pending)
                 .ToListAsync();
+        }
+
+        public void UpdateBookingList(List<Bookings> bookings)
+        {
+            _dbSet.UpdateRange(bookings);
         }
     }
 }

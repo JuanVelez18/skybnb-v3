@@ -6,7 +6,8 @@ namespace repository.Interfaces
     public interface IBookingsRepository : IBaseRepository<Bookings, Guid>
     {
         Task<Page<Bookings>> GetBookingsByUserIdAsync(Guid userId, PaginationOptions pagination, BookingFilters? filters);
-        Task<List<Bookings>> GetConfirmedBookingsByPropertyIdAsync(Guid propertyId);
+        Task<List<Bookings>> GetBookingsByPropertyIdAsync(Guid propertyId, BookingStatus? status);
         Task<List<Bookings>> GetPendingBookingsByGuestIdAsync(Guid guestId);
+        void UpdateBookingList(List<Bookings> bookings);
     }
 }

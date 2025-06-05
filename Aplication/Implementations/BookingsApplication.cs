@@ -102,7 +102,10 @@ namespace application.Implementations
             newBooking.CalculateTotalPrice();
 
 
-            var existingConfirmedBookings = await _unitOfWork.Bookings.GetConfirmedBookingsByPropertyIdAsync(bookingDto.PropertyId);
+            var existingConfirmedBookings = await _unitOfWork.Bookings.GetBookingsByPropertyIdAsync(
+                bookingDto.PropertyId,
+                BookingStatus.Confirmed
+            );
             var hasOverlap = existingConfirmedBookings.Any(newBooking.HasOverlapWith);
             if (hasOverlap)
             {
