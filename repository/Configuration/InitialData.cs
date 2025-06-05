@@ -109,7 +109,7 @@ namespace repository.Configuration
                     ReadCityPermission.Id,
                     ReadPropertyTypePermission.Id,
                     ReadPropertyPermission.Id,
-                    CreateBookingPermission.Id, ReadBookingPermission.Id,
+                    CreateBookingPermission.Id, ReadBookingPermission.Id, UpdateBookingPermission.Id,
                     CreateReviewPermission.Id, ReadReviewPermission.Id,
                     CreatePaymentPermission.Id, ReadPaymentPermission.Id
                 ]
