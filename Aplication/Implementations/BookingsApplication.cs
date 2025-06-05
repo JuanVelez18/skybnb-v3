@@ -21,6 +21,11 @@ namespace application.Implementations
         public async Task CreateBooking(BookingsDto bookingDto, Guid userId)
 
         {
+            if (bookingDto.CheckInDate >= bookingDto.CheckOutDate)
+            {
+                throw new InvalidDataApplicationException("Check-out date must be after check-in date.");
+            }
+
             var user = await _unitOfWork.Customers.GetByIdAsync(userId);
 
             if (user == null)
@@ -35,8 +40,24 @@ namespace application.Implementations
             }
             if (property.HostId == userId)
             {
-                throw new InvalidOperationException("You cannot reserve your own property.");
+                throw new ConflictApplicationException("You cannot reserve your own property.");
             }
+            if (!property.IsActive)
+            {
+                throw new ConflictApplicationException("The property is not available for booking.");
+            }
+            if (bookingDto.NumGuests <= 0 || bookingDto.NumGuests > property.MaxGuests)
+            {
+                throw new InvalidDataApplicationException($"Number of guests must be between 1 and {property.MaxGuests}.");
+            }
+
+            var guestPendingBookings = await _unitOfWork.Bookings.GetPendingBookingsByGuestIdAsync(userId);
+            var hasPendingBooking = guestPendingBookings.Any(b => b.PropertyId == bookingDto.PropertyId);
+            if (hasPendingBooking)
+            {
+                throw new ConflictApplicationException("You already have a pending booking for this property.");
+            }
+
 
             var newBooking = new Bookings(
                 bookingDto.PropertyId,
@@ -44,15 +65,21 @@ namespace application.Implementations
                 bookingDto.CheckInDate,
                 bookingDto.CheckOutDate,
                 bookingDto.NumGuests,
-                bookingDto.TotalPrice,
                 bookingDto.Comment
-        );
+            );
             newBooking.Property = property;
             newBooking.Guest = user;
+            newBooking.CalculateTotalPrice();
+
+
+            var existingConfirmedBookings = await _unitOfWork.Bookings.GetConfirmedBookingsByPropertyIdAsync(bookingDto.PropertyId);
+            var hasOverlap = existingConfirmedBookings.Any(newBooking.HasOverlapWith);
+            if (hasOverlap)
+            {
+                throw new ConflictApplicationException("The selected dates overlap with an existing booking.");
+            }
 
             await _unitOfWork.Bookings.AddAsync(newBooking);
-
-
 
             var auditory = new Auditories(
                 userId: userId,
@@ -65,7 +92,6 @@ namespace application.Implementations
             await _unitOfWork.Auditories.AddAsync(auditory);
 
             await _unitOfWork.CommitAsync();
-
         }
     }
 }
