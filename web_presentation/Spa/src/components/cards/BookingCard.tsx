@@ -35,6 +35,7 @@ import { bookingStatuses } from "@/utils/bookings";
 type Props = {
   booking: Booking;
   userId: string;
+  isLoading?: boolean;
   onApprove: () => void;
   onPayment: () => void;
   onCancel: () => void;
@@ -43,6 +44,7 @@ type Props = {
 const BookingCard = ({
   booking,
   userId,
+  isLoading = false,
   onApprove,
   onPayment,
   onCancel,
@@ -111,10 +113,15 @@ const BookingCard = ({
                           <AlertDialogFooter>
                             <AlertDialogCancel>Keep Booking</AlertDialogCancel>
                             <AlertDialogAction
+                              disabled={isLoading}
                               onClick={onCancel}
                               className="bg-red-600 hover:bg-red-700"
                             >
-                              Cancel Booking
+                              {isLoading &&
+                                (isGuest ? "Cancelling..." : "Declining...")}
+                              {!isLoading && isGuest
+                                ? "Cancel Booking"
+                                : "Decline Booking"}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -294,15 +301,15 @@ const BookingCard = ({
             {/* Action Buttons */}
             <div className="flex gap-2 pt-2">
               {canApprove && (
-                <Button onClick={onApprove} size="sm">
+                <Button onClick={onApprove} size="sm" disabled={isLoading}>
                   <CheckCircle className="h-4 w-4 mr-2" />
-                  Approve Booking
+                  {isLoading ? "Approving..." : "Approve Booking"}
                 </Button>
               )}
               {canPay && (
-                <Button onClick={onPayment} size="sm">
+                <Button onClick={onPayment} size="sm" disabled={isLoading}>
                   <DollarSign className="h-4 w-4 mr-2" />
-                  Complete Payment
+                  {isLoading ? "Processing Payment..." : "Complete Payment"}
                 </Button>
               )}
             </div>
