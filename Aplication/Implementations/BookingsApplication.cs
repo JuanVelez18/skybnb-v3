@@ -182,6 +182,25 @@ namespace application.Implementations
                 throw new ConflictApplicationException("This booking has already been cancelled.");
             }
 
+            var timeDiff = booking.CheckInDate.ToDateTime(TimeOnly.MinValue) - DateTime.UtcNow;
+
+            if (booking.Status == BookingStatus.Confirmed && timeDiff < TimeSpan.FromDays(2))
+            {
+                throw new ConflictApplicationException("Bookings can only be cancelled at least 48 hours before check-in.");
+            }
+
+            if (booking.Status == BookingStatus.Confirmed)
+            {
+                foreach (var payment in booking.Payments)
+                {
+                    if (payment.Status == Payments.PaymentStatus.Completed)
+                    {
+                        payment.Status = Payments.PaymentStatus.Refunded;
+                        _unitOfWork.Payments.Update(payment);
+                    }
+                }
+            }
+
             if (booking.GuestId != userId && (booking.Property == null || booking.Property.HostId != userId))
             {
                 throw new UnauthorizedApplicationException("You are not authorized to cancel this booking.");

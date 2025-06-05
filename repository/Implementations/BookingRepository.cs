@@ -17,6 +17,7 @@ namespace repository.Implementations
             return await _dbSet
                 .Include(b => b.Property)
                 .ThenInclude(p => p!.Host)
+                .Include(b => b.Payments)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
