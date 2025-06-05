@@ -35,5 +35,14 @@ namespace asp_services.Controllers
             var bookingsPage = await _bookingsApplication.GetBookingsByUserIdAsync(userId, paginationDto, filtersDto);
             return Ok(bookingsPage);
         }
+
+        [HttpPatch("{bookingId:guid}/approve")]
+        [Authorize("update:booking")]
+        public async Task<IActionResult> ApproveBooking(Guid bookingId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _bookingsApplication.ApproveBooking(bookingId, userId);
+            return NoContent();
+        }
     }
 }
