@@ -44,5 +44,14 @@ namespace asp_services.Controllers
             await _bookingsApplication.ApproveBooking(bookingId, userId);
             return NoContent();
         }
+
+        [HttpPatch("{bookingId:guid}/cancel")]
+        [Authorize("update:booking")]
+        public async Task<IActionResult> CancelBooking(Guid bookingId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _bookingsApplication.CancelBooking(bookingId, userId);
+            return NoContent();
+        }
     }
 }
