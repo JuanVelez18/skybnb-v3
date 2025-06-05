@@ -52,6 +52,19 @@ export const routes: RouteObject[] = [
         } as RouteConfig,
       },
       {
+        path: RouteNames.BOOKINGS,
+        element: (
+          <ProtectedRoute authenticated permission="read:booking">
+            <div>Bookings Page (to be implemented)</div>
+          </ProtectedRoute>
+        ),
+        handle: {
+          layoutConfig: {
+            title: "My Bookings",
+          },
+        } as RouteConfig,
+      },
+      {
         path: "*",
         element: <NotFoundPage />,
       },
