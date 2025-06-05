@@ -8,6 +8,7 @@ import {
   CreditCard,
   LogIn,
   UserRoundPlus,
+  Calendar,
 } from "lucide-react";
 import { logout } from "./auth";
 
@@ -44,6 +45,12 @@ export const navigationItems: NavigationItem[] = [
     icon: Building2,
     url: RouteNames.CREATE_PROPERTY,
     permission: "create:property",
+  },
+  {
+    title: "My Bookings",
+    icon: Calendar,
+    url: RouteNames.BOOKINGS,
+    permission: "read:booking",
   },
 ];
 
