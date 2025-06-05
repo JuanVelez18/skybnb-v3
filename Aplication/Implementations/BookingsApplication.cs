@@ -18,6 +18,36 @@ namespace application.Implementations
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<PageDto<BookingItemDto>> GetBookingsByUserIdAsync(Guid userId, PaginationOptionsDto paginationDto, BookingFiltersDto? filtersDto)
+        {
+            var user = await _unitOfWork.Customers.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundApplicationException("User not found.");
+            }
+
+            var filters = filtersDto?.ToDomainBookingFilters();
+            var pagination = paginationDto.ToDomainPaginationOptions();
+            if (!pagination.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid pagination options.");
+            }
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Get Bookings",
+                entity: "Bookings",
+                entityId: null,
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+
+            var bookingsPage = await _unitOfWork.Bookings.GetBookingsByUserIdAsync(userId, pagination, filters);
+
+            return PageDto<BookingItemDto>.FromDomainPage(bookingsPage, BookingItemDto.FromDomainBooking);
+        }
+
         public async Task CreateBooking(BookingsDto bookingDto, Guid userId)
 
         {
@@ -72,7 +102,10 @@ namespace application.Implementations
             newBooking.CalculateTotalPrice();
 
 
-            var existingConfirmedBookings = await _unitOfWork.Bookings.GetConfirmedBookingsByPropertyIdAsync(bookingDto.PropertyId);
+            var existingConfirmedBookings = await _unitOfWork.Bookings.GetBookingsByPropertyIdAsync(
+                bookingDto.PropertyId,
+                BookingStatus.Confirmed
+            );
             var hasOverlap = existingConfirmedBookings.Any(newBooking.HasOverlapWith);
             if (hasOverlap)
             {
@@ -91,6 +124,99 @@ namespace application.Implementations
 
             await _unitOfWork.Auditories.AddAsync(auditory);
 
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task ApproveBooking(Guid bookingId, Guid userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId);
+            if (booking == null)
+            {
+                throw new NotFoundApplicationException("Booking not found.");
+            }
+
+            if (booking.Status != BookingStatus.Pending)
+            {
+                throw new ConflictApplicationException("Only pending bookings can be approved.");
+            }
+
+            if (booking.Property == null || booking.Property.HostId != userId)
+            {
+                throw new UnauthorizedApplicationException("You are not authorized to approve this booking.");
+            }
+
+            var pendingBookings = await _unitOfWork.Bookings.GetBookingsByPropertyIdAsync(
+                booking.PropertyId!.Value,
+                BookingStatus.Pending
+            );
+            var overlappingPendingBookings = pendingBookings
+                .Where(b => b.Id != booking.Id && b.HasOverlapWith(booking))
+                .ToList();
+
+            booking.Approve(overlappingPendingBookings);
+
+            _unitOfWork.Bookings.Update(booking);
+            _unitOfWork.Bookings.UpdateBookingList(overlappingPendingBookings);
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Approve Booking",
+                entity: "Bookings",
+                entityId: booking.Id.ToString(),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task CancelBooking(Guid bookingId, Guid userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId);
+            if (booking == null)
+            {
+                throw new NotFoundApplicationException("Booking not found.");
+            }
+
+            if (booking.Status == BookingStatus.Cancelled)
+            {
+                throw new ConflictApplicationException("This booking has already been cancelled.");
+            }
+
+            var timeDiff = booking.CheckInDate.ToDateTime(TimeOnly.MinValue) - DateTime.UtcNow;
+
+            if (booking.Status == BookingStatus.Confirmed && timeDiff < TimeSpan.FromDays(2))
+            {
+                throw new ConflictApplicationException("Bookings can only be cancelled at least 48 hours before check-in.");
+            }
+
+            if (booking.Status == BookingStatus.Confirmed)
+            {
+                foreach (var payment in booking.Payments)
+                {
+                    if (payment.Status == Payments.PaymentStatus.Completed)
+                    {
+                        payment.Status = Payments.PaymentStatus.Refunded;
+                        _unitOfWork.Payments.Update(payment);
+                    }
+                }
+            }
+
+            if (booking.GuestId != userId && (booking.Property == null || booking.Property.HostId != userId))
+            {
+                throw new UnauthorizedApplicationException("You are not authorized to cancel this booking.");
+            }
+
+            booking.Cancel();
+            _unitOfWork.Bookings.Update(booking);
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Cancel Booking",
+                entity: "Bookings",
+                entityId: booking.Id.ToString(),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
             await _unitOfWork.CommitAsync();
         }
     }

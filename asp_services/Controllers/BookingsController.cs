@@ -24,5 +24,34 @@ namespace asp_services.Controllers
             await _bookingsApplication.CreateBooking(bookingsDto, userId);
             return Created();
         }
+
+        [HttpGet]
+        [Authorize("read:booking")]
+        public async Task<IActionResult> GetBookingsByUserId(
+            [FromQuery] PaginationOptionsDto paginationDto,
+            [FromQuery] BookingFiltersDto? filtersDto)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var bookingsPage = await _bookingsApplication.GetBookingsByUserIdAsync(userId, paginationDto, filtersDto);
+            return Ok(bookingsPage);
+        }
+
+        [HttpPatch("{bookingId:guid}/approve")]
+        [Authorize("update:booking")]
+        public async Task<IActionResult> ApproveBooking(Guid bookingId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _bookingsApplication.ApproveBooking(bookingId, userId);
+            return NoContent();
+        }
+
+        [HttpPatch("{bookingId:guid}/cancel")]
+        [Authorize("update:booking")]
+        public async Task<IActionResult> CancelBooking(Guid bookingId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _bookingsApplication.CancelBooking(bookingId, userId);
+            return NoContent();
+        }
     }
 }

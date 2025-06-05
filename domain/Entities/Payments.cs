@@ -6,8 +6,6 @@ namespace domain.Entities
     public class Payments(
         Guid bookingId,
         Guid? userId,
-        decimal amount,
-        decimal fee,
         string paymentMethod,
         string? transactionId
     )
@@ -27,10 +25,10 @@ namespace domain.Entities
         public Guid? UserId { get; private set; } = userId;
 
         [Precision(13, 2)]
-        public decimal Amount { get; private set; } = amount;
+        public decimal Amount { get; private set; }
 
         [Precision(13, 2)]
-        public decimal Fee { get; private set; } = fee;
+        public decimal Fee { get; private set; }
 
         [MaxLength(100)]
         public string PaymentMethod { get; private set; } = paymentMethod;
@@ -44,5 +42,19 @@ namespace domain.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public Bookings? Booking { get; set; }
         public Customers? User { get; set; }
+
+
+        public void CalculateAmountAndFee()
+        {
+            if (Booking == null)
+            {
+                throw new ArgumentNullException(nameof(Booking), "Booking cannot be null");
+            }
+
+            var rawAmount = Booking.TotalPrice / (1 + Bookings.FEE_PERCENTAGE);
+
+            Amount = rawAmount * (1 + Bookings.FEE_PERCENTAGE);
+            Fee = rawAmount * Bookings.FEE_PERCENTAGE;
+        }
     }
 }
