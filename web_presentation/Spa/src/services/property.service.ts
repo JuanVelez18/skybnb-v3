@@ -19,6 +19,7 @@ import {
   type PaginationOptions,
 } from "@/models/pagination";
 import { useAuthStore } from "@/stores/auth.store";
+import { dateToDateOnlyString } from "@/utils/dates";
 
 type PropertyTypeDto = {
   id: number;
@@ -78,8 +79,12 @@ export class PropertyService {
     const params = {
       ...pagination,
       ...(filters ?? {}),
-      checkIn: filters?.checkIn?.toISOString().split("T")[0],
-      checkOut: filters?.checkOut?.toISOString().split("T")[0],
+      checkIn: filters?.checkIn
+        ? dateToDateOnlyString(filters.checkIn)
+        : undefined,
+      checkOut: filters?.checkOut
+        ? dateToDateOnlyString(filters.checkOut)
+        : undefined,
     };
 
     let response: ApiResponse<PageDto<PropertySummary>>;

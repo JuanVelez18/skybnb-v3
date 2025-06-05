@@ -2,8 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import type { BookingFormData } from "@/components/BookingSheet";
-
-const DAY_IN_MS = 1000 * 60 * 60 * 24;
+import type { CreationBooking } from "@/models/bookings";
+import { BookingService } from "@/services/booking.service";
+import { ApiError } from "@/core/httpClient";
 
 export const useBooking = (onSuccess?: () => void) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,24 +32,14 @@ export const useBooking = (onSuccess?: () => void) => {
         throw new Error("Check-in date cannot be in the past");
       }
 
-      // Calculate nights and pricing
-      const nights = Math.ceil(
-        (checkOutDate.getTime() - checkInDate.getTime()) / DAY_IN_MS
-      );
-
-      // Here you would typically call your booking API
-      const bookingData = {
-        propertyId,
-        checkInDate: formData.checkIn,
-        checkOutDate: formData.checkOut,
-        numGuests: parseInt(formData.guests),
-        comment: formData.comment,
-        nights,
+      const booking: CreationBooking = {
+        property: propertyId,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        guests: parseInt(formData.guests),
+        comment: formData.comment || null,
       };
-
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Booking request submitted:", bookingData);
+      await BookingService.createBooking(booking);
 
       // Show success message
       toast.success("Booking request sent successfully!", {
@@ -61,10 +52,14 @@ export const useBooking = (onSuccess?: () => void) => {
 
       return true;
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to submit booking request";
+      let message = "Failed to submit booking request";
+      if (error instanceof ApiError && error.status && error.status < 500) {
+        message =
+          error.message || "An error occurred while processing your request";
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
       toast.error(message);
       throw error;
     } finally {

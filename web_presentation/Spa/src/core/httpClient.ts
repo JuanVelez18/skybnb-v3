@@ -18,10 +18,16 @@ export interface ApiResponse<T = unknown> {
   statusText: string;
 }
 
-export interface ApiError {
+export class ApiError {
   message: string;
   status?: number;
   details?: unknown;
+
+  constructor(message: string, status?: number, details?: unknown) {
+    this.message = message;
+    this.status = status;
+    this.details = details;
+  }
 }
 
 interface FailedRequest {
@@ -309,21 +315,16 @@ class HttpClient {
         error.message ||
         "An error occurred in the request";
 
-      return {
+      return new ApiError(
         message,
-        status: error.response?.status,
-        details: error.response?.data,
-      };
+        error.response?.status,
+        error.response?.data
+      );
     }
 
-    if (error instanceof Error) {
-      return {
-        message: error.message,
-      };
-    }
-    return {
-      message: "An unknown error occurred",
-    };
+    if (error instanceof Error) return new ApiError(error.message);
+
+    return new ApiError("An unknown error occurred");
   }
 
   // Method to get the axios instance (useful for special cases)
