@@ -28,11 +28,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { RouteNames } from "@/router/routes";
+import { PaymentForm } from "@/components/forms";
 
 const BookingsPage = () => {
   const { user } = useGetUserSummary();
 
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [bookingToPay, setBookingToPay] = useState<Booking | null>(null);
   const [filters, setFilters] = useState<BookingFilters>({
     role: undefined,
     status: undefined,
@@ -85,8 +87,7 @@ const BookingsPage = () => {
   };
 
   const handlePayment = (booking: Booking) => {
-    // TODO: Implement payment processing logic
-    console.log(`Processing payment for booking ${booking.id}`);
+    setBookingToPay(booking);
   };
 
   const handleCancel = (booking: Booking) => {
@@ -223,6 +224,12 @@ const BookingsPage = () => {
 
         {showSkeleton && <Skeleton className="h-72 w-full" ref={loadMoreRef} />}
       </div>
+
+      <PaymentForm
+        booking={bookingToPay}
+        isOpen={bookingToPay !== null}
+        onClose={() => setBookingToPay(null)}
+      />
     </div>
   );
 };
