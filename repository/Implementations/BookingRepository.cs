@@ -12,6 +12,14 @@ namespace repository.Implementations
         {
         }
 
+        public override async Task<Bookings?> GetByIdAsync(Guid id)
+        {
+            return await _dbSet
+                .Include(b => b.Property)
+                .ThenInclude(p => p!.Host)
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
+
         public async Task<Page<Bookings>> GetBookingsByUserIdAsync(Guid userId, PaginationOptions pagination, BookingFilters? filters)
         {
             IQueryable<Bookings> query = _dbSet
