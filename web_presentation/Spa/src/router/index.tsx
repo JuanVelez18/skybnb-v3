@@ -6,6 +6,7 @@ import { RouteNames } from "./routes.ts";
 import PropertyCreationPage from "@/pages/PropertyCreationPage.tsx";
 import ProtectedRoute from "@/components/auth/ProtectedRoute.tsx";
 import PropertyDetailPage from "@/pages/PropertyDetailPage.tsx";
+import BookingsPage from "@/pages/BookingsPage.tsx";
 
 export interface RouteConfig {
   layoutConfig?: {
@@ -41,7 +42,7 @@ export const routes: RouteObject[] = [
       {
         path: RouteNames.CREATE_PROPERTY,
         element: (
-          <ProtectedRoute authenticated permission="create:property">
+          <ProtectedRoute permission="create:property">
             <PropertyCreationPage />
           </ProtectedRoute>
         ),
@@ -54,8 +55,8 @@ export const routes: RouteObject[] = [
       {
         path: RouteNames.BOOKINGS,
         element: (
-          <ProtectedRoute authenticated permission="read:booking">
-            <div>Bookings Page (to be implemented)</div>
+          <ProtectedRoute permission="read:booking">
+            <BookingsPage />
           </ProtectedRoute>
         ),
         handle: {
