@@ -168,5 +168,37 @@ namespace application.Implementations
             await _unitOfWork.Auditories.AddAsync(auditory);
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task CancelBooking(Guid bookingId, Guid userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId);
+            if (booking == null)
+            {
+                throw new NotFoundApplicationException("Booking not found.");
+            }
+
+            if (booking.Status == BookingStatus.Cancelled)
+            {
+                throw new ConflictApplicationException("This booking has already been cancelled.");
+            }
+
+            if (booking.GuestId != userId && (booking.Property == null || booking.Property.HostId != userId))
+            {
+                throw new UnauthorizedApplicationException("You are not authorized to cancel this booking.");
+            }
+
+            booking.Cancel();
+            _unitOfWork.Bookings.Update(booking);
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Cancel Booking",
+                entity: "Bookings",
+                entityId: booking.Id.ToString(),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+        }
     }
 }
