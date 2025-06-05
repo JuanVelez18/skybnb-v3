@@ -18,6 +18,36 @@ namespace application.Implementations
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<PageDto<BookingItemDto>> GetBookingsByUserIdAsync(Guid userId, PaginationOptionsDto paginationDto, BookingFiltersDto? filtersDto)
+        {
+            var user = await _unitOfWork.Customers.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundApplicationException("User not found.");
+            }
+
+            var filters = filtersDto?.ToDomainBookingFilters();
+            var pagination = paginationDto.ToDomainPaginationOptions();
+            if (!pagination.IsValid())
+            {
+                throw new InvalidDataApplicationException("Invalid pagination options.");
+            }
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Get Bookings",
+                entity: "Bookings",
+                entityId: null,
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+
+            var bookingsPage = await _unitOfWork.Bookings.GetBookingsByUserIdAsync(userId, pagination, filters);
+
+            return PageDto<BookingItemDto>.FromDomainPage(bookingsPage, BookingItemDto.FromDomainBooking);
+        }
+
         public async Task CreateBooking(BookingsDto bookingDto, Guid userId)
 
         {
