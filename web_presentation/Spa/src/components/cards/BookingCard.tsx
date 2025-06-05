@@ -97,7 +97,7 @@ const BookingCard = ({
                             onSelect={(e) => e.preventDefault()}
                           >
                             <XCircle className="h-4 w-4 mr-2" />
-                            Cancel Booking
+                            {isGuest ? "Cancel Booking" : "Decline Booking"}
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
