@@ -62,6 +62,43 @@ namespace domain.Entities
             TotalPrice += TotalPrice * FEE_PERCENTAGE; // Add fee   
         }
 
+        public void Approve(List<Bookings> otherOvelarpingAndPendingBookings, DateTime now)
+        {
+            if (Status != BookingStatus.Pending)
+            {
+                throw new InvalidOperationException("Only pending bookings can be approved.");
+            }
+
+            foreach (var booking in otherOvelarpingAndPendingBookings)
+            {
+                if (booking.Id != Id) booking.Cancel(now);
+            }
+
+            Status = BookingStatus.Approved;
+            UpdatedAt = now;
+        }
+
+        public void Approve(List<Bookings> otherOvelarpingAndPendingBookings)
+        {
+            Approve(otherOvelarpingAndPendingBookings, DateTime.UtcNow);
+        }
+
+        public void Cancel(DateTime now)
+        {
+            if (Status == BookingStatus.Cancelled || Status == BookingStatus.Completed)
+            {
+                throw new InvalidOperationException("Booking is already cancelled or completed.");
+            }
+
+            Status = BookingStatus.Cancelled;
+            UpdatedAt = now;
+        }
+
+        public void Cancel()
+        {
+            Cancel(DateTime.UtcNow);
+        }
+
         public bool HasOverlapWith(Bookings otherBooking)
         {
             return CheckInDate < otherBooking.CheckOutDate &&
