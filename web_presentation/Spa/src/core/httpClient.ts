@@ -7,6 +7,7 @@ import type {
 } from "axios";
 import { type Tokens } from "../models/auth";
 import { useAuthStore } from "@/stores/auth.store";
+import { queryClient } from "./queryClient";
 
 // Base HTTP client configuration
 const API_BASE_URL =
@@ -99,14 +100,20 @@ class HttpClient {
 
           try {
             const newTokens = await this.refreshToken();
-            if (newTokens) {
-              // Process the queue of failed requests
-              this.processQueue(null, newTokens.accessToken);
-
-              // Retry the original request
-              originalRequest.config.headers.Authorization = `Bearer ${newTokens.accessToken}`;
-              return this.client(originalRequest.config);
+            if (!newTokens) {
+              useAuthStore.getState().clearAuthentication();
+              queryClient.clear();
+              return Promise.reject(
+                new ApiError("Failed to refresh token, user logged out")
+              );
             }
+
+            // Process the queue of failed requests
+            this.processQueue(null, newTokens.accessToken);
+
+            // Retry the original request
+            originalRequest.config.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+            return this.client(originalRequest.config);
           } catch (refreshError) {
             this.processQueue(refreshError as Error, null);
             const logout = await import("@/utils/auth").then(
@@ -155,8 +162,8 @@ class HttpClient {
       );
 
       const newTokens = response.data;
-
       useAuthStore.getState().authenticate(newTokens);
+
       return newTokens;
     } catch (error) {
       console.error("Error refreshing token:", error);
