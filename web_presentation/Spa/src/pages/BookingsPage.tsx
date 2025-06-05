@@ -20,7 +20,11 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingCard from "@/components/cards/BookingCard";
 import { useGetUserSummary } from "@/queries/users.queries";
-import { useGetInfiniteBookings } from "@/queries/bookings.queries";
+import {
+  useApproveBooking,
+  useCancelBooking,
+  useGetInfiniteBookings,
+} from "@/queries/bookings.queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { RouteNames } from "@/router/routes";
@@ -28,6 +32,7 @@ import { RouteNames } from "@/router/routes";
 const BookingsPage = () => {
   const { user } = useGetUserSummary();
 
+  const [bookingId, setBookingId] = useState<string | null>(null);
   const [filters, setFilters] = useState<BookingFilters>({
     role: undefined,
     status: undefined,
@@ -41,6 +46,8 @@ const BookingsPage = () => {
     hasMoreBookings,
     fetchNextBookingsPage,
   } = useGetInfiniteBookings(filters);
+  const { approveBooking } = useApproveBooking();
+  const { cancelBooking } = useCancelBooking();
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const showSkeleton =
@@ -68,8 +75,13 @@ const BookingsPage = () => {
   };
 
   const handleApprove = (booking: Booking) => {
-    // TODO: Implement booking approval logic
-    console.log(`Approving booking ${booking.id}`);
+    setBookingId(booking.id);
+
+    approveBooking(booking.id, {
+      onSettled: () => {
+        setBookingId(null);
+      },
+    });
   };
 
   const handlePayment = (booking: Booking) => {
@@ -78,8 +90,13 @@ const BookingsPage = () => {
   };
 
   const handleCancel = (booking: Booking) => {
-    // TODO: Implement booking cancellation logic
-    console.log(`Cancelling booking ${booking.id}`);
+    setBookingId(booking.id);
+
+    cancelBooking(booking.id, {
+      onSettled: () => {
+        setBookingId(null);
+      },
+    });
   };
 
   useEffect(() => {
@@ -165,6 +182,7 @@ const BookingsPage = () => {
                   key={booking.id}
                   booking={booking}
                   userId={user?.id ?? ""}
+                  isLoading={bookingId === booking.id}
                   onApprove={() => handleApprove(booking)}
                   onPayment={() => handlePayment(booking)}
                   onCancel={() => handleCancel(booking)}
