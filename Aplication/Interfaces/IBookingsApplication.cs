@@ -6,5 +6,6 @@ namespace application.Interfaces
     {
         Task<PageDto<BookingItemDto>> GetBookingsByUserIdAsync(Guid userId, PaginationOptionsDto pagination, BookingFiltersDto? filters);
         Task CreateBooking(BookingsDto bookingDto, Guid userId);
+        Task ApproveBooking(Guid bookingId, Guid userId);
     }
 }

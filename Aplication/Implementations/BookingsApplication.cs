@@ -126,5 +126,47 @@ namespace application.Implementations
 
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task ApproveBooking(Guid bookingId, Guid userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId);
+            if (booking == null)
+            {
+                throw new NotFoundApplicationException("Booking not found.");
+            }
+
+            if (booking.Status != BookingStatus.Pending)
+            {
+                throw new ConflictApplicationException("Only pending bookings can be approved.");
+            }
+
+            if (booking.Property == null || booking.Property.HostId != userId)
+            {
+                throw new UnauthorizedApplicationException("You are not authorized to approve this booking.");
+            }
+
+            var pendingBookings = await _unitOfWork.Bookings.GetBookingsByPropertyIdAsync(
+                booking.PropertyId!.Value,
+                BookingStatus.Pending
+            );
+            var overlappingPendingBookings = pendingBookings
+                .Where(b => b.Id != booking.Id && b.HasOverlapWith(booking))
+                .ToList();
+
+            booking.Approve(overlappingPendingBookings);
+
+            _unitOfWork.Bookings.Update(booking);
+            _unitOfWork.Bookings.UpdateBookingList(overlappingPendingBookings);
+
+            var auditory = new Auditories(
+                userId: userId,
+                action: "Approve Booking",
+                entity: "Bookings",
+                entityId: booking.Id.ToString(),
+                timestamp: DateTime.UtcNow
+            );
+            await _unitOfWork.Auditories.AddAsync(auditory);
+            await _unitOfWork.CommitAsync();
+        }
     }
 }
