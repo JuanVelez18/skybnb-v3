@@ -57,6 +57,11 @@ namespace asp_services.Middlewares
                     problemDetails.Title = "Not Found";
                     problemDetails.Detail = exception.Message;
                     break;
+                case ConflictApplicationException _:
+                    context.Response.StatusCode = StatusCodes.Status409Conflict;
+                    problemDetails.Title = "Conflict";
+                    problemDetails.Detail = exception.Message;
+                    break;
                 default:
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     problemDetails.Title = "Internal Server Error";
