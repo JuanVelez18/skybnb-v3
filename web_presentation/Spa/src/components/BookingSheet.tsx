@@ -63,7 +63,7 @@ type Props = {
   onOpenChange?: (open: boolean) => void;
 };
 
-const DEFAULT_SERVICE_FEE = 25;
+const SERVICE_FEE_PERCENTAGE = 0.1;
 
 const BookingSheet = forwardRef<BookingSheetRef, Props>(
   (
@@ -117,11 +117,18 @@ const BookingSheet = forwardRef<BookingSheetRef, Props>(
 
     const nights = calculateNights();
     const subtotal = property.price * nights;
-    const serviceFee = DEFAULT_SERVICE_FEE;
+    const serviceFee = subtotal * SERVICE_FEE_PERCENTAGE;
     const total = subtotal + serviceFee;
 
+    const handleOpenChange = (open: boolean) => {
+      setIsOpen(open);
+      if (!open) {
+        resetForm();
+      }
+    };
+
     return (
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
         <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent className="w-[400px] sm:w-[540px]">
           <SheetHeader>
@@ -340,7 +347,7 @@ const PriceBreakdown = ({
             <span>${subtotal}</span>
           </div>
           <div className="flex justify-between">
-            <span>Service fee</span>
+            <span>Service fee ({SERVICE_FEE_PERCENTAGE * 100}%)</span>
             <span>${serviceFee}</span>
           </div>
           <Separator />
