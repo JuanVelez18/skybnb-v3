@@ -47,6 +47,7 @@ builder.Services.AddScoped<IBookingsApplication, BookingsApplication>();
 builder.Services.AddScoped<IReviewsApplication, ReviewsApplication>();
 builder.Services.AddScoped<IUserApplication, UserApplication>();
 builder.Services.AddScoped<IPropertyTypesApplication, PropertyTypesApplication>();
+builder.Services.AddScoped<IPaymentApplication, PaymentApplication>();
 
 // Initializer
 builder.Services.AddScoped<IDataInitializer, DataInitializer>();
