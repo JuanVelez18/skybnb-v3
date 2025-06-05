@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Calendar } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,23 +20,40 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingCard from "@/components/cards/BookingCard";
 import { useGetUserSummary } from "@/queries/users.queries";
-import { mockBookings } from "@/utils/bookings";
+import {
+  useApproveBooking,
+  useCancelBooking,
+  useGetInfiniteBookings,
+} from "@/queries/bookings.queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
+import { RouteNames } from "@/router/routes";
+import { PaymentForm } from "@/components/forms";
 
 const BookingsPage = () => {
   const { user } = useGetUserSummary();
 
+  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [bookingToPay, setBookingToPay] = useState<Booking | null>(null);
   const [filters, setFilters] = useState<BookingFilters>({
     role: undefined,
     status: undefined,
     sortBy: "newest",
   });
 
-  const filteredBookings = mockBookings.filter((booking) => {
-    if (filters.role === "guest" && booking.guest.id === user?.id) return false;
-    if (filters.role === "host" && booking.host.id !== user?.id) return false;
-    if (filters.status && booking.status !== filters.status) return false;
-    return true;
-  });
+  const {
+    bookings,
+    areBookingsLoading,
+    isLoadingNextBookingsPage,
+    hasMoreBookings,
+    fetchNextBookingsPage,
+  } = useGetInfiniteBookings(filters);
+  const { approveBooking } = useApproveBooking();
+  const { cancelBooking } = useCancelBooking();
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const showSkeleton =
+    areBookingsLoading || isLoadingNextBookingsPage || hasMoreBookings;
 
   const handleTabChange = (value: string) => {
     setFilters((prev) => ({
@@ -60,19 +77,59 @@ const BookingsPage = () => {
   };
 
   const handleApprove = (booking: Booking) => {
-    // TODO: Implement booking approval logic
-    console.log(`Approving booking ${booking.id}`);
+    setBookingId(booking.id);
+
+    approveBooking(booking.id, {
+      onSettled: () => {
+        setBookingId(null);
+      },
+    });
   };
 
   const handlePayment = (booking: Booking) => {
-    // TODO: Implement payment processing logic
-    console.log(`Processing payment for booking ${booking.id}`);
+    setBookingToPay(booking);
   };
 
   const handleCancel = (booking: Booking) => {
-    // TODO: Implement booking cancellation logic
-    console.log(`Cancelling booking ${booking.id}`);
+    setBookingId(booking.id);
+
+    cancelBooking(booking.id, {
+      onSettled: () => {
+        setBookingId(null);
+      },
+    });
   };
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+
+    if (!target || !hasMoreBookings) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !areBookingsLoading &&
+          !isLoadingNextBookingsPage
+        ) {
+          fetchNextBookingsPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "30px 0px",
+      }
+    );
+
+    observer.observe(target);
+
+    return () => observer.unobserve(target);
+  }, [
+    areBookingsLoading,
+    hasMoreBookings,
+    isLoadingNextBookingsPage,
+    fetchNextBookingsPage,
+  ]);
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -118,40 +175,61 @@ const BookingsPage = () => {
       </div>
 
       <div className="space-y-4">
-        {filteredBookings.length > 0 ? (
-          filteredBookings.map((booking) => (
-            <BookingCard
-              key={booking.id}
-              booking={booking}
-              userId={user?.id ?? ""}
-              onApprove={() => handleApprove(booking)}
-              onPayment={() => handlePayment(booking)}
-              onCancel={() => handleCancel(booking)}
-            />
-          ))
-        ) : (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No bookings found</h3>
-              <p className="text-muted-foreground mb-4">
-                {filters.role === "guest"
-                  ? "You haven't made any bookings yet."
-                  : filters.role === "host"
-                  ? "You haven't received any bookings yet."
-                  : "No bookings match your current filters."}
-              </p>
-              <Button asChild>
-                <a href="/search">
-                  {filters.role === "guest"
-                    ? "Start Exploring"
-                    : "List Your Property"}
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
+        {!areBookingsLoading && (
+          <>
+            {bookings.length > 0 ? (
+              bookings.map((booking) => (
+                <BookingCard
+                  key={booking.id}
+                  booking={booking}
+                  userId={user?.id ?? ""}
+                  isLoading={bookingId === booking.id}
+                  onApprove={() => handleApprove(booking)}
+                  onPayment={() => handlePayment(booking)}
+                  onCancel={() => handleCancel(booking)}
+                />
+              ))
+            ) : (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    No bookings found
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    {filters.role === "guest"
+                      ? "You haven't made any bookings yet."
+                      : filters.role === "host"
+                      ? "You haven't received any bookings yet."
+                      : "No bookings match your current filters."}
+                  </p>
+                  <Button asChild>
+                    <Link
+                      to={
+                        filters.role === "guest"
+                          ? RouteNames.HOME
+                          : RouteNames.CREATE_PROPERTY
+                      }
+                    >
+                      {filters.role === "guest"
+                        ? "Start Exploring"
+                        : "List Your Property"}
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </>
         )}
+
+        {showSkeleton && <Skeleton className="h-72 w-full" ref={loadMoreRef} />}
       </div>
+
+      <PaymentForm
+        booking={bookingToPay}
+        isOpen={bookingToPay !== null}
+        onClose={() => setBookingToPay(null)}
+      />
     </div>
   );
 };

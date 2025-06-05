@@ -53,6 +53,60 @@ export type Booking = {
   rating: number | null;
 };
 
+export type BookingDto = {
+  id: string;
+  property: {
+    title: string;
+    imageUrl: string | null;
+    city: string;
+    country: string;
+  };
+  host: {
+    id: string;
+    fullName: string;
+  };
+  guest: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  total: number;
+  message: string | null;
+  status: BookingStatus;
+  rating: number | null;
+};
+
+export const dtoToBooking = (dto: BookingDto): Booking => {
+  return {
+    id: dto.id,
+    property: {
+      title: dto.property.title,
+      photoUrl: dto.property.imageUrl,
+      city: dto.property.city,
+      country: dto.property.country,
+    },
+    host: {
+      id: dto.host.id,
+      fullName: dto.host.fullName,
+    },
+    guest: {
+      id: dto.guest.id,
+      fullName: dto.guest.fullName,
+      email: dto.guest.email,
+    },
+    checkIn: new Date(dto.checkIn),
+    checkOut: new Date(dto.checkOut),
+    guests: dto.guests,
+    totalAmount: dto.total,
+    message: dto.message,
+    status: dto.status,
+    rating: dto.rating,
+  };
+};
+
 export type BookingRoleFilter = "guest" | "host";
 
 export type BookingSortBy = "newest" | "oldest" | "checkin" | "amount";

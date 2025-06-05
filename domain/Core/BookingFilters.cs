@@ -69,7 +69,7 @@ namespace domain.Core
 
         public bool IsSortDescending()
         {
-            return SortBy is SortType.NewestFirst or SortType.CheckInDateNearest;
+            return SortBy is SortType.NewestFirst;
         }
     }
 }
