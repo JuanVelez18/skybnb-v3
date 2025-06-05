@@ -36,4 +36,12 @@ export class BookingService {
       results: response.data.results.map(dtoToBooking),
     };
   }
+
+  public static async aproveBooking(bookingId: string): Promise<void> {
+    await httpClient.patch(`/bookings/${bookingId}/approve`);
+  }
+
+  public static async cancelBooking(bookingId: string): Promise<void> {
+    await httpClient.patch(`/bookings/${bookingId}/cancel`);
+  }
 }
