@@ -6,17 +6,16 @@ namespace domain.Entities
     [Index(nameof(UserId), nameof(Timestamp))]
     [Index(nameof(Action))]
     public class Auditories(
-        Guid userId,
+        Guid? userId,
         string action,
         DateTime timestamp,
         string? entity,
-        string? entityId,
-        string? details
+        string? entityId
         )
     {
         public long Id { get; private set; }
 
-        public Guid UserId { get; private set; } = userId;
+        public Guid? UserId { get; private set; } = userId;
 
         public string Action { get; private set; } = action;
 
@@ -25,10 +24,5 @@ namespace domain.Entities
         public string? Entity { get; private set; } = entity;
 
         public string? EntityId { get; private set; } = entityId;
-
-        public string? Details { get; private set; } = details;
-        
-
-        public Users? User { get; set; }
     }
 }

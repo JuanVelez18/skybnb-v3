@@ -14,8 +14,10 @@ namespace domain.Entities
         decimal basePricePerNight,
         int typeId,
         Guid hostId,
-        Guid addressId
-        )
+        Guid addressId,
+        int CityId,
+        int CountryId
+        ) : IDisabled
     {
         public Guid Id { get; private set; }
 
@@ -37,7 +39,7 @@ namespace domain.Entities
         [Range(0, int.MaxValue)]
         public int MaxGuests { get; set; } = maxGuests;
 
-        [Precision(12,2)]
+        [Precision(12, 2)]
         public decimal BasePricePerNight { get; set; } = basePricePerNight;
 
         public int TypeId { get; set; } = typeId;
@@ -45,11 +47,13 @@ namespace domain.Entities
         public Guid HostId { get; private set; } = hostId;
 
         public Guid AddressId { get; set; } = addressId;
+        public int CityId { get; set; } = CityId;
+        public int CountryId { get; set; } = CountryId;
 
         [Range(0, int.MaxValue)]
         public int ReviewsCount { get; set; } = 0;
 
-        [Precision(2,1)]
+        [Precision(2, 1)]
         public decimal? AverageRating { get; set; }
 
         public bool IsActive { get; set; } = true;
@@ -58,9 +62,12 @@ namespace domain.Entities
 
 
         public PropertyTypes? Type { get; set; }
-        public Users? Host { get; set; }
+        public Customers? Host { get; set; }
         public Addresses? Address { get; set; }
+        public Cities? City { get; set; }
+        public Countries? Country { get; set; }
         public List<Bookings> Bookings { get; set; } = [];
         public List<Reviews> Reviews { get; set; } = [];
+        public List<PropertyAssets> Multimedia { get; set; } = [];
     }
 }

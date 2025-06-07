@@ -1,0 +1,43 @@
+@page "/{*catchall}"
+@using web_presentation.Core
+@using web_presentation.Extensions
+@using System.Text.Json;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <link rel="stylesheet" vite-href="~/main.tsx" asp-append-version="true" />
+    <environment include="Development">
+        <script type="module">
+            import RefreshRuntime from 'http://localhost:5173/@@react-refresh'
+            RefreshRuntime.injectIntoGlobalHook(window)
+            window.$RefreshReg$ = () => { }
+            window.$RefreshSig$ = () => (type) => type
+            window.__vite_plugin_react_preamble_installed__ = true
+        </script>
+    </environment>
+
+    @if (Model.ShouldPassCookiesToSPA && Request.HasActiveSession())
+    {
+        <script id="tokens" type="application/json">
+        @Html.Raw(JsonSerializer.Serialize(Request.GetAuthTokensFromCookies()))
+        </script>
+    }
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" vite-src="~/main.tsx"></script>
+</body>
+
+</html>

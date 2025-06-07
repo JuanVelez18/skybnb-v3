@@ -1,10 +1,8 @@
-﻿using asp_services.Core;
-using asp_services.Dtos;
-using domain.Core;
-using domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using application.Interfaces;
+using application.DTOs;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asp_services.Controllers
 {
@@ -12,76 +10,53 @@ namespace asp_services.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly JwtGenerator _jwtGenerator;
-        private readonly IPasswordHasher<UserDto> _passwordHasher;
         private readonly IUsersApplication _usersApplication;
 
-        public AuthController(IPasswordHasher<UserDto> passwordHasher, IUsersApplication usersApplication)
+        public AuthController(IUsersApplication usersApplication)
         {
-            _jwtGenerator = new JwtGenerator(Configuration.SecretKey);
-            _passwordHasher = passwordHasher;
             _usersApplication = usersApplication;
         }
 
-        public class LoginModel
+        [HttpPost("register/host")]
+        public async Task<IActionResult> RegisterHost([FromBody] UserCreationDto userCreationDto)
         {
-            public string Username { get; set; }
-            public string Password { get; set; }
+            var tokens = await _usersApplication.RegisterHost(userCreationDto);
+            return Ok(tokens);
+        }
+
+        [HttpPost("register/guest")]
+        public async Task<IActionResult> RegisterGuest([FromBody] GuestCreationDto guestCreationDto)
+        {
+            var tokens = await _usersApplication.RegisterGuest(guestCreationDto);
+            return Ok(tokens);
+
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel loginModel)
+        public async Task<IActionResult> Login([FromBody] UserCredentialsDto credentials)
         {
-            // 1. Validar credenciales (esto es un ejemplo simplificado)
-            // En una aplicación real, consultarías una base de datos, verificarías un hash de contraseña, etc.
-            bool credentialsAreValid = loginModel.Username == "testuser" && loginModel.Password == "P@ssword1!";
-            bool isAdmin = loginModel.Username == "adminuser" && loginModel.Password == "AdminP@ss!"; // Ejemplo
-
-            if (credentialsAreValid || isAdmin)
-            {
-                string userId = isAdmin ? "admin001" : "user123";
-                string userName = isAdmin ? "Admin User" : "Test User";
-
-                // 2. Generar el token
-                var token = _jwtGenerator.GenerateToken(
-                    userId: userId,
-                    expiresIn: TimeSpan.FromHours(1)
-                );
-
-                // 3. Devolver el token
-                return Ok(new { Token = token });
-            }
-
-            return Unauthorized("Credenciales inválidas.");
+            var tokens = await _usersApplication.Login(credentials);
+            return Ok(tokens);
         }
 
-        [HttpPost("signup")]
-        public IActionResult Signup([FromBody] UserDto userDto)
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
-            Users user;
+            var tokens = await _usersApplication.RefreshToken(refreshTokenDto);
+            return Ok(tokens);
+        }
 
-            try
-            {
-                user = new Users(
-                    dni: userDto.Dni,
-                    firstName: userDto.FirstName,
-                    lastName: userDto.LastName,
-                    email: userDto.Email,
-                    birthday: userDto.Birthday,
-                    countryId: userDto.CountryId,
-                    phone: userDto.Phone,
-                    passwordHash: _passwordHasher.HashPassword(userDto, userDto.Password)
-                );
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _usersApplication.Logout(
+                userId,
+                refreshTokenDto.RefreshToken
+            );
 
-            }
-            catch (Exception error)
-            {
-                return BadRequest(new { error = error.Message });
-            }
-            
-            _usersApplication.Guardar(user);
-
-            return Ok(201);
+            return NoContent();
         }
     }
 }

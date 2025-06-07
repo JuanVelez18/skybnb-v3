@@ -1,0 +1,207 @@
+﻿@page
+@using web_presentation.Core
+@model web_presentation.Pages.RegisterModel
+@{
+	ViewData["Title"] = "Registration";
+}
+<center>
+	<div>
+		<form method="POST" align="left" style="width: 100%;">
+			<h3>Create an account</h3>
+
+			<div style="width: 60%; flex-direction: column; gap: 1rem; display: flex;">
+				<div
+					style="flex-direction: column; gap: 1rem; @(!Model.LikeGuest ? "display: flex;" : "display: none;")">
+					<div align="form-group">
+						<label asp-for="UserCreation.Email" class="control-label">
+							Email
+						</label>
+						<input asp-for="UserCreation.Email" class="form-control" />
+						<span asp-validation-for="UserCreation.Email" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.Password" class="control-label">
+							Password
+						</label>
+						@*TODO: Search a better solution for the password*@
+						<input asp-for="UserCreation.Password" class="form-control"
+							value="@(Model.UserCreation.Password)" type="password" />
+						<span asp-validation-for="UserCreation.Password" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.Dni" class="control-label">
+							Document Number (DNI)
+						</label>
+						<input asp-for="UserCreation.Dni" class="form-control" />
+						<span asp-validation-for="UserCreation.Dni" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation" class="control-label">
+							First Name
+						</label>
+						<input asp-for="UserCreation.FirstName" class="form-control" />
+						<span asp-validation-for="UserCreation.FirstName" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.LastName" class="control-label">
+							Last Name
+						</label>
+						<input asp-for="UserCreation.LastName" class="form-control" />
+						<span asp-validation-for="UserCreation.LastName" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.Birthday" class="control-label">
+							Birthday
+						</label>
+						<input asp-for="UserCreation.Birthday" type="date" class="form-control" />
+						<span asp-validation-for="UserCreation.Birthday" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.Country" class="control-label">
+							Country
+						</label>
+						<select asp-for="UserCreation.Country" class="form-control">
+							<option value="">Select a country</option>
+							@foreach (var country in Model.Countries)
+							{
+								<option value="@country.Id">@country.Name (@country.IsoCode)</option>
+							}
+						</select>
+						<span asp-validation-for="UserCreation.Country" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<label asp-for="UserCreation.Phone" class="control-label">
+							Phone
+						</label>
+						<input asp-for="UserCreation.Phone" type="phone" class="form-control" />
+						<span asp-validation-for="UserCreation.Phone" class="text-danger"></span>
+					</div>
+
+					<div align="form-group">
+						<input asp-for="LikeGuest" type="checkbox" class="form-check-input" />
+						<label asp-for="LikeGuest" class="control-label">
+							I want to register as a guest
+						</label>
+					</div>
+				</div>
+
+				@if (Model.LikeGuest)
+				{
+					<div style=" flex-direction: column; gap: 1rem; display: flex;">
+						<p>
+							You are registering as a guest. This means you will to provide an residence address
+						</p>
+
+						<div align="form-group">
+							<label asp-for="Address.Street" class="control-label">
+								Street
+							</label>
+							<input asp-for="Address.Street" class="form-control" />
+							<span asp-validation-for="Address.Street" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.StreetNumber" class="control-label">
+								Street Number
+							</label>
+							<input asp-for="Address.StreetNumber" type="number" class="form-control" />
+							<span asp-validation-for="Address.StreetNumber" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.IntersectionNumber" class="control-label">
+								Intersection Number
+							</label>
+							<input asp-for="Address.IntersectionNumber" type="number" class="form-control" />
+							<span asp-validation-for="Address.IntersectionNumber" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.DoorNumber" class="control-label">
+								Door Number
+							</label>
+							<input asp-for="Address.DoorNumber" type="number" class="form-control" />
+							<span asp-validation-for="Address.DoorNumber" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="ResidenceCountry" class="control-label">
+								Country
+							</label>
+							<select asp-for="ResidenceCountry" class="form-control">
+								<option value="">Select a country</option>
+								@foreach (var country in Model.Countries)
+								{
+									<option value="@country.Id">@country.Name (@country.IsoCode)</option>
+								}
+							</select>
+							<span asp-validation-for="ResidenceCountry" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="ResidenceCity" class="control-label">
+								City
+							</label>
+							<select asp-for="ResidenceCity" class="form-control">
+								<option value="">Select a city</option>
+								@foreach (var city in Model.Cities)
+								{
+									<option value="@city.Id">@city.Name</option>
+								}
+							</select>
+							<span asp-validation-for="ResidenceCity" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.Complement" class="control-label">
+								Complement (Optional)
+							</label>
+							<input asp-for="Address.Complement" class="form-control" />
+							<span asp-validation-for="Address.Complement" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.Latitude" class="control-label">
+								Latitude (Optional)
+							</label>
+							<input asp-for="Address.Latitude" type="number" step="any" class="form-control" />
+							<span asp-validation-for="Address.Latitude" class="text-danger"></span>
+						</div>
+
+						<div align="form-group">
+							<label asp-for="Address.Longitude" class="control-label">
+								Longitude (Optional)
+							</label>
+							<input asp-for="Address.Longitude" type="number" step="any" class="form-control" />
+							<span asp-validation-for="Address.Longitude" class="text-danger"></span>
+						</div>
+					</div>
+				}
+
+				<div class="register-actions-container">
+					<button type="submit" value="Limpiar" asp-page-handler="BtClean" class="btn-primary"
+						style="align-self: flex-start;">
+						Sign Up
+					</button>
+
+					<p>
+						Already have an account? <a asp-page="@Routes.Login">Log in</a>
+					</p>
+				</div>
+			</div>
+
+			@if (ViewData.ContainsKey("Message"))
+			{
+				@await Html.PartialAsync("./_Messages.cshtml")
+				;
+			}
+		</form>
+	</div>
+</center>
