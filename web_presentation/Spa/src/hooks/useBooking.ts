@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 import type { BookingFormData } from "@/components/BookingSheet";
 import type { CreationBooking } from "@/models/bookings";
 import { BookingService } from "@/services/booking.service";
 import { ApiError } from "@/core/httpClient";
+import { BookingsQueryKeys } from "@/queries/bookings.queries";
 
 export const useBooking = (onSuccess?: () => void) => {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   const submitBooking = async (
@@ -40,6 +43,10 @@ export const useBooking = (onSuccess?: () => void) => {
         comment: formData.comment || null,
       };
       await BookingService.createBooking(booking);
+
+      queryClient.invalidateQueries({
+        queryKey: BookingsQueryKeys.search(),
+      });
 
       // Show success message
       toast.success("Booking request sent successfully!", {
