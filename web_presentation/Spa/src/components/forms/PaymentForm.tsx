@@ -59,7 +59,7 @@ const PaymentForm = ({ isOpen, booking, onClose }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Complete Payment</DialogTitle>
           <DialogDescription>

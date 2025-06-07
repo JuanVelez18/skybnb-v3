@@ -130,7 +130,7 @@ const BookingSheet = forwardRef<BookingSheetRef, Props>(
     return (
       <Sheet open={isOpen} onOpenChange={handleOpenChange}>
         <SheetTrigger asChild>{children}</SheetTrigger>
-        <SheetContent className="w-[400px] sm:w-[540px]">
+        <SheetContent className="overflow-auto w-[400px] sm:w-[540px]">
           <SheetHeader>
             <SheetTitle className="text-lg font-semibold">
               Reserve Your Stay
