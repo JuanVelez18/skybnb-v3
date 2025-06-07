@@ -29,13 +29,14 @@ namespace ut_presentation.Repositories
                 checkInDate: new DateOnly(2025, 12, 24),
                 checkOutDate: new DateOnly(2025, 12, 31),
                 numGuests: 2,
-                totalPrice: 600000,
                 guestComment: "Looking forward to my stay!"
             );
+            booking.CalculateTotalPrice();
+
             await _repository.AddAsync(booking);
             await _conexion.SaveChangesAsync();
         }
-        
+
         [TestCleanup]
         public void TearDown()
         {
